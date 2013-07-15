@@ -1,0 +1,86 @@
+<!--
+  #%L
+  Server
+  %%
+  Copyright (C) 2013 DNS Belgium vzw
+  %%
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  #L%
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+  <bean class="be.dns.rdap.service.FileSystemDomainService">
+    <constructor-arg value="src/test/resources/rdap"/>
+  </bean>
+
+  <bean class="be.dns.rdap.service.IPServiceSupport"/>
+
+  <security:ldap-server root="dc=dns,dc=be"
+                        ldif="file:src/test/resources/init.ldif"/>
+
+  <security:authentication-manager id="authenticationManager">
+    <security:authentication-provider>
+      <security:ldap-user-service
+          user-search-base="ou=affiliates"
+          user-search-filter="(uid={0})"
+          group-search-base="ou=groups"/>
+    </security:authentication-provider>
+  </security:authentication-manager>
+
+  <security:global-method-security pre-post-annotations="enabled"
+                                   authentication-manager-ref="authenticationManager"
+                                   access-decision-manager-ref="accessDecisionManager">
+    <security:protect-pointcut
+        expression="execution(* be.dns.rdap.service.*.*(..))"
+        access="LEAKY_BUCKET_#1"/>
+  </security:global-method-security>
+
+  <bean id="accessDeniedHandler"
+        class="be.dns.rdap.spring.security.RDAPErrorHandler"/>
+
+  <security:http authentication-manager-ref="authenticationManager"
+                 access-decision-manager-ref="accessDecisionManager">
+    <security:intercept-url pattern="/**" access="ROLE_RDAP"/>
+    <security:access-denied-handler ref="accessDeniedHandler"/>
+    <security:x509 subject-principal-regex="CN=([\w@\.]+),"/>
+  </security:http>
+
+  <bean id="accessDecisionManager"
+        class="org.springframework.security.access.vote.UnanimousBased">
+    <constructor-arg>
+      <list>
+        <bean class="be.dns.rate.spring.security.LazyLeakyBucketVoter">
+          <constructor-arg>
+            <bean class="org.apache.commons.pool.impl.GenericKeyedObjectPool">
+              <constructor-arg>
+                <bean class="be.dns.rate.pool.BucketFactory">
+                  <constructor-arg value="5"/>
+                  <constructor-arg value="1"/>
+                </bean>
+              </constructor-arg>
+              <property name="maxActive" value="1"/>
+            </bean>
+          </constructor-arg>
+          <constructor-arg value="1"/>
+        </bean>
+        <bean class="org.springframework.security.access.vote.RoleVoter"/>
+      </list>
+    </constructor-arg>
+  </bean>
+</beans>

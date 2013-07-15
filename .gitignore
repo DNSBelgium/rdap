@@ -1,0 +1,7 @@
+# maven
+target/
+pom.xml.versionsBackup
+# intellij idea
+*.iml
+*.iws
+.idea/

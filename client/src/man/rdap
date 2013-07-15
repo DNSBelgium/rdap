@@ -1,0 +1,68 @@
+.\" Manpage for rdap.
+.\" Contact vivek@nixcraft.net.in to correct errors or typos.
+.TH RDAP 1 "13 June 2013" "RDAP 0.1.0" "RDAP man page"
+.SH NAME
+rdap \- RDAP client
+.SH SYNOPSIS
+.B rdap [options]...
+.I QUERY
+.I [TYPE]
+.SH DESCRIPTION
+rdap is an RDAP client
+.SH OPTIONS
+.IP "--raw"
+Causes rdap to emit raw (not pretty-printed) JSON rather than text output.
+.IP "--keystorepass <PASSWORD>"
+Tells rdap to use the specified keystore file when getting info with RDAP. Default value is changeit
+.IP "-c --config <FILE>"
+uses FILE as a configuration file instead of the default.
+.IP "--truststorepass <PASSWORD>"
+Tells rdap to use the specified keystore file when getting info with RDAP. Default value is changeit
+.IP "-l --location"
+If  the server reports that the requested page has moved to a different location (indicated with a Location: header and a 3XX response
+ code), this option will make curl redo the request on the new place
+.IP "--truststore <FILE>"
+Tells curl to use the specified certificate file to verify the peer. The file may contain multiple CA certificates. The certificate(s) must be
+ in PEM format.
+.IP "--password <PASSWORD>"
+Specify a password to be used with Basic Authentication.
+.IP "--pretty"
+Causes rdap to emit pretty-printed JSON rather than text output.
+.IP "-i --insecure"
+This option explicitly allows RDAP to perform "insecure" SSL connections
+.IP "--version"
+display version, authors and licensing information.
+.IP "--keypass <PASSWORD>"
+Tells rdap to use the specified key password when getting info with RDAP. Default value is changeit
+.IP "--keystoretype <TYPE>"
+Type of the keystore. Either JKS or PKCS12, default is JKS
+.IP "--help"
+display a short help text.
+.IP "-u --url <URL>"
+overrides any hosts in the configuration file and queries HOST directly.
+.IP "--username <USERNAME>"
+Specify a username to be used with Basic Authentication.
+.IP "--keystore <FILE>"
+Tells rdap to use the specified keystore file when getting info with RDAP
+.IP "--truststoretype <TYPE>"
+Type of the truststore. Either JKS or PKCS12
+.IP "--language <LANG>"
+Specify a language. This is sent to the server using the Accept-Language header. If unset, the language will be taken from your $LANG environment variable (or en if that is not defined).
+
+.SH EXIT STATUS
+.TP
+.B 0
+Successful program execution.
+.SH EXAMLES
+.TP
+.B rdap \ example.com
+.TP
+.B rdap \ ns.example.com NS
+
+
+.SH SEE ALSO
+.BR whois(1)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Pieter Vandepitte (pieter.vandepitte@dnsbelgium.be)

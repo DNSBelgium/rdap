@@ -1,0 +1,104 @@
+package be.dns.core;
+
+/*
+ * #%L
+ * Core
+ * %%
+ * Copyright (C) 2013 DNS Belgium vzw
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class DomainName {
+
+  private final List<Label> labels;
+
+  public DomainName(List<Label> labels) {
+    checkNotNull(labels, "labels must not be null");
+    checkArgument(labels.size() > 0, "labels.size() should be > 0");
+    for (int i = 0; i < labels.size() - 1; i++)
+      if (labels.get(i) instanceof Label.RootLabel)
+        throw new IllegalArgumentException("Only the last label may be a root label");
+
+    this.labels = new ImmutableList.Builder<Label>().addAll(labels).build();
+  }
+
+  public static DomainName of(String domainName) {
+    String[] labels = StringUtils.splitPreserveAllTokens(domainName, '.');
+    ImmutableList.Builder<Label> builder = new ImmutableList.Builder<Label>();
+    for (String label : labels) {
+      builder.add(Label.of(label));
+    }
+    return new DomainName(builder.build());
+  }
+
+  public DomainName toFQDN() {
+    if (isFQDN()) return this;
+    return new DomainName(new ImmutableList.Builder<Label>().addAll(labels).add(Label.RootLabel.getInstance()).build());
+  }
+
+  public boolean isFQDN() {
+    return labels.get(labels.size() - 1) instanceof Label.RootLabel;
+  }
+
+  public int getLevelSize() {
+    return (isFQDN() ? labels.size() - 1 : labels.size());
+  }
+
+  public List<Label> getLabels() {
+    return labels;
+  }
+
+  public Label getTLDLabel() {
+    return labels.get(getLevelSize() - 1);
+  }
+
+  public String getStringValue() {
+    String result = labels.get(0).getStringValue();
+    for (int i = 1; i < labels.size(); i++) {
+      result += "." + labels.get(i).getStringValue();
+    }
+    return result;
+  }
+
+  public Label getLevel(int level) {
+    if (isFQDN())
+      return labels.get(labels.size() - 1 - level);
+    return labels.get(labels.size() - level);
+  }
+
+  public DomainName toLDH() {
+    List<Label> labelList = new ArrayList<Label>();
+    for (Label label : getLabels())
+      labelList.add(label.toLDH());
+    return new DomainName(labelList);
+  }
+
+  public DomainName toUnicode() {
+    List<Label> labelList = new ArrayList<Label>();
+    for (Label label : getLabels())
+      labelList.add(label.toUnicode());
+    return new DomainName(labelList);
+  }
+
+}
