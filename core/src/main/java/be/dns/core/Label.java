@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
@@ -39,15 +40,38 @@ public abstract class Label {
 
   private static final IDNA IDNA;
 
+  public static final String ICU4J_CONFIGURATION = "icu4j.configuration";
+
+  public static final int DEFAULT_IDNA_OPTIONS = 126;
+
   static {
-    int options;
+    int options = -1;
     Properties properties = new Properties();
-    try {
-      properties.load(TelephoneNumber.class.getResourceAsStream("icu4j.properties"));
-      options = Integer.parseInt(properties.getProperty("idna.options"));
-    } catch (IOException e) {
-      LOGGER.debug("IOException. Defaulting to zero", e);
-      options = 0;
+    if (System.getProperty(ICU4J_CONFIGURATION) != null) {
+      FileInputStream fis = null;
+      try {
+        fis = new FileInputStream(System.getProperty(ICU4J_CONFIGURATION));
+        properties.load(fis);
+      } catch (IOException e) {
+        LOGGER.debug("Error in reading icu4j configuration file {}", System.getProperty(ICU4J_CONFIGURATION));
+      } finally {
+        if (fis != null) {
+          try {
+            fis.close();
+          } catch (IOException e) {
+            LOGGER.debug("Error in closing icu4j configuration file {}", System.getProperty(ICU4J_CONFIGURATION));
+          }
+        }
+      }
+    }
+    if (options == -1) {
+      try {
+        properties.load(TelephoneNumber.class.getResourceAsStream("icu4j.properties"));
+        options = Integer.parseInt(properties.getProperty("idna.options"));
+      } catch (IOException e) {
+        LOGGER.debug("IOException. Defaulting to {}", DEFAULT_IDNA_OPTIONS, e);
+        options = DEFAULT_IDNA_OPTIONS;
+      }
     }
     IDNA_OPTIONS = options;
     IDNA = com.ibm.icu.text.IDNA.getUTS46Instance(IDNA_OPTIONS);
