@@ -101,7 +101,7 @@ public class LazyLeakyBucketVoter implements AccessDecisionVoter<Object> {
       }
     }
     if (result == ACCESS_DENIED) {
-      throw new RDAPErrorException(TOO_MANY_REQUESTS_HTTP_CODE, String.format("Impossible to add %s token(s) to bucket", amount));
+      throw new RDAPErrorException(TOO_MANY_REQUESTS_HTTP_CODE, "Too many requests");
     }
     return result;
   }
