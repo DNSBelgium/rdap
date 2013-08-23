@@ -4,19 +4,19 @@
   <groupId>be.dnsbelgium.rdap</groupId>
   <artifactId>server</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <name>RDAP Server</name>
   <url>http://maven.apache.org</url>
   <parent>
     <artifactId>rdap</artifactId>
     <groupId>be.dnsbelgium</groupId>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
   </parent>
   <dependencies>
     <dependency>
       <groupId>be.dnsbelgium.rdap</groupId>
       <artifactId>core</artifactId>
-      <version>0.2.1</version>
+      <version>0.2.2</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
