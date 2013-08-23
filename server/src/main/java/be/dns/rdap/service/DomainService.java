@@ -22,9 +22,10 @@ package be.dns.rdap.service;
 
 import be.dns.core.DomainName;
 import be.dns.rdap.core.Domain;
+import be.dns.rdap.core.Error;
 
 public interface DomainService {
 
-  Domain getDomain(DomainName domainName);
+  Domain getDomain(DomainName domainName) throws Error;
 
 }

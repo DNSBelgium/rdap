@@ -114,7 +114,7 @@ public final class Domain extends Common {
 
         @Override
         public String getValue() {
-          return null;  //To change body of implemented methods use File | Settings | File Templates.
+          return value;
         }
       }
 
@@ -270,6 +270,11 @@ public final class Domain extends Common {
 
     public Builder setLDHName(String domainName) {
       this.ldhName = DomainName.of(domainName);
+      return this;
+    }
+
+    public Builder setUnicodeName(String domainName) {
+      this.unicodeName = DomainName.of(domainName);
       return this;
     }
 
