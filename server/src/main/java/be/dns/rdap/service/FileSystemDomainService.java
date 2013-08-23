@@ -22,7 +22,8 @@ package be.dns.rdap.service;
 
 import be.dns.core.DomainName;
 import be.dns.rdap.DomainController;
-import be.dns.rdap.core.Domain;
+import be.dns.rdap.core.*;
+import be.dns.rdap.core.Error;
 import be.dns.rdap.jackson.CustomObjectMapper;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -51,7 +52,7 @@ public class FileSystemDomainService implements DomainService {
   }
 
   @Override
-  public Domain getDomain(DomainName domainName) {
+  public Domain getDomain(DomainName domainName) throws Error {
     LOGGER.debug("Current locale: {}", LocaleContextHolder.getLocale());
     File domainNameFile = new File(directory, domainName.getStringValue());
     try {
@@ -64,7 +65,7 @@ public class FileSystemDomainService implements DomainService {
     } catch (Throwable t) {
       LOGGER.error("Unhandled error in parsing JSON file", t);
     }
-    throw new DomainController.DomainNotFoundException(domainName);
+    throw new Error.DomainNotFound(domainName);
   }
 
 }

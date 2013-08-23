@@ -124,7 +124,6 @@ public class RDAPClient {
       method.setHeader("Accept","application/rdap+json");
       HttpResponse response = httpClient.execute(method);
       HttpEntity entity = response.getEntity();
-      //System.out.println(EntityUtils.toString(entity));
       return mapper.readValue(entity.getContent(), Domain.class);
     } catch (UnsupportedEncodingException e) {
       logger.error("UTF-8 is an unsupported encoding", e);

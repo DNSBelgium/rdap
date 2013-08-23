@@ -22,8 +22,11 @@ package be.dns.rdap;
  */
 
 import be.dns.core.DomainName;
+import be.dns.core.LabelException;
 import be.dns.rdap.core.Domain;
+import be.dns.rdap.core.Error;
 import be.dns.rdap.service.DomainService;
+import com.ibm.icu.text.IDNA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +38,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "domain")
@@ -62,97 +65,52 @@ public final class DomainController {
     this.redirectThreshold = redirectThreshold;
   }
 
-  /**
-   * Parent of all exceptions thrown by the DomainService.
-   */
-  public abstract static class DomainException extends RuntimeException {
-
-    /**
-     * The subject of the DomainException.
-     */
-    private final DomainName domainName;
-
-    public DomainException(DomainName domainName) {
-      this.domainName = domainName;
-    }
-
-    public DomainName getDomainName() {
-      return domainName;
-    }
-  }
-
-  /**
-   * Thrown when a Domain is not found.
-   */
-  public static class DomainNotFoundException extends DomainException {
-    public DomainNotFoundException(DomainName domainName) {
-      super(domainName);
-    }
-  }
-
-  /**
-   * Thrown when this server is not authoritative for the
-   * domain being looked up.
-   * <p/>
-   * e.g. when looking up a .com domain at the .be registry
-   */
-  public static class NotAuthoritativeException extends DomainException {
-    public NotAuthoritativeException(DomainName domainName) {
-      super(domainName);
-    }
-  }
-
   @Autowired
   private DomainService domainService;
 
   @RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public Domain get(@PathVariable("domainName") final String domainName) {
+  public Domain get(@PathVariable("domainName") final String domainName) throws Error {
     LOGGER.debug("Query for domain {}", domainName);
-    DomainName dn = DomainName.of(domainName);
-    Domain result = domainService.getDomain(dn);
-    if (result == null) {
-      LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFoundException", domainName);
-      throw new DomainNotFoundException(dn);
+    final DomainName dn;
+    try {
+      dn = DomainName.of(domainName);
+    } catch (LabelException.IDNParseException e) {
+      List<String> description = new ArrayList<String>(e.getErrors().size());
+      for (IDNA.Error error : e.getErrors()) description.add(error.name());
+      throw new be.dns.rdap.core.Error(400, "Invalid domain name", description);
     }
-    return result;
+    try {
+      Domain result = domainService.getDomain(dn);
+      if (result == null) {
+        LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFoundException", domainName);
+        throw new Error.DomainNotFound(dn);
+      }
+      return result;
+    } catch (Error e) {
+      throw e;
+    } catch (Throwable t) {
+      LOGGER.error("Some errors not handled", t);
+      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+    }
   }
 
-  @RequestMapping(value = "/{domainName}/redirect/{redirect}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+  @ExceptionHandler(value = Error.NotAuthoritative.class)
   @ResponseBody
-  public Domain get(@PathVariable("domainName") final String domainName, @PathVariable final int redirect) {
-    if (redirect > redirectThreshold) {
-      LOGGER.debug("Exceeded threshold for domain name {}. Current: {} Max: {}", domainName, redirect, redirectThreshold);
-      throw new DomainNotFoundException(DomainName.of(domainName));
-    }
-    return get(domainName);
-  }
-
-  @ExceptionHandler(value = NotAuthoritativeException.class)
-  @ResponseStatus(value = HttpStatus.MOVED_PERMANENTLY)
-  @ResponseBody
-  protected Domain handleNotAuthoritativeException(NotAuthoritativeException ex, HttpServletRequest request, HttpServletResponse response) {
-    String location = baseRedirectURL + "/domain/" + ex.getDomainName().getStringValue() + "/redirect/";
-    String requestURI = request.getRequestURI();
-    Pattern pattern = Pattern.compile(".*/redirect/(\\d+).*", Pattern.CASE_INSENSITIVE);
-    Matcher matcher = pattern.matcher(requestURI);
-    if (matcher.matches()) {
-      long number = Long.parseLong(matcher.group(1));
-      location += number + 1;
-    } else {
-      location += 1;
-    }
+  protected Error handleResourceNotFoundException(Error.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
+    response.setStatus(error.getErrorCode());
+    String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName().getStringValue(), "UTF-8");
     response.addHeader(LOCATION_HEADER, location);
-    // TODO: handler method in DomainService to create a domain object to return
-    return new Domain.Builder().setLDHName(ex.getDomainName().toLDH().getStringValue()).build();
+    return error;
   }
 
-  @ExceptionHandler(value = DomainNotFoundException.class)
-  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  @ExceptionHandler(value = Error.class)
   @ResponseBody
-  protected Domain handleResourceNotFoundException(DomainNotFoundException ex, HttpServletResponse response) {
-    // TODO: handler method in DomainService to create a domain object to return
-    return new Domain.Builder().setLDHName(ex.getDomainName().toLDH().getStringValue()).build();
+  protected Error handleResourceNotFoundException(Error error, HttpServletResponse response) {
+    response.setStatus(error.getErrorCode());
+    return error;
   }
+
+
 
 }

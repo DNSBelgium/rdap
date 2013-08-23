@@ -71,11 +71,6 @@ public class RDAPCLI {
 
     AnsiConsole.systemInstall();
 
-//    System.out.println(Locale.getDefault());
-
-    //System.out.println( ansi().eraseScreen().fg(RED).a("Hello").fg(GREEN).a(" World").reset() );
-//    if (true) return;
-
     LOGGER.debug("Create the command line parser");
     CommandLineParser parser = new GnuParser();
 

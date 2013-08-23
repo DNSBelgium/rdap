@@ -21,7 +21,8 @@ package be.dns.rdap;
  */
 
 import be.dns.core.DomainName;
-import be.dns.rdap.core.Domain;
+import be.dns.rdap.core.*;
+import be.dns.rdap.core.Error;
 import be.dns.rdap.jackson.CustomObjectMapper;
 import be.dns.rdap.service.DomainService;
 import org.junit.After;
@@ -50,6 +51,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -116,6 +118,13 @@ public class DomainControllerTest {
   }
 
   @Test
+  public void testNotAuthoritative() throws Exception {
+    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenThrow(new Error.NotAuthoritative(DomainName.of("example")));
+    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    mockMvc.perform(get("/domain/example")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/domain/example"));
+  }
+
+  @Test
   public void testDefault() throws Exception {
     Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(new Domain.Builder().setLDHName("example.com").build());
     MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -143,46 +152,13 @@ public class DomainControllerTest {
   }
 
   @Test
-  public void testNotAuthoritative() throws Exception {
-    Mockito
-        .when(domainService.getDomain(Mockito.any(DomainName.class)))
-        .thenThrow(new DomainController.NotAuthoritativeException(DomainName.of("example.com")));
+  public void testIDNParseException() throws Exception {
     MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    mockMvc.perform(get("/domain/example")
+    mockMvc.perform(get("/domain/-\u2620-.be")
         .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-        .andExpect(status().isMovedPermanently())
-        .andExpect(header().string("Location", REDIRECT_URL + "/domain/example.com/redirect/1"))
-        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"ldhName\":\"example.com\"}"));
-  }
-
-  @Test
-  public void testNotAuthoritativeWithPreviousRedirect() throws Exception {
-    DomainController.NotAuthoritativeException notAuthoritativeException = new DomainController.NotAuthoritativeException(DomainName.of("example.com"));
-    Mockito
-        .when(domainService.getDomain(Mockito.any(DomainName.class)))
-        .thenThrow(notAuthoritativeException);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    mockMvc.perform(get("/domain/example/redirect/1")
-        .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-        .andExpect(status().isMovedPermanently())
-        .andExpect(header().string("Location", REDIRECT_URL + "/domain/example.com/redirect/2"))
-        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"ldhName\":\"example.com\"}"));
-  }
-
-  @Test
-  public void testNotAuthoritativeTooManyRedirects() throws Exception {
-    DomainController.NotAuthoritativeException notAuthoritativeException = new DomainController.NotAuthoritativeException(DomainName.of("example.com"));
-    Mockito
-        .when(domainService.getDomain(Mockito.any(DomainName.class)))
-        .thenThrow(notAuthoritativeException);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    mockMvc.perform(get("/domain/example/redirect/4")
-        .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-        .andExpect(status().isNotFound())
-        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"ldhName\":\"example\"}"));
+        .andExpect(header().string("Content-type", Controllers.CONTENT_TYPE))
+        .andExpect(content().string("{\"errorCode\":400,\"title\":\"Invalid domain name\",\"description\":[\"LEADING_HYPHEN\",\"TRAILING_HYPHEN\",\"DISALLOWED\"]}"))
+        .andExpect(status().isBadRequest());
   }
 
 }

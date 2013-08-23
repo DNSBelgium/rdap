@@ -12,7 +12,7 @@
     <url>http://www.dnsbelgium.be</url>
   </organization>
   <inceptionYear>2013</inceptionYear>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <prerequisites>
     <maven>2.2.1</maven>
   </prerequisites>
