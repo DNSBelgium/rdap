@@ -4,13 +4,13 @@
   <groupId>be.dnsbelgium.rdap</groupId>
   <artifactId>client</artifactId>
   <packaging>jar</packaging>
-  <version>0.2.1</version>
+  <version>0.2.2</version>
   <name>Client</name>
   <url>http://maven.apache.org</url>
     <parent>
         <groupId>be.dnsbelgium</groupId>
         <artifactId>rdap</artifactId>
-        <version>0.2.1</version>
+        <version>0.2.2</version>
     </parent>
   <dependencies>
     <dependency>
