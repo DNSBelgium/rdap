@@ -75,18 +75,16 @@ public final class DomainController {
     final DomainName dn;
     try {
       dn = DomainName.of(domainName);
-    } catch (LabelException.IDNParseException e) {
-      List<String> description = new ArrayList<String>(e.getErrors().size());
-      for (IDNA.Error error : e.getErrors()) description.add(error.name());
-      throw new be.dns.rdap.core.Error(400, "Invalid domain name", description);
-    }
-    try {
       Domain result = domainService.getDomain(dn);
       if (result == null) {
         LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFoundException", domainName);
         throw new Error.DomainNotFound(dn);
       }
       return result;
+    } catch (LabelException.IDNParseException e) {
+      List<String> description = new ArrayList<String>(e.getErrors().size());
+      for (IDNA.Error error : e.getErrors()) description.add(error.name());
+      throw new be.dns.rdap.core.Error(400, "Invalid domain name", description);
     } catch (Error e) {
       throw e;
     } catch (Throwable t) {
