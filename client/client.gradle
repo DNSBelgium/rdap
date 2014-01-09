@@ -1,0 +1,49 @@
+apply plugin: 'application'
+
+mainClassName = 'be.dnsbelgium.rdap.client.RDAPCLI'
+
+configurations {
+  rpm 
+}
+
+dependencies {
+  compile project(':rdap-core')
+  compile lib.httpclient, lib.jansi, lib.commons_cli
+  testCompile lib.junit
+  rpm 'org.redline-rpm:redline:1.1.12'
+}
+
+task clientRpm(dependsOn: distZip) << {
+
+  def rpmDir = new File("${buildDir}/rpms")
+  rpmDir.mkdirs()
+
+  logger.debug 'creating man file'
+  ant.gzip(src: 'src/man/rdap', destfile: "${buildDir}/rdap.1.gz")
+
+  def unzippedDir = new File(buildDir, 'unzipped')
+  unzippedDir.mkdirs()
+  ant.unzip(src: "${distsDir}/rdap-client-${version}.zip", dest: unzippedDir.canonicalPath)
+
+  FileTree redlineDeps = configurations.rpm.asFileTree
+  ant.taskdef(name: 'redlinerpm', classname: 'org.freecompany.redline.ant.RedlineTask', classpath: redlineDeps.asPath)
+  ant.redlinerpm(
+      group: 'Applications/Internet', 
+      description: 'RDAP client',  
+      name: project.name, 
+      version: project.version, 
+      release: '1',
+      license: 'Apache License, Version 2.0',
+      architecture: 'NOARCH', 
+      destination: rpmDir) {
+    tarfileset(prefix: '/opt/rdap/bin', dir: unzippedDir.canonicalPath+"/rdap-client-${version}/bin", filemode: '744') 
+    tarfileset(prefix: '/opt/rdap/lib', dir: unzippedDir.canonicalPath+"/rdap-client-${version}/lib") 
+    link(target: '/opt/rdap/bin/rdap-client', path: '/usr/bin/rdap')
+    tarfileset(prefix: '/usr/share/man/man1', dir: 'build') {
+      include(name: 'rdap.1.gz')
+    } 
+    
+  }
+
+}
+

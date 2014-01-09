@@ -1,0 +1,6 @@
+apply plugin: 'groovy'
+
+dependencies {
+  compile lib.jackson, lib.slf4j, lib.guava, lib.joda_time, lib.commons_lang, lib.icu4j
+  testCompile lib.junit, lib.groovy
+}

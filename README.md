@@ -28,12 +28,12 @@ You can also set a System property with
 
 Implement MyDomainService
 
-    import be.dns.core.DomainName;
-    import be.dns.rdap.DomainController;
-    import be.dns.rdap.core.Notice;
-    import be.dns.rdap.core.Status;
-    import be.dns.rdap.service.DomainService;
-    import be.dns.rdap.core.Domain;
+    import be.dnsbelgium.core.DomainName;
+    import be.dnsbelgium.rdap.DomainController;
+    import be.dnsbelgium.rdap.core.Notice;
+    import be.dnsbelgium.rdap.core.Status;
+    import be.dnsbelgium.rdap.service.DomainService;
+    import be.dnsbelgium.rdap.core.Domain;
     import com.google.common.collect.Lists;
 
     import javax.annotation.Resource;
@@ -62,7 +62,7 @@ Although the standard doesn't allow you, you can get the Accept-Language header 
 
 # RDAP Extensions
 
-Simply extend the be.dns.rdap.core objects
+Simply extend the be.dnsbelgium.rdap.core objects
 
 Make sure you use the @JsonGenerator annotations in case of immutable objects. E.g. extending Notice
 
@@ -92,9 +92,9 @@ Make sure you use the @JsonGenerator annotations in case of immutable objects. E
 Simply add Properties with custom names. In case of a new type, you must create a serializer for it and register it in the CustomObjectMapper
 (extend CustomObjectMapper, add the Serializer in the construc
 
-    package be.dns.weirds.spring.rest;
+    package be.dnsbelgium.weirds.spring.rest;
 
-    import be.dns.rdap.jackson.CustomObjectMapper;
+    import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
     import org.codehaus.jackson.JsonGenerator;
     import org.codehaus.jackson.map.JsonSerializer;
     import org.codehaus.jackson.map.ObjectMapper;
