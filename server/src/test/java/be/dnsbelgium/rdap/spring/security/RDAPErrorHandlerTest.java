@@ -41,7 +41,7 @@ public class RDAPErrorHandlerTest {
     RDAPErrorHandler errorHandler = new RDAPErrorHandler();
     MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpServletResponse response = new MockHttpServletResponse();
-    RDAPErrorException exception = new RDAPErrorException(499, "title", (String) null);
+    RDAPErrorException exception = new RDAPErrorException(499, "title", (String[]) null);
     errorHandler.handle(request, response, exception);
     Assert.assertEquals("{\"errorCode\":499,\"title\":\"title\"}", response.getContentAsString());
   }

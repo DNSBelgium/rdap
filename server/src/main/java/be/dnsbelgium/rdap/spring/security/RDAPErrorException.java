@@ -45,7 +45,7 @@ public class RDAPErrorException extends AccessDeniedException {
   }
 
   public RDAPErrorException(int errorCode, String title) {
-    this(errorCode, title, (String) null);
+    this(errorCode, title, (String[]) null);
   }
 
   @JsonProperty
