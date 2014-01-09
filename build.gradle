@@ -106,10 +106,10 @@ subprojects {
   }
 
   test {
-    forkEvery = 5
-    maxParallelForks = Runtime.runtime.availableProcessors() - 1
+    //forkEvery = 5
+    //maxParallelForks = Runtime.runtime.availableProcessors() - 1
     testLogging {
-      exceptionFormat "full"
+      //exceptionFormat "full"
       //events 'started', 'passed', 'skipped', 'failed'
     }
   }
