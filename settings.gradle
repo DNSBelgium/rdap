@@ -1,0 +1,8 @@
+include 'core', 'client', 'server'
+
+rootProject.name = 'rdap'
+
+rootProject.children.each { 
+  it.buildFileName = it.name + '.gradle'
+  it.name = rootProject.name + '-' + it.name
+} 
