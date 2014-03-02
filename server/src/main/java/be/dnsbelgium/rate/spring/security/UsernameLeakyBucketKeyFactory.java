@@ -15,12 +15,12 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
-import be.dnsbelgium.rate.UsernameLazyLeakyBucketKey;
+import be.dnsbelgium.rate.UsernameLeakyBucketKey;
 import org.springframework.security.core.context.SecurityContext;
 
-public class UsernameLazyLeakyBucketKeyFactory implements LazyLeakyBucketKeyFactory<UsernameLazyLeakyBucketKey> {
+public class UsernameLeakyBucketKeyFactory implements LeakyBucketKeyFactory<UsernameLeakyBucketKey> {
   @Override
-  public UsernameLazyLeakyBucketKey create(SecurityContext context) {
-    return new UsernameLazyLeakyBucketKey(context.getAuthentication().getName());
+  public UsernameLeakyBucketKey create(SecurityContext context) {
+    return new UsernameLeakyBucketKey(context.getAuthentication().getName());
   }
 }

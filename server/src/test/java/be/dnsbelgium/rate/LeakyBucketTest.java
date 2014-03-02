@@ -21,13 +21,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class LazyLeakyBucketTest {
+public class LeakyBucketTest {
 
   @Test
   public void testBucket() throws InterruptedException {
     long current = DateTimeUtils.currentTimeMillis();
     DateTimeUtils.setCurrentMillisFixed(current);
-    LazyLeakyBucket bucket = new LazyLeakyBucket(10, 1);
+    LeakyBucket bucket = new LeakyBucket(10, 1);
     assertEquals(0, bucket.getLevel());
     assertTrue(bucket.add(9));
     assertEquals(9, bucket.getLevel());
@@ -48,7 +48,7 @@ public class LazyLeakyBucketTest {
     Assert.assertThrows(new Assert.Closure() {
       @Override
       public void execute() throws Throwable {
-        new LazyLeakyBucket(10, 1).add(-1);
+        new LeakyBucket(10, 1).add(-1);
       }
     }, IllegalArgumentException.class, "Should throw IllegalArgumentException when negative amount");
   }

@@ -16,9 +16,9 @@
 package be.dnsbelgium.rate;
 
 /**
- * A key for looking up LazyLeakyBuckets in a LeakyBucketFactory
+ * A key for looking up LeakyBuckets in a LeakyBucketFactory
  *
  * All implementations must properly implement Object.equals() and Object.hashCode()
  */
-public interface LazyLeakyBucketKey {
+public interface LeakyBucketKey {
 }

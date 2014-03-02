@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class LazyLeakyBucketServiceImpl implements LazyLeakyBucketService {
+public class LeakyBucketServiceImpl implements LeakyBucketService {
 
-  public static final Logger logger = LoggerFactory.getLogger(LazyLeakyBucketServiceImpl.class);
+  public static final Logger logger = LoggerFactory.getLogger(LeakyBucketServiceImpl.class);
 
   public static class TimestampedItem<T extends Object> {
     private final T item;
@@ -32,7 +32,7 @@ public class LazyLeakyBucketServiceImpl implements LazyLeakyBucketService {
   }
 
 
-  private final LoadingCache<LazyLeakyBucketKey, TimestampedItem<LazyLeakyBucket>> cache;
+  private final LoadingCache<LeakyBucketKey, TimestampedItem<LeakyBucket>> cache;
 
   private final long ttl;
 
@@ -42,37 +42,37 @@ public class LazyLeakyBucketServiceImpl implements LazyLeakyBucketService {
 
   private final TimeUnit refreshTimeUnit;
 
-  private final LazyLeakyBucketDao lazyLeakyBucketDao;
+  private final LeakyBucketDao leakyBucketDao;
 
-  public LazyLeakyBucketServiceImpl(final long ttl, final TimeUnit timeUnit, long refreshRate, TimeUnit refreshTimeUnit, LazyLeakyBucketDao lazyLeakyBucketDao) {
+  public LeakyBucketServiceImpl(final long ttl, final TimeUnit timeUnit, long refreshRate, TimeUnit refreshTimeUnit, LeakyBucketDao leakyBucketDao) {
 
     this.ttl = ttl;
     this.timeUnit = timeUnit;
     this.refreshRate = refreshRate;
     this.refreshTimeUnit = refreshTimeUnit;
-    this.lazyLeakyBucketDao = lazyLeakyBucketDao;
+    this.leakyBucketDao = leakyBucketDao;
 
     cache = CacheBuilder.newBuilder()
         .expireAfterAccess(this.ttl, this.timeUnit)
         .build(
-            new CacheLoader<LazyLeakyBucketKey, TimestampedItem<LazyLeakyBucket>>() {
+            new CacheLoader<LeakyBucketKey, TimestampedItem<LeakyBucket>>() {
 
               @Override
-              public TimestampedItem<LazyLeakyBucket> load(LazyLeakyBucketKey key) throws Exception {
+              public TimestampedItem<LeakyBucket> load(LeakyBucketKey key) throws Exception {
                 logger.debug("Load bucket for key {}", key);
-                return new TimestampedItem<LazyLeakyBucket>(LazyLeakyBucketServiceImpl.this.lazyLeakyBucketDao.load(key));
+                return new TimestampedItem<LeakyBucket>(LeakyBucketServiceImpl.this.leakyBucketDao.load(key));
               }
 
               @Override
-              public ListenableFuture<TimestampedItem<LazyLeakyBucket>> reload(LazyLeakyBucketKey key, TimestampedItem<LazyLeakyBucket> oldValue) throws Exception {
+              public ListenableFuture<TimestampedItem<LeakyBucket>> reload(LeakyBucketKey key, TimestampedItem<LeakyBucket> oldValue) throws Exception {
                 logger.debug("Reload bucket for key {}", key);
-                LazyLeakyBucket newBucket = LazyLeakyBucketServiceImpl.this.lazyLeakyBucketDao.load(key);
+                LeakyBucket newBucket = LeakyBucketServiceImpl.this.leakyBucketDao.load(key);
                 if (newBucket.getCapacity() == oldValue.getItem().getCapacity() && newBucket.getRate() == oldValue.getItem().getRate()) {
                   logger.debug("Configuration is the same, return the old");
-                  return Futures.immediateFuture(new TimestampedItem<LazyLeakyBucket>(oldValue.getItem()));
+                  return Futures.immediateFuture(new TimestampedItem<LeakyBucket>(oldValue.getItem()));
                 }
                 logger.debug("Configuration has changed, return new leaky bucket with capacity {} and rate {}", newBucket.getCapacity(), newBucket.getRate());
-                return Futures.immediateFuture(new TimestampedItem<LazyLeakyBucket>(newBucket));
+                return Futures.immediateFuture(new TimestampedItem<LeakyBucket>(newBucket));
 
               }
             }
@@ -80,9 +80,9 @@ public class LazyLeakyBucketServiceImpl implements LazyLeakyBucketService {
   }
 
   @Override
-  public boolean add(LazyLeakyBucketKey key, int amount) {
+  public boolean add(LeakyBucketKey key, int amount) {
     logger.debug("Adding {} to key {}", amount, key);
-    TimestampedItem<LazyLeakyBucket> value;
+    TimestampedItem<LeakyBucket> value;
     try {
       value = cache.get(key);
     } catch (ExecutionException e) {

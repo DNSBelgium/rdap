@@ -15,8 +15,8 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
-import be.dnsbelgium.rate.LazyLeakyBucketKey;
-import be.dnsbelgium.rate.LazyLeakyBucketService;
+import be.dnsbelgium.rate.LeakyBucketKey;
+import be.dnsbelgium.rate.LeakyBucketService;
 import be.dnsbelgium.rdap.spring.security.RDAPErrorException;
 import org.junit.After;
 import org.junit.Before;
@@ -35,13 +35,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
-public class LazyLeakyBucketVoterTest {
+public class LeakyBucketVoterTest {
 
   private static final String USERNAME = "bob";
   public static final int DEFAULT_AMOUNT = 1;
   public static final int CONFIG_AMOUNT = 2;
-  public static final String LB_CONFIG = LazyLeakyBucketVoter.PREFIX + "#" + CONFIG_AMOUNT;
-  private UsernameLazyLeakyBucketKeyFactory keyFactory;
+  public static final String LB_CONFIG = LeakyBucketVoter.PREFIX + "#" + CONFIG_AMOUNT;
+  private UsernameLeakyBucketKeyFactory keyFactory;
 
   @Before
   public void setup() {
@@ -49,7 +49,7 @@ public class LazyLeakyBucketVoterTest {
     context.setAuthentication(new TestingAuthenticationToken(USERNAME, null));
     SecurityContextHolder.setContext(context);
 
-    keyFactory = new UsernameLazyLeakyBucketKeyFactory();
+    keyFactory = new UsernameLeakyBucketKeyFactory();
   }
 
   @After
@@ -59,107 +59,107 @@ public class LazyLeakyBucketVoterTest {
 
   @Test
   public void testEmptyBucket() {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(CONFIG_AMOUNT))).thenReturn(true);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(CONFIG_AMOUNT))).thenReturn(true);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
     assertEquals(
         AccessDecisionVoter.ACCESS_GRANTED,
         voter.vote(authentication, securedObject, SecurityConfig.createList(LB_CONFIG)));
-    verify(service, times(1)).add(any(LazyLeakyBucketKey.class), eq(CONFIG_AMOUNT));
+    verify(service, times(1)).add(any(LeakyBucketKey.class), eq(CONFIG_AMOUNT));
   }
 
   @Test(expected = RDAPErrorException.class)
   public void testFullBucket() {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(CONFIG_AMOUNT))).thenReturn(false);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(CONFIG_AMOUNT))).thenReturn(false);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
     try {
       voter.vote(authentication, securedObject, SecurityConfig.createList(LB_CONFIG));
     } catch (RDAPErrorException rde) {
-      verify(service, times(1)).add(any(LazyLeakyBucketKey.class), eq(CONFIG_AMOUNT));
+      verify(service, times(1)).add(any(LeakyBucketKey.class), eq(CONFIG_AMOUNT));
       throw rde;
     }
   }
 
   @Test
   public void testNoLeakyBucketConfigAttributes() {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
     assertEquals(
         AccessDecisionVoter.ACCESS_GRANTED,
         voter.vote(authentication, securedObject, SecurityConfig.createList("ROLE_USER")));
-    verify(service, times(1)).add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT));
+    verify(service, times(1)).add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT));
 
   }
 
 
   @Test
   public void testNullConfigAttributes() {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
     assertEquals(
         AccessDecisionVoter.ACCESS_GRANTED,
         voter.vote(authentication, securedObject, null));
-    verify(service, times(1)).add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT));
+    verify(service, times(1)).add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT));
   }
 
   @Test
   public void testNoNumber() throws Exception {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
     assertEquals(
         AccessDecisionVoter.ACCESS_GRANTED,
-        voter.vote(authentication, securedObject, SecurityConfig.createList(LazyLeakyBucketVoter.PREFIX + "#A")));
-    verify(service, times(1)).add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT));
+        voter.vote(authentication, securedObject, SecurityConfig.createList(LeakyBucketVoter.PREFIX + "#A")));
+    verify(service, times(1)).add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT));
   }
 
   @Test
   public void testNegativeNumber() throws Exception {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
 
     assertEquals(
         AccessDecisionVoter.ACCESS_GRANTED,
-        voter.vote(authentication, securedObject, SecurityConfig.createList(LazyLeakyBucketVoter.PREFIX + "#" + (-DEFAULT_AMOUNT))));
-    verify(service, never()).add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT));
+        voter.vote(authentication, securedObject, SecurityConfig.createList(LeakyBucketVoter.PREFIX + "#" + (-DEFAULT_AMOUNT))));
+    verify(service, never()).add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT));
   }
 
   @Test
   public void testEmptyNumber() throws Exception {
-    LazyLeakyBucketService service = mock(LazyLeakyBucketService.class);
-    when(service.add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
+    LeakyBucketService service = mock(LeakyBucketService.class);
+    when(service.add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT))).thenReturn(true);
+    final LeakyBucketVoter voter = new LeakyBucketVoter(service, keyFactory, DEFAULT_AMOUNT);
     final Authentication authentication = mock(Authentication.class);
     final Object securedObject = mock(Object.class);
 
     assertEquals(
         AccessDecisionVoter.ACCESS_GRANTED,
-        voter.vote(authentication, securedObject, SecurityConfig.createList(LazyLeakyBucketVoter.PREFIX + "#")));
-    verify(service, times(1)).add(any(LazyLeakyBucketKey.class), eq(DEFAULT_AMOUNT));
+        voter.vote(authentication, securedObject, SecurityConfig.createList(LeakyBucketVoter.PREFIX + "#")));
+    verify(service, times(1)).add(any(LeakyBucketKey.class), eq(DEFAULT_AMOUNT));
   }
 
   @Test
   @SuppressWarnings("unchecked")
   public void testSupportsConfigAttribute() {
-    final LazyLeakyBucketVoter voter = new LazyLeakyBucketVoter(mock(LazyLeakyBucketService.class), keyFactory, DEFAULT_AMOUNT);
-    assertEquals(true, voter.supports(new SecurityConfig(LazyLeakyBucketVoter.PREFIX + "ANY_SUFFIX")));
-    assertEquals(false, voter.supports(new SecurityConfig("NOT" + LazyLeakyBucketVoter.PREFIX + "ANY_SUFFIX")));
+    final LeakyBucketVoter voter = new LeakyBucketVoter(mock(LeakyBucketService.class), keyFactory, DEFAULT_AMOUNT);
+    assertEquals(true, voter.supports(new SecurityConfig(LeakyBucketVoter.PREFIX + "ANY_SUFFIX")));
+    assertEquals(false, voter.supports(new SecurityConfig("NOT" + LeakyBucketVoter.PREFIX + "ANY_SUFFIX")));
     assertEquals(false, voter.supports(new ConfigAttribute() {
       @Override
       public String getAttribute() {

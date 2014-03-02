@@ -15,8 +15,8 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
-import be.dnsbelgium.rate.LazyLeakyBucketKey;
-import be.dnsbelgium.rate.LazyLeakyBucketService;
+import be.dnsbelgium.rate.LeakyBucketKey;
+import be.dnsbelgium.rate.LeakyBucketService;
 import be.dnsbelgium.rdap.spring.security.RDAPErrorException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -28,13 +28,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collection;
 
-public class LazyLeakyBucketVoter<T extends LazyLeakyBucketKey> implements AccessDecisionVoter<Object> {
+public class LeakyBucketVoter<T extends LeakyBucketKey> implements AccessDecisionVoter<Object> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LazyLeakyBucketVoter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LeakyBucketVoter.class);
 
   public static final int TOO_MANY_REQUESTS_HTTP_CODE = 429;
 
-  private final LazyLeakyBucketService lazyLeakyBucketService;
+  private final LeakyBucketService leakyBucketService;
 
   private final int defaultAmount;
 
@@ -42,12 +42,12 @@ public class LazyLeakyBucketVoter<T extends LazyLeakyBucketKey> implements Acces
 
   public static final String SEPARATOR = "#";
 
-  private final LazyLeakyBucketKeyFactory<T> keyFactory;
+  private final LeakyBucketKeyFactory<T> keyFactory;
 
-  public LazyLeakyBucketVoter(LazyLeakyBucketService lazyLeakyBucketService, LazyLeakyBucketKeyFactory<T> keyFactory, int defaultAmount) {
+  public LeakyBucketVoter(LeakyBucketService leakyBucketService, LeakyBucketKeyFactory<T> keyFactory, int defaultAmount) {
     this.keyFactory = keyFactory;
     this.defaultAmount = defaultAmount;
-    this.lazyLeakyBucketService = lazyLeakyBucketService;
+    this.leakyBucketService = leakyBucketService;
   }
 
   @Override
@@ -82,7 +82,7 @@ public class LazyLeakyBucketVoter<T extends LazyLeakyBucketKey> implements Acces
     int result = ACCESS_DENIED;
     T key = keyFactory.create(SecurityContextHolder.getContext());
     try {
-      if (lazyLeakyBucketService.add(key, amount)) {
+      if (leakyBucketService.add(key, amount)) {
         result = ACCESS_GRANTED;
       }
     } catch (IllegalArgumentException iae) {

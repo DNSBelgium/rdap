@@ -17,11 +17,11 @@ package be.dnsbelgium.rate;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-public class UsernameLazyLeakyBucketKey implements LazyLeakyBucketKey {
+public class UsernameLeakyBucketKey implements LeakyBucketKey {
 
   private final String userId;
 
-  public UsernameLazyLeakyBucketKey(String userId) {
+  public UsernameLeakyBucketKey(String userId) {
     this.userId = userId;
   }
 
@@ -43,7 +43,7 @@ public class UsernameLazyLeakyBucketKey implements LazyLeakyBucketKey {
       return false;
     }
 
-    UsernameLazyLeakyBucketKey that = (UsernameLazyLeakyBucketKey) o;
+    UsernameLeakyBucketKey that = (UsernameLeakyBucketKey) o;
 
     return userId.equals(that.userId);
 

@@ -15,14 +15,14 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
-import be.dnsbelgium.rate.LazyLeakyBucketKey;
+import be.dnsbelgium.rate.LeakyBucketKey;
 import org.springframework.security.core.context.SecurityContext;
 
 /**
- * A Factory for creating LazyLeakyBucketKeys. The current SecurityContext is provided
+ * A Factory for creating LeakyBucketKeys. The current SecurityContext is provided
  * @param <T>
  */
-public interface LazyLeakyBucketKeyFactory<T extends LazyLeakyBucketKey> {
+public interface LeakyBucketKeyFactory<T extends LeakyBucketKey> {
 
   T create(SecurityContext context);
 

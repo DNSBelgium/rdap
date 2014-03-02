@@ -23,16 +23,16 @@ import org.slf4j.LoggerFactory;
  * Leaky Bucket as a meter implementation
  * with lazy update of the bucket level.
  */
-public class LazyLeakyBucket {
+public class LeakyBucket {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(LazyLeakyBucket.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LeakyBucket.class);
   public static final int MILLIS_PER_SECOND = 1000;
 
   /**
    * Level of the bucket at timestamp lastUpdate.
-   * Use LazyLeakyBucket#getLevel to get the current level
+   * Use LeakyBucket#getLevel to get the current level
    *
-   * @see LazyLeakyBucket#lastUpdate
+   * @see LeakyBucket#lastUpdate
    */
   private int level;
 
@@ -49,7 +49,7 @@ public class LazyLeakyBucket {
   /**
    * DateTime when the level was last updated.
    *
-   * @see LazyLeakyBucket#level
+   * @see LeakyBucket#level
    */
   private DateTime lastUpdate;
 
@@ -57,7 +57,7 @@ public class LazyLeakyBucket {
    * @param capacity total number of tokens
    * @param rate     number of tokens to be added per second
    */
-  public LazyLeakyBucket(final int capacity, final int rate) {
+  public LeakyBucket(final int capacity, final int rate) {
     this.level = 0;
     this.capacity = capacity;
     this.rate = rate;
