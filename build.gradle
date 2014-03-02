@@ -1,8 +1,5 @@
 apply plugin: 'sonar-runner'
 
-import be.dnsbelgium.bintray.*
-
-
 buildscript {
 
   repositories {
@@ -115,7 +112,7 @@ subprojects {
   }
 
   tasks.withType(JavaCompile) {
-    options.compilerArgs << "-Xlint:all"
+    //options.compilerArgs << "-Xlint:all"
   }
 
   signing {
@@ -146,9 +143,14 @@ subprojects {
     repositories {
       mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-        repository(url: "${bintray_api_base_url}/maven/dnsbelgium/rdap/${project.projectDir.name}") {
-          authentication(userName: bintray_username, password: bintray_api_key)
+        if (uploadToBintray.toBoolean()) {
+          repository(url: "${bintray_api_base_url}/maven/dnsbelgium/rdap/${project.projectDir.name}") {
+            authentication(userName: bintray_username, password: bintray_api_key)
+          }
+        } else {
+          repository(url: sonatype_staging_url) {
+            authentication(userName: sonatype_username, password: sonatype_password)
+          }
         }
 
         pom.project {
@@ -184,27 +186,5 @@ subprojects {
 
   }
 
-  task testje(type:CreateBintrayVersion) {
-    username bintray_username
-    password bintray_api_key
-    url bintray_api_base_url
-    subject 'dnsbelgium'
-    repo 'rdap'
-    pkg project.projectDir.name
-  }
-
 }
-
-
-
-task printVersion << {
-  println "Version is: $version"
-}
-
-tasks.printVersion {
-  onlyIf {
-    false
-  }
-}
-
 

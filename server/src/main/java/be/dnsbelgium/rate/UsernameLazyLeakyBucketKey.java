@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.dnsbelgium.rate.spring.security;
+package be.dnsbelgium.rate;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
-/**
-* Created by pieterv on 12/19/13.
-*/
 public class UsernameLazyLeakyBucketKey implements LazyLeakyBucketKey {
 
   private final String userId;
@@ -50,5 +47,10 @@ public class UsernameLazyLeakyBucketKey implements LazyLeakyBucketKey {
 
     return userId.equals(that.userId);
 
+  }
+
+  @Override
+  public String toString() {
+    return String.format("[%s]", userId);
   }
 }

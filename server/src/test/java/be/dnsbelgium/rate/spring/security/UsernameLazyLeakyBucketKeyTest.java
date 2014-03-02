@@ -15,6 +15,7 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
+import be.dnsbelgium.rate.UsernameLazyLeakyBucketKey;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;

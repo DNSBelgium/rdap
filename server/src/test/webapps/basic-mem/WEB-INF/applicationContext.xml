@@ -65,14 +65,17 @@
       <list>
         <bean class="be.dnsbelgium.rate.spring.security.LazyLeakyBucketVoter">
           <constructor-arg>
-            <bean class="org.apache.commons.pool.impl.GenericKeyedObjectPool">
+            <bean class="be.dnsbelgium.rate.LazyLeakyBucketServiceImpl">
+              <constructor-arg value="1"/>
+              <constructor-arg value="MINUTES" type="java.util.concurrent.TimeUnit"/>
+              <constructor-arg value="10"/>
+              <constructor-arg value="SECONDS" type="java.util.concurrent.TimeUnit"/>
               <constructor-arg>
-                <bean class="be.dnsbelgium.rate.pool.StaticLeakyBucketFactory">
-                  <constructor-arg value="5"/>
+                <bean class="be.dnsbelgium.rate.StaticLazyLeakyBucketDao">
+                  <constructor-arg value="10"/>
                   <constructor-arg value="1"/>
                 </bean>
               </constructor-arg>
-              <property name="maxActive" value="1"/>
             </bean>
           </constructor-arg>
           <constructor-arg><bean class="be.dnsbelgium.rate.spring.security.UsernameLazyLeakyBucketKeyFactory"/></constructor-arg>

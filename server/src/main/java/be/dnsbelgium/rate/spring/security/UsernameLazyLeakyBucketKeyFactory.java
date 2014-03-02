@@ -15,6 +15,7 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
+import be.dnsbelgium.rate.UsernameLazyLeakyBucketKey;
 import org.springframework.security.core.context.SecurityContext;
 
 public class UsernameLazyLeakyBucketKeyFactory implements LazyLeakyBucketKeyFactory<UsernameLazyLeakyBucketKey> {

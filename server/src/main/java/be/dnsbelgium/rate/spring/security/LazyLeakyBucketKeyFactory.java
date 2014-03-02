@@ -15,6 +15,7 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
+import be.dnsbelgium.rate.LazyLeakyBucketKey;
 import org.springframework.security.core.context.SecurityContext;
 
 /**
