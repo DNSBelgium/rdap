@@ -13,16 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.dnsbelgium.rate.spring.security;
-
-import org.springframework.security.core.context.SecurityContext;
+package be.dnsbelgium.rate;
 
 /**
- * A Factory for creating LazyLeakyBucketKeys. The current SecurityContext is provided
- * @param <T>
+ * A key for looking up LeakyBuckets in a LeakyBucketFactory
+ *
+ * All implementations must properly implement Object.equals() and Object.hashCode()
  */
-public interface LazyLeakyBucketKeyFactory<T extends LazyLeakyBucketKey> {
-
-  T create(SecurityContext context);
-
+public interface LeakyBucketKey {
 }

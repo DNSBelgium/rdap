@@ -15,10 +15,12 @@
  */
 package be.dnsbelgium.rate.spring.security;
 
-/**
- * A key for looking up LazyLeakyBuckets in a LeakyBucketFactory
- *
- * All implementations must properly implement Object.equals() and Object.hashCode()
- */
-public interface LazyLeakyBucketKey {
+import be.dnsbelgium.rate.UsernameLeakyBucketKey;
+import org.springframework.security.core.context.SecurityContext;
+
+public class UsernameLeakyBucketKeyFactory implements LeakyBucketKeyFactory<UsernameLeakyBucketKey> {
+  @Override
+  public UsernameLeakyBucketKey create(SecurityContext context) {
+    return new UsernameLeakyBucketKey(context.getAuthentication().getName());
+  }
 }

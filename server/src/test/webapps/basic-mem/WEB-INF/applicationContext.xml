@@ -63,19 +63,22 @@
         class="org.springframework.security.access.vote.UnanimousBased">
     <constructor-arg>
       <list>
-        <bean class="be.dnsbelgium.rate.spring.security.LazyLeakyBucketVoter">
+        <bean class="be.dnsbelgium.rate.spring.security.LeakyBucketVoter">
           <constructor-arg>
-            <bean class="org.apache.commons.pool.impl.GenericKeyedObjectPool">
+            <bean class="be.dnsbelgium.rate.LeakyBucketServiceImpl">
+              <constructor-arg value="1"/>
+              <constructor-arg value="MINUTES" type="java.util.concurrent.TimeUnit"/>
+              <constructor-arg value="10"/>
+              <constructor-arg value="SECONDS" type="java.util.concurrent.TimeUnit"/>
               <constructor-arg>
-                <bean class="be.dnsbelgium.rate.pool.StaticLeakyBucketFactory">
-                  <constructor-arg value="5"/>
+                <bean class="be.dnsbelgium.rate.StaticLeakyBucketDao">
+                  <constructor-arg value="10"/>
                   <constructor-arg value="1"/>
                 </bean>
               </constructor-arg>
-              <property name="maxActive" value="1"/>
             </bean>
           </constructor-arg>
-          <constructor-arg><bean class="be.dnsbelgium.rate.spring.security.UsernameLazyLeakyBucketKeyFactory"/></constructor-arg>
+          <constructor-arg><bean class="be.dnsbelgium.rate.spring.security.UsernameLeakyBucketKeyFactory"/></constructor-arg>
           <constructor-arg value="1"/>
         </bean>
         <bean class="org.springframework.security.access.vote.RoleVoter"/>
