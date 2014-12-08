@@ -1,16 +1,5 @@
 apply plugin: 'sonar-runner'
 
-buildscript {
-
-  repositories {
-    mavenCentral()
-  }
-
-  dependencies {
-    classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.6.0'
-  }
-}
-
 ext {
   cglib_version = '3.0'
   guava_version = '15.0'
@@ -74,15 +63,6 @@ allprojects {
 
   group 'be.dnsbelgium'
   version = '0.3' + (build_number? '.' + build_number: '')
-
-  apply plugin: 'license'
-
-  license {
-    ext.year = Calendar.getInstance().get(Calendar.YEAR)
-    ext.name = 'DNS Belgium vzw'
-    header rootProject.file('LICENSE')
-    strictCheck true
-  }
 
 }
 

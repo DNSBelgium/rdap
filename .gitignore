@@ -4,6 +4,7 @@ pom.xml.versionsBackup
 # intellij idea
 *.iml
 *.iws
+*.ipr
 .idea/
 classes/
 # gradle
