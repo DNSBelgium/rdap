@@ -31,7 +31,7 @@ import java.util.*;
 
 /**
  * <p>Usage:</p>
- * <p/>
+ * 
  * <pre>
  * Contact c = Contact.of(
  *   Contact.Property("fn", Text.of("John Doe")),

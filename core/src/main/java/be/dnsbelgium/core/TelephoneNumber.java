@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * E.164 Telephone Number
- * <p/>
+ *
  * Immutable, thread safe
  */
 public final class TelephoneNumber {
