@@ -21,7 +21,7 @@ import java.io.IOException;
 
 /**
  * CORS Filter.
- * <p/>
+ *
  * <a href="http://www.w3.org/TR/cors/">Cross-Origin Resource Sharing</a>
  */
 public class CORSFilter implements Filter {
