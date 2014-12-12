@@ -38,6 +38,7 @@ public class CustomObjectMapper extends ObjectMapper {
     super.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
     setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
     configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+    configure(SerializationConfig.Feature.WRITE_EMPTY_JSON_ARRAYS, false);
     SimpleModule simpleModule = new SimpleModule("SimpleModule",
         new Version(1, 0, 0, null));
 

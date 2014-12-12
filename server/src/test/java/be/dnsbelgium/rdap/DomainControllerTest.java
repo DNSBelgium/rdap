@@ -18,6 +18,7 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.Nameserver;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import be.dnsbelgium.rdap.service.DomainService;
 import org.junit.After;
@@ -120,6 +121,18 @@ public class DomainControllerTest {
     Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(new Domain.Builder().setLDHName("example.com").build());
     MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     mockMvc.perform(get("/domain/example")).andExpect(status().isOk()).andExpect(jsonPath("$.ldhName", "example.com").exists());
+  }
+
+  @Test
+  public void testNoGlue() throws Exception{
+    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).
+        thenReturn(
+            new Domain.Builder()
+                .setLDHName("example.com")
+                .addNameserver(new Nameserver.Builder().setLDHName(DomainName.of("ns.example.other")).build())
+                .build());
+    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    mockMvc.perform(get("/domain/example")).andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"ldhName\":\"example.com\",\"nameservers\":[{\"rdapConformance\":[\"rdap_level_0\"],\"ldhName\":\"ns.example.other\"}]}"));
   }
 
   @Test

@@ -24,6 +24,7 @@ import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -45,6 +46,11 @@ public final class Nameserver extends Common {
     }
 
     public IpAddresses(List<InetAddress> inetAddresses) {
+      if (inetAddresses == null) {
+        this.v4 = Collections.emptyList();
+        this.v6 = Collections.emptyList();
+        return;
+      }
       ImmutableList.Builder<String> v4Builder = new ImmutableList.Builder<String>();
       ImmutableList.Builder<String> v6Builder = new ImmutableList.Builder<String>();
       for (InetAddress addr : inetAddresses) {
@@ -145,7 +151,7 @@ public final class Nameserver extends Common {
     }
 
     public Nameserver build() {
-      return new Nameserver(null, null, null, null, null, null, null, null, null, ldhName, unicodeName, new IpAddresses(inetAddresses));
+      return new Nameserver(null, null, null, null, null, null, null, null, null, ldhName, unicodeName, (inetAddresses == null)? null:new IpAddresses(inetAddresses));
     }
   }
 }
