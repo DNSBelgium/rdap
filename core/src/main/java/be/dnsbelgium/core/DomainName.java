@@ -103,4 +103,18 @@ public class DomainName {
     return new DomainName(labelList);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof DomainName)) return false;
+
+    DomainName that = (DomainName) o;
+
+    return this.toLDH().getStringValue().equals(that.toLDH().getStringValue());
+  }
+
+  @Override
+  public int hashCode() {
+    return toLDH().getStringValue().hashCode();
+  }
 }
