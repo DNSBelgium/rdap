@@ -30,6 +30,7 @@ import java.util.Set;
 
 public final class Nameserver extends Common {
 
+  public static final String OBJECT_CLASS_NAME = "nameserver";
 
   public static class IpAddresses {
 
@@ -76,37 +77,21 @@ public final class Nameserver extends Common {
 
   }
 
-  private final String handle;
+  public String handle;
 
-  private final DomainName ldhName;
+  public DomainName ldhName;
 
-  private final DomainName unicodeName;
+  public DomainName unicodeName;
 
-  public IpAddresses getIpAddresses() {
-    return ipAddresses;
-  }
-
-  public DomainName getUnicodeName() {
-    return unicodeName;
-  }
-
-  public DomainName getLdhName() {
-    return ldhName;
-  }
-
-  public String getHandle() {
-    return handle;
-  }
-
-  private final IpAddresses ipAddresses;
+  public IpAddresses ipAddresses;
 
   @JsonCreator
   public Nameserver(
-      @JsonProperty("rdapConformance") Set<String> rdapConformance,
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
-      @JsonProperty("remarks") List<Notice> remarks,
+      @JsonProperty("remarks") List<Remark> remarks,
       @JsonProperty("lang") String lang,
+      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -114,44 +99,10 @@ public final class Nameserver extends Common {
       @JsonProperty("ldhName") DomainName ldhName,
       @JsonProperty("unicodeName") DomainName unicodeName,
       @JsonProperty("ipAddresses") IpAddresses ipAddresses) {
-    super(rdapConformance, links, notices, remarks, lang, events, status, port43);
+    super(links, notices, remarks, lang, objectClassName, events, status, port43);
     this.handle = handle;
     this.ldhName = ldhName;
     this.unicodeName = unicodeName;
     this.ipAddresses = ipAddresses;
-  }
-
-  public static class Builder {
-
-    private List<InetAddress> inetAddresses;
-
-    private DomainName ldhName;
-
-    private DomainName unicodeName;
-
-    public Builder addInetAddress(InetAddress addr) {
-      if (addr == null) {
-        return this;
-      }
-      if (inetAddresses == null) {
-        inetAddresses = new ArrayList<InetAddress>();
-      }
-      inetAddresses.add(addr);
-      return this;
-    }
-
-    public Builder setLDHName(DomainName ldhName) {
-      this.ldhName = ldhName;
-      return this;
-    }
-
-    public Builder setUnicodeName(DomainName unicodeName) {
-      this.unicodeName = unicodeName;
-      return this;
-    }
-
-    public Nameserver build() {
-      return new Nameserver(null, null, null, null, null, null, null, null, null, ldhName, unicodeName, (inetAddresses == null)? null:new IpAddresses(inetAddresses));
-    }
   }
 }

@@ -62,7 +62,8 @@ allprojects {
   ext.build_number = System.env.SOURCE_BUILD_NUMBER
 
   group 'be.dnsbelgium'
-  version = '0.3' + (build_number? '.' + build_number: '')
+  version = '1.0-SNAPSHOT'
+//  version = '1.0' + (build_number? '.' + build_number: '')
 
 }
 

@@ -15,7 +15,6 @@
  */
 package be.dnsbelgium.rdap.spring.security;
 
-import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

@@ -70,6 +70,8 @@ public final class DomainController {
       if (result == null) {
         LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFoundException", domainName);
         throw new Error.DomainNotFound(dn);
+      } else {
+        result.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
       }
       return result;
     } catch (LabelException.IDNParseException e) {
@@ -101,7 +103,6 @@ public final class DomainController {
     response.setStatus(error.getErrorCode());
     return error;
   }
-
 
   public int getRedirectThreshold() {
     return redirectThreshold;

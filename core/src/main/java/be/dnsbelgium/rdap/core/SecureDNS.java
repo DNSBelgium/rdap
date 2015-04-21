@@ -51,7 +51,11 @@ public class SecureDNS {
 
   @JsonCreator
   public SecureDNS(
-      @JsonProperty("zoneSigned") boolean zoneSigned, @JsonProperty("delegationSigned") boolean delegationSigned, @JsonProperty("maxSigLife") int maxSigLife, @JsonProperty("dsData") List<DSData> dsData, @JsonProperty("keyData") List<KeyData> keyData) {
+      @JsonProperty("zoneSigned") boolean zoneSigned,
+      @JsonProperty("delegationSigned") boolean delegationSigned,
+      @JsonProperty("maxSigLife") int maxSigLife,
+      @JsonProperty("dsData") List<DSData> dsData,
+      @JsonProperty("keyData") List<KeyData> keyData) {
     this.zoneSigned = zoneSigned;
     this.delegationSigned = delegationSigned;
     this.maxSigLife = maxSigLife;
@@ -91,13 +95,21 @@ public class SecureDNS {
 
     private final List<Event> events;
 
+    private final List<Link> links;
+
     @JsonCreator
-    public DSData(@JsonProperty("keyTag") int keyTag, @JsonProperty("algorithm") int algorithm, @JsonProperty("digest") String digest, @JsonProperty("digestType") int digestType, @JsonProperty("events") List<Event> events) {
+    public DSData(@JsonProperty("keyTag") int keyTag,
+                  @JsonProperty("algorithm") int algorithm,
+                  @JsonProperty("digest") String digest,
+                  @JsonProperty("digestType") int digestType,
+                  @JsonProperty("events") List<Event> events,
+                  @JsonProperty("links") List<Link> links) {
       this.keyTag = keyTag;
       this.algorithm = algorithm;
       this.digest = digest;
       this.digestType = digestType;
       this.events = events == null? new ImmutableList.Builder<Event>().build() : ImmutableList.copyOf(events);
+      this.links = links == null? new ImmutableList.Builder<Link>().build() : ImmutableList.copyOf(links);
     }
 
     public int getKeyTag() {
@@ -119,6 +131,10 @@ public class SecureDNS {
     public List<Event> getEvents() {
       return events;
     }
+
+    public List<Link> getLinks() {
+      return links;
+    }
   }
 
   public static class KeyData {
@@ -132,13 +148,21 @@ public class SecureDNS {
 
     private final List<Event> events;
 
+    private final List<Link> links;
+
     @JsonCreator
-    public KeyData(@JsonProperty("flags") String flags, @JsonProperty("protocol") String protocol, @JsonProperty("publicKey") String publicKey, @JsonProperty("algorithm") int algorithm, @JsonProperty("events") List<Event> events) {
+    public KeyData(@JsonProperty("flags") String flags,
+                   @JsonProperty("protocol") String protocol,
+                   @JsonProperty("publicKey") String publicKey,
+                   @JsonProperty("algorithm") int algorithm,
+                   @JsonProperty("events") List<Event> events,
+                   @JsonProperty("links") List<Link> links) {
       this.flags = flags;
       this.protocol = protocol;
       this.publicKey = publicKey;
       this.algorithm = algorithm;
       this.events = events == null? new ImmutableList.Builder<Event>().build() : ImmutableList.copyOf(events);
+      this.links = links == null? new ImmutableList.Builder<Link>().build() : ImmutableList.copyOf(links);
     }
 
     public String getFlags() {
@@ -159,6 +183,10 @@ public class SecureDNS {
 
     public List<Event> getEvents() {
       return events;
+    }
+
+    public List<Link> getLinks() {
+      return links;
     }
   }
 }

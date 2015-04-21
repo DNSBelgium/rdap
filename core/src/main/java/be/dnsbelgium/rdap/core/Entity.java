@@ -28,12 +28,14 @@ import java.util.Set;
 
 public final class Entity extends Common {
 
+  public static final String OBJECT_CLASS_NAME = "entity";
+
   public interface Role {
 
     String getValue();
 
     public static enum Default implements Role {
-      REGISTRANT, TECH, ADMIN, ABUSE, BILLING, REGISTRAR, RESELLER, SPONSOR, PROXY;
+      REGISTRANT, TECHNICAL, ADMINISTRATIVE, ABUSE, BILLING, REGISTRAR, RESELLER, SPONSOR, PROXY, NOTIFICATIONS, NOC;
 
       private final String value;
 
@@ -76,11 +78,11 @@ public final class Entity extends Common {
 
   @JsonCreator
   public Entity(
-      @JsonProperty("rdapConformance") Set<String> rdapConformance,
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
-      @JsonProperty("remarks") List<Notice> remarks,
+      @JsonProperty("remarks") List<Remark> remarks,
       @JsonProperty("lang") String lang,
+      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -89,7 +91,7 @@ public final class Entity extends Common {
       @JsonProperty("roles") List<Role> roles,
       @JsonProperty("asEventActor") List<Event> asEventActor,
       @JsonProperty("publicIds") List<PublicId> publicIds) {
-    super(rdapConformance, links, notices, remarks, lang, events, status, port43);
+    super(links, notices, remarks, lang, objectClassName, events, status, port43);
     this.handle = handle;
     this.vCard = vCard;
     this.roles = roles == null ? null : new ImmutableList.Builder<Role>().addAll(roles).build();
@@ -125,7 +127,7 @@ public final class Entity extends Common {
 
     private List<Notice> notices;
 
-    private List<Notice> remarks;
+    private List<Remark> remarks;
 
     private String lang;
 
@@ -159,7 +161,7 @@ public final class Entity extends Common {
     }
 
     public Entity build() {
-      return new Entity(rdapConformance, links, notices, remarks, lang, events, status, port43, handle, vCard, roles, asEventActor, publicIds);
+      return new Entity(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43, handle, vCard, roles, asEventActor, publicIds);
     }
 
     public Builder setHandle(String handle) {

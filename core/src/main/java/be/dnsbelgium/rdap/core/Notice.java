@@ -22,7 +22,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.List;
 
 /**
- * A Notice or Remark
+ * A Notice
  */
 public final class Notice {
 

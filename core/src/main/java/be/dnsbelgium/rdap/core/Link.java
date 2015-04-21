@@ -52,12 +52,12 @@ public final class Link {
       @JsonProperty("title") List<String> title,
       @JsonProperty("media") String media,
       @JsonProperty("type") String type) {
-    if (value == null) {
-      throw new IllegalArgumentException("value MUST be specified");
-    }
-    if (rel == null) {
-      throw new IllegalArgumentException("rel MUST be specified");
-    }
+//    if (value == null) {
+//      throw new IllegalArgumentException("value MUST be specified");
+//    }
+//    if (rel == null) {
+//      throw new IllegalArgumentException("rel MUST be specified");
+//    }
     if (href == null) {
       throw new IllegalArgumentException("href MUST be specified");
     }

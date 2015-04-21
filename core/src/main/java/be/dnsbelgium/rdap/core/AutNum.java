@@ -36,11 +36,11 @@ public class AutNum extends Common {
   private final String country;
 
   public AutNum(
-      @JsonProperty("rdapConformance") Set<String> rdapConformance,
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
-      @JsonProperty("remarks") List<Notice> remarks,
+      @JsonProperty("remarks") List<Remark> remarks,
       @JsonProperty("lang") String lang,
+      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -50,7 +50,7 @@ public class AutNum extends Common {
       @JsonProperty("name") String name,
       @JsonProperty("type") String type,
       @JsonProperty("country") String country) {
-    super(rdapConformance, links, notices, remarks, lang, events, status, port43);
+    super(links, notices, remarks, lang, objectClassName, events, status, port43);
     this.handle = handle;
     this.startAutnum = startAutnum;
     this.endAutnum = endAutnum;
