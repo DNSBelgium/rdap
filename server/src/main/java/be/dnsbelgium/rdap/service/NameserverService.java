@@ -16,10 +16,11 @@
 package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.DomainName;
-import be.dnsbelgium.rdap.core.Nameserver;
+import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.core.Error;
 
 public interface NameserverService {
 
-  Nameserver getNameserver(DomainName domainName);
+  Nameserver getNameserver(DomainName domainName) throws Error;
 
 }

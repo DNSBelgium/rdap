@@ -44,5 +44,4 @@ public final class IPController {
   public IPNetwork get(@PathVariable("ipaddress") String ipAddress, @PathVariable("size") int size) {
     return ipService.getIPNetwork(CIDR.of(ipAddress+"/"+size));
   }
-
 }

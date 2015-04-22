@@ -99,6 +99,22 @@ public class Error extends Exception {
     return description;
   }
 
+  public static class NameserverNotFound extends Error {
+
+    private static final long serialVersionUID = -3617347189246764940L;
+    private final DomainName nameserverName;
+
+    public NameserverNotFound(DomainName nameserverName) {
+      super(404, String.format("Domain %s not found", nameserverName.toLDH().getStringValue()));
+      this.nameserverName = nameserverName;
+    }
+
+    public DomainName getNameserverName() {
+      return nameserverName;
+    }
+
+  }
+
   public static class DomainNotFound extends Error {
 
     private static final long serialVersionUID = -1355753652647945804L;

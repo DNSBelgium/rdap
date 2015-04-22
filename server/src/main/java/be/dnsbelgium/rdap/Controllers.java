@@ -23,5 +23,5 @@ public final class Controllers {
   }
 
   public static final String CONTENT_TYPE = "application/rdap+json;charset=UTF-8";
-
+  public static final String LOCATION_HEADER = "Location";
 }

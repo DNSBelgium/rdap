@@ -19,6 +19,7 @@ import be.dnsbelgium.core.DomainName;
 import com.google.common.collect.ImmutableList;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -28,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+@JsonPropertyOrder({"rdapConformance"})
 public final class Nameserver extends Common {
 
   public static final String OBJECT_CLASS_NAME = "nameserver";

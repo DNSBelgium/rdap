@@ -25,6 +25,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -50,6 +51,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -60,6 +62,7 @@ public class DomainControllerTest {
 
   private final static int REDIRECT_THRESHOLD = 3;
   private final static String REDIRECT_URL = "https://rdap.org";
+  private MockMvc mockMvc;
 
   @Configuration
   static class Config extends WebMvcConfigurationSupport {
@@ -109,17 +112,20 @@ public class DomainControllerTest {
     Mockito.reset(domainService);
   }
 
+  @Before
+  public void setUp() throws Exception {
+    mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+  }
+
   @Test
   public void testNotFound() throws Exception {
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(null);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(null);
     mockMvc.perform(get("/domain/example")).andExpect(status().isNotFound());
   }
 
   @Test
   public void testNotAuthoritative() throws Exception {
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenThrow(new Error.NotAuthoritative(DomainName.of("example")));
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenThrow(new Error.NotAuthoritative(DomainName.of("example")));
     mockMvc.perform(get("/domain/example")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/domain/example"));
   }
 
@@ -127,8 +133,7 @@ public class DomainControllerTest {
   public void testDefault() throws Exception {
     DomainName domainName = DomainName.of("example.com");
     Domain domain = new Domain(null, null, null, null, Domain.OBJECT_CLASS_NAME, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
     mockMvc.perform(get("/domain/example")).andExpect(status().isOk()).andExpect(jsonPath("$.ldhName", "example.com").exists());
   }
 
@@ -140,9 +145,8 @@ public class DomainControllerTest {
     List<Nameserver> nameserverList = new ArrayList<Nameserver>();
     nameserverList.add(nameserver);
     Domain domain = new Domain(null, null, null, null, Domain.OBJECT_CLASS_NAME, null, null, null, null, domainName, domainName, null, nameserverList, null, null, null, null);
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).
+    when(domainService.getDomain(Mockito.any(DomainName.class))).
             thenReturn(domain);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     mockMvc.perform(get("/domain/example")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
@@ -201,8 +205,7 @@ public class DomainControllerTest {
 
     Domain domain = new Domain(linksList, notices, null, "en", Domain.OBJECT_CLASS_NAME, events, statusesList, DomainName.of("whois.example.com"), "exampleHandle", domainName, domainName, null, null,
             initSecureDNS(), initDefaultEntities(), null, null);
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
     mockMvc.perform(get("/domain/example")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
@@ -224,8 +227,7 @@ public class DomainControllerTest {
   public void testBytes() throws Exception {
     DomainName domainName = DomainName.of("example.com");
     Domain domain = new Domain(null, null, null, null, Domain.OBJECT_CLASS_NAME, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
     mockMvc.perform(get("/domain/example")
         .accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
@@ -237,8 +239,7 @@ public class DomainControllerTest {
   public void testWrongMediaType() throws Exception {
     DomainName domainName = DomainName.of("example.com");
     Domain domain = new Domain(null, null, null, null, Domain.OBJECT_CLASS_NAME, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    Mockito.when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
     mockMvc.perform(get("/domain/example")
             .accept(MediaType.TEXT_HTML))
         .andExpect(status().isNotAcceptable());
@@ -246,7 +247,6 @@ public class DomainControllerTest {
 
   @Test
   public void testIDNParseException() throws Exception {
-    MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     mockMvc.perform(get("/domain/-\u2620-.be")
         .accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(header().string("Content-type", Controllers.CONTENT_TYPE))

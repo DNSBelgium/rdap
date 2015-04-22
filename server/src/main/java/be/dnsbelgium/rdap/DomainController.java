@@ -42,8 +42,6 @@ public final class DomainController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DomainController.class);
 
-  private static final String LOCATION_HEADER = "Location";
-
   private final String baseRedirectURL;
 
   private final int redirectThreshold;
@@ -93,7 +91,7 @@ public final class DomainController {
   protected Error handleResourceNotFoundException(Error.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
     response.setStatus(error.getErrorCode());
     String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName().getStringValue(), "UTF-8");
-    response.addHeader(LOCATION_HEADER, location);
+    response.addHeader(Controllers.LOCATION_HEADER, location);
     return error;
   }
 
