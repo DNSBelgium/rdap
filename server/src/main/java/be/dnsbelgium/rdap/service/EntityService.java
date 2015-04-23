@@ -16,9 +16,10 @@
 package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.rdap.core.Entity;
+import be.dnsbelgium.rdap.core.Error;
 
 public interface EntityService {
 
-  Entity getEntity(String handle);
+  Entity getEntity(String handle) throws Error;
 
 }

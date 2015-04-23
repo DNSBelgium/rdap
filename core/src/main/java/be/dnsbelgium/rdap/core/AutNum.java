@@ -23,6 +23,8 @@ import java.util.Set;
 
 public class AutNum extends Common {
 
+  public static final String OBJECT_CLASS_NAME = "autnum";
+
   private final String handle;
 
   private final int startAutnum;

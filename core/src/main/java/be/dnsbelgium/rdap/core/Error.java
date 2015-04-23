@@ -99,13 +99,58 @@ public class Error extends Exception {
     return description;
   }
 
+  public static class AutNumNotFound extends Error {
+
+    private static final long serialVersionUID = 3356523501894745257L;
+    private final int autNum;
+
+    public AutNumNotFound(int autNum) {
+      super(404, String.format("AutNum %s not found", autNum));
+      this.autNum = autNum;
+    }
+
+    public int getAutNum() {
+      return autNum;
+    }
+  }
+
+  public static class IPNotFound extends Error {
+
+    private static final long serialVersionUID = -7523573051976600864L;
+    private final String ipAddress;
+
+    public IPNotFound(String ipAddress) {
+      super(404, String.format("IP %s not found", ipAddress));
+      this.ipAddress = ipAddress;
+    }
+
+    public String getIpAddress() {
+      return ipAddress;
+    }
+  }
+
+  public static class EntityNotFound extends Error {
+
+    private static final long serialVersionUID = -5264750084274730969L;
+    private final String handle;
+
+    public EntityNotFound(String handle) {
+      super(404, String.format("Entity %s not found", handle));
+      this.handle = handle;
+    }
+
+    public String getHandle() {
+      return handle;
+    }
+  }
+
   public static class NameserverNotFound extends Error {
 
     private static final long serialVersionUID = -3617347189246764940L;
     private final DomainName nameserverName;
 
     public NameserverNotFound(DomainName nameserverName) {
-      super(404, String.format("Domain %s not found", nameserverName.toLDH().getStringValue()));
+      super(404, String.format("Nameserver %s not found", nameserverName.toLDH().getStringValue()));
       this.nameserverName = nameserverName;
     }
 
@@ -136,7 +181,7 @@ public class Error extends Exception {
     private final DomainName domainName;
 
     public NotAuthoritative(DomainName domainName) {
-      super(301, String.format("Not authoritative for domain %s", domainName.toLDH().getStringValue()));
+      super(301, String.format("Not authoritative for %s", domainName.toLDH().getStringValue()));
       this.domainName = domainName;
     }
 

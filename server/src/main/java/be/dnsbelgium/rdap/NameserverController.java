@@ -35,8 +35,8 @@ public final class NameserverController {
 
   @Autowired
   public NameserverController(
-          @Value("#{applicationProperties['nameserverController.baseRedirectURL']}") String baseRedirectURL,
-          @Value("#{applicationProperties['nameserverController.redirectThreshold']}") int redirectThreshold) {
+          @Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
+          @Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
     this.baseRedirectURL = baseRedirectURL;
     this.redirectThreshold = redirectThreshold;
   }
@@ -50,7 +50,7 @@ public final class NameserverController {
       domainName = DomainName.of(nameserverName);
       Nameserver nameserver = nameserverService.getNameserver(domainName);
       if (nameserver == null) {
-        logger.debug("Query result for {} is null. Throwing NameserverNotFoundException");
+        logger.debug("Query result for {} is null. Throwing NameserverNotFound Error");
         throw new Error.NameserverNotFound(domainName);
       } else {
         nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
@@ -61,12 +61,12 @@ public final class NameserverController {
       for (IDNA.Error error : e.getErrors()) {
         description.add(error.name());
       }
-      throw new be.dnsbelgium.rdap.core.Error(400, "Invalid nameserver name", description, e);
-    } catch (be.dnsbelgium.rdap.core.Error e) {
+      throw new Error(400, "Invalid nameserver name", description, e);
+    } catch (Error e) {
       throw e;
     } catch (Exception e) {
       logger.error("Some errors not handled", e);
-      throw new be.dnsbelgium.rdap.core.Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 

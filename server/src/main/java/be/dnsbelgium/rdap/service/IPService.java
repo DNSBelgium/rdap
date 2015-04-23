@@ -16,10 +16,11 @@
 package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.CIDR;
-import be.dnsbelgium.rdap.core.IPNetwork;
+import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.core.Error;
 
 public interface IPService {
 
-  IPNetwork getIPNetwork(CIDR cidr);
+  IPNetwork getIPNetwork(CIDR cidr) throws Error;
 
 }

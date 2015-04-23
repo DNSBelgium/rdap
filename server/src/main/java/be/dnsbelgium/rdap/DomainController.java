@@ -48,8 +48,8 @@ public final class DomainController {
 
   @Autowired
   public DomainController(
-      @Value("#{applicationProperties['domainController.baseRedirectURL']}") String baseRedirectURL,
-      @Value("#{applicationProperties['domainController.redirectThreshold']}") int redirectThreshold) {
+      @Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
+      @Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
     this.baseRedirectURL = baseRedirectURL;
     this.redirectThreshold = redirectThreshold;
   }
@@ -66,7 +66,7 @@ public final class DomainController {
       dn = DomainName.of(domainName);
       Domain result = domainService.getDomain(dn);
       if (result == null) {
-        LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFoundException", domainName);
+        LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
         throw new Error.DomainNotFound(dn);
       } else {
         result.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
@@ -77,12 +77,12 @@ public final class DomainController {
       for (IDNA.Error error : e.getErrors()) {
         description.add(error.name());
       }
-      throw new be.dnsbelgium.rdap.core.Error(400, "Invalid domain name", description, e);
-    } catch (be.dnsbelgium.rdap.core.Error e) {
+      throw new Error(400, "Invalid domain name", description, e);
+    } catch (Error e) {
       throw e;
     } catch (Exception e) {
       LOGGER.error("Some errors not handled", e);
-      throw new be.dnsbelgium.rdap.core.Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 
