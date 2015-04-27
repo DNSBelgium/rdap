@@ -172,10 +172,7 @@ public class DomainControllerTest extends AbstractControllerTest {
   protected List<Entity> someEntities() {
     List<Entity> entityList = new ArrayList<Entity>();
     Contact vCard = new Contact.Builder().addOU("This is an OU").addStreet("street 1").setFormattedName("This is a formatted name").build();
-    List<Entity.Role> rolesList = new ArrayList<Entity.Role>();
-    rolesList.add(Entity.Role.Default.REGISTRANT);
-    rolesList.add(Entity.Role.Default.ADMINISTRATIVE);
-    Entity registrant = new Entity(null, null, null, "en", Entity.OBJECT_CLASS_NAME, null, null, null, "REGISTRANT", vCard, rolesList, null, null);
+    Entity registrant = new Entity(null, null, null, "en", Entity.OBJECT_CLASS_NAME, null, null, null, "REGISTRANT", vCard, someRoles(), null, null);
     entityList.add(registrant);
     return entityList;
   }

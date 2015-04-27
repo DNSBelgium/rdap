@@ -402,10 +402,55 @@ public class Contact {
       if (StringUtils.isEmpty(organizationalUnit)) {
         return this;
       }
+      if (this.organizationalUnits == null) {
+        this.organizationalUnits = new ArrayList<String>();
+      }
       this.organizationalUnits.add(organizationalUnit);
       return this;
     }
+
+    public Builder addLocality(String locality) {
+      if (StringUtils.isEmpty(locality)) {
+        return this;
+      }
+      if (this.locality == null) {
+        this.locality = new ArrayList<String>();
+      }
+      this.locality.add(locality);
+      return this;
+    }
+
+    public Builder addRegion(String region) {
+      if (StringUtils.isEmpty(region)) {
+        return this;
+      }
+      if (this.region == null) {
+        this.region = new ArrayList<String>();
+      }
+      this.region.add(region);
+      return this;
+    }
+
+    public Builder addPostalCode(String postalCode) {
+      if (StringUtils.isEmpty(postalCode)) {
+        return this;
+      }
+      if (this.postalCode == null) {
+        this.postalCode = new ArrayList<String>();
+      }
+      this.postalCode.add(postalCode);
+      return this;
+    }
+
+    public Builder addCountry(String country) {
+      if (StringUtils.isEmpty(country)) {
+        return this;
+      }
+      if (this.country == null) {
+        this.country = new ArrayList<String>();
+      }
+      this.country.add(country);
+      return this;
+    }
   }
-
-
 }

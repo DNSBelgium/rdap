@@ -1,8 +1,10 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
+import be.dnsbelgium.core.TelephoneNumber;
 import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
+import be.dnsbelgium.vcard.Contact;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.annotation.Resource;
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -133,5 +136,37 @@ public class AbstractControllerTest {
     publicIds.add(new PublicId("Type", "Identifier"));
     publicIds.add(new PublicId("Type", "Identifier"));
     return publicIds;
+  }
+
+  protected List<Entity.Role> someRoles() {
+    List<Entity.Role> roles = new ArrayList<Entity.Role>();
+    roles.add(Entity.Role.Default.REGISTRANT);
+    roles.add(Entity.Role.Default.ADMINISTRATIVE);
+    return roles;
+  }
+
+  protected Contact aContact() {
+    return new Contact.Builder()
+            .setFormattedName("Larry Ellison")
+            .setGivenName("Larry")
+            .setFamilyName("Ellison")
+            .setOrganization("Retirees Inc.")
+            .addOU("This is an OU")
+            .addOU("This is another OU")
+            .addStreet("street 1")
+            .addStreet("street 2")
+            .addLocality("New York")
+            .addLocality("Brooklyn")
+            .addRegion("New York")
+            .addRegion("East coast")
+            .addPostalCode("12345")
+            .addCountry("United states of America")
+            .addTelephoneNumber(TelephoneNumber.of(32, BigInteger.valueOf(123456)))
+            .addTelephoneNumber(TelephoneNumber.of("+32.654321"))
+            .addFaxNumber(TelephoneNumber.of(32, BigInteger.valueOf(987654)))
+            .addEmailAddress("larry.ellison@retirees.com")
+            .addEmailAddress("le@former.oracle.com")
+            .setLanguages("en", "de", "es")
+            .build();
   }
 }
