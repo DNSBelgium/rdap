@@ -99,6 +99,15 @@ public class Error extends Exception {
     return description;
   }
 
+  public static class HelpNotFound extends Error {
+
+    private static final long serialVersionUID = -2365389916154054286L;
+
+    public HelpNotFound() {
+      super(404, "Help not found");
+    }
+  }
+
   public static class AutNumNotFound extends Error {
 
     private static final long serialVersionUID = 3356523501894745257L;

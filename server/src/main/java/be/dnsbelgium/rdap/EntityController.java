@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "entity")
-public class EntityController {
+public class EntityController extends AbstractController {
 
   private final static Logger logger = LoggerFactory.getLogger(EntityController.class);
 
@@ -53,13 +53,6 @@ public class EntityController {
       throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
     return entity;
-  }
-
-  @ExceptionHandler(value = Error.class)
-  @ResponseBody
-  protected Error handleResourceNotFoundException(Error error, HttpServletResponse response) {
-    response.setStatus(error.getErrorCode());
-    return error;
   }
 
   public int getRedirectThreshold() {

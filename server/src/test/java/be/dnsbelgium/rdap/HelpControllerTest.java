@@ -52,7 +52,13 @@ public class HelpControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testHelp() throws Exception {
+  public void testException() throws Exception {
+    when(helpService.getHelp()).thenThrow(new IllegalArgumentException());
+    mockMvc.perform(get("/help")).andExpect(status().isInternalServerError());
+  }
+
+  @Test
+  public void testHelpSuccess() throws Exception {
     Help help = new Help(someNotices());
     when(helpService.getHelp()).thenReturn(help);
     mockMvc.perform(get("/help")

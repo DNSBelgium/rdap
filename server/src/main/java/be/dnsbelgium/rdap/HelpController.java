@@ -1,11 +1,12 @@
 package be.dnsbelgium.rdap;
 
-import be.dnsbelgium.rdap.core.Domain;
-import be.dnsbelgium.rdap.core.Help;
+import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.core.Error;
 import be.dnsbelgium.rdap.service.HelpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "help")
-public final class HelpController {
+public final class HelpController extends AbstractController {
 
   private final static Logger logger = LoggerFactory.getLogger(HelpController.class);
 
@@ -22,9 +23,18 @@ public final class HelpController {
 
   @RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public Help get() {
-    Help help = helpService.getHelp();
-    help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
-    return help;
+  public Help get() throws Error {
+    try {
+      Help help = helpService.getHelp();
+      if (help == null) {
+        throw new Error.HelpNotFound();
+      } else {
+        help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+      }
+      return help;
+    } catch (Exception e) {
+      logger.error("Some errors not handled", e);
+      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+    }
   }
 }

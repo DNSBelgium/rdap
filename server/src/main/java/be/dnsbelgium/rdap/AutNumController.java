@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "autnum")
-public final class AutNumController {
+public final class AutNumController extends AbstractController {
 
   private final static Logger logger = LoggerFactory.getLogger(AutNumController.class);
 
@@ -40,12 +40,5 @@ public final class AutNumController {
       throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
     return result;
-  }
-
-  @ExceptionHandler(value = Error.class)
-  @ResponseBody
-  protected Error handleResourceNotFoundException(Error error, HttpServletResponse response) {
-    response.setStatus(error.getErrorCode());
-    return error;
   }
 }

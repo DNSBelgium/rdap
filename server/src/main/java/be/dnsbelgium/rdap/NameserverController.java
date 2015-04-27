@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "nameserver")
-public final class NameserverController {
+public final class NameserverController extends AbstractController {
 
   private final static Logger logger = LoggerFactory.getLogger(NameserverController.class);
 
@@ -76,13 +76,6 @@ public final class NameserverController {
     response.setStatus(error.getErrorCode());
     String location = baseRedirectURL + "/nameserver/" + URLEncoder.encode(error.getDomainName().getStringValue(), "UTF-8");
     response.addHeader(Controllers.LOCATION_HEADER, location);
-    return error;
-  }
-
-  @ExceptionHandler(value = Error.class)
-  @ResponseBody
-  protected Error handleResourceNotFoundException(Error error, HttpServletResponse response) {
-    response.setStatus(error.getErrorCode());
     return error;
   }
 

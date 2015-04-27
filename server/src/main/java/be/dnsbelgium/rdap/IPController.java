@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("ip")
-public final class IPController {
+public final class IPController extends AbstractController {
 
   private final static Logger logger = LoggerFactory.getLogger(IPController.class);
 
@@ -79,12 +79,5 @@ public final class IPController {
       throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
     return ipNetwork;
-  }
-
-  @ExceptionHandler(value = Error.class)
-  @ResponseBody
-  protected Error handleResourceNotFoundException(Error error, HttpServletResponse response) {
-    response.setStatus(error.getErrorCode());
-    return error;
   }
 }

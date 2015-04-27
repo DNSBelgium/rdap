@@ -38,7 +38,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "domain")
-public final class DomainController {
+public final class DomainController extends AbstractController {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DomainController.class);
 
@@ -92,13 +92,6 @@ public final class DomainController {
     response.setStatus(error.getErrorCode());
     String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName().getStringValue(), "UTF-8");
     response.addHeader(Controllers.LOCATION_HEADER, location);
-    return error;
-  }
-
-  @ExceptionHandler(value = Error.class)
-  @ResponseBody
-  protected Error handleResourceNotFoundException(Error error, HttpServletResponse response) {
-    response.setStatus(error.getErrorCode());
     return error;
   }
 
