@@ -86,7 +86,7 @@ public interface Status {
       try {
         return Default.valueOf(status.toUpperCase(Locale.ENGLISH));
       } catch (IllegalArgumentException iae) {
-        LOGGER.debug("Not a default status, returning a BasicStatus", iae);
+        LOGGER.debug("Not a default status, returning a BasicStatus");
         return new BasicStatus(status);
       }
     }

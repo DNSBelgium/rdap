@@ -82,7 +82,7 @@ public final class Entity extends Common {
   public Entity(
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
-      @JsonProperty("remarks") List<Remark> remarks,
+      @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
       @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
@@ -119,56 +119,5 @@ public final class Entity extends Common {
 
   public List<PublicId> getPublicIds() {
     return publicIds;
-  }
-
-  public static class Builder {
-
-    private Set<String> rdapConformance;
-
-    private List<Link> links;
-
-    private List<Notice> notices;
-
-    private List<Remark> remarks;
-
-    private String lang;
-
-    private List<Event> events;
-
-    private List<Status> status;
-
-    private DomainName port43;
-
-    private String handle;
-
-    private Contact vCard;
-
-    private List<Role> roles;
-
-    private List<Event> asEventActor;
-
-    private List<PublicId> publicIds;
-
-    public Builder setvCard(Contact contact) {
-      this.vCard = contact;
-      return this;
-    }
-
-    public Builder addRole(Role role) {
-      if (this.roles == null) {
-        this.roles = new ArrayList<Role>();
-      }
-      this.roles.add(role);
-      return this;
-    }
-
-    public Entity build() {
-      return new Entity(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43, handle, vCard, roles, asEventActor, publicIds);
-    }
-
-    public Builder setHandle(String handle) {
-      this.handle = handle;
-      return this;
-    }
   }
 }

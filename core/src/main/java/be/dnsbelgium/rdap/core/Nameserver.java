@@ -91,7 +91,7 @@ public final class Nameserver extends Common {
   public Nameserver(
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
-      @JsonProperty("remarks") List<Remark> remarks,
+      @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
       @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,

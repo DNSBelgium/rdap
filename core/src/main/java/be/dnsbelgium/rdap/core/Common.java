@@ -38,7 +38,7 @@ class Common {
 
   public List<Notice> notices;
 
-  public List<Remark> remarks;
+  public List<Notice> remarks;
 
   public String lang;
 
@@ -54,7 +54,7 @@ class Common {
   public Common(
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
-      @JsonProperty("remarks") List<Remark> remarks,
+      @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
       @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
@@ -63,7 +63,7 @@ class Common {
   ) {
     this.links = links == null ? null : new ImmutableList.Builder<Link>().addAll(links).build();
     this.notices = notices == null ? null : new ImmutableList.Builder<Notice>().addAll(notices).build();
-    this.remarks = remarks == null ? null : new ImmutableList.Builder<Remark>().addAll(remarks).build();
+    this.remarks = remarks == null ? null : new ImmutableList.Builder<Notice>().addAll(remarks).build();
     this.lang = lang;
     this.objectClassName = objectClassName;
     this.events = events == null ? null : new ImmutableList.Builder<Event>().addAll(events).build();
@@ -90,7 +90,7 @@ class Common {
     return notices;
   }
 
-  public List<Remark> getRemarks() {
+  public List<Notice> getRemarks() {
     return remarks;
   }
 

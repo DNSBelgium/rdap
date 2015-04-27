@@ -21,8 +21,8 @@ dependencies {
       lib.log4j,
       lib.commons_pool,
       lib.aspectj,
-      lib.cglib
-  providedCompile lib.servlet_api
+      lib.cglib,
+      lib.servlet_api
   testCompile lib.spring_test, lib.jsonpath
 }
 

@@ -44,25 +44,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = NameserverControllerTest.Config.class)
-public class NameserverControllerTest {
+public class NameserverControllerTest extends AbstractControllerTest {
 
   private final static int REDIRECT_THRESHOLD = 3;
   private final static String REDIRECT_URL = "https://rdap.org";
 
   @Configuration
-  static class Config extends WebMvcConfigurationSupport {
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-      converters.add(converter());
-    }
-
-    @Bean
-    MappingJacksonHttpMessageConverter converter() {
-      MappingJacksonHttpMessageConverter converter = new MappingJacksonHttpMessageConverter();
-      converter.setObjectMapper(new CustomObjectMapper());
-      return converter;
-    }
+  static class Config extends AbstractControllerTest.Config {
 
     @Bean
     public NameserverService nameserverService() {
@@ -72,14 +60,6 @@ public class NameserverControllerTest {
     @Bean
     public NameserverController nameserverController() {
       return new NameserverController(REDIRECT_URL, REDIRECT_THRESHOLD);
-    }
-
-    @Bean
-    public RequestMappingHandlerMapping requestMappingHandlerMapping() {
-      RequestMappingHandlerMapping handlerMapping = super.requestMappingHandlerMapping();
-      handlerMapping.setUseSuffixPatternMatch(false);
-      handlerMapping.setUseTrailingSlashMatch(false);
-      return handlerMapping;
     }
   }
 
@@ -147,7 +127,7 @@ public class NameserverControllerTest {
     List<String> noticeDescriptions = new ArrayList<String>();
     noticeDescriptions.add("Call this a description!");
     noticeDescriptions.add("This one to!");
-    Notice notice = new Notice("Notice", noticeDescriptions, null);
+    Notice notice = new Notice("Notice title", "Notice type", noticeDescriptions, null);
     List<Notice> noticeList = new ArrayList<Notice>();
     noticeList.add(notice);
     //end notices
@@ -155,8 +135,8 @@ public class NameserverControllerTest {
     //Remarks
     List<String> remarkDescriptions = new ArrayList<String>();
     remarkDescriptions.add("Describes the remark");
-    Remark remark = new Remark("RemarkType", remarkDescriptions, null);
-    List<Remark> remarksList = new ArrayList<Remark>();
+    Notice remark = new Notice("Remark title", "RemarkType", remarkDescriptions, null);
+    List<Notice> remarksList = new ArrayList<Notice>();
     remarksList.add(remark);
     //end remarks
 
@@ -190,17 +170,7 @@ public class NameserverControllerTest {
     statusesList.add(new Status.BasicStatus("specific status"));
     //end creating statusses
 
-    //Create IpAddresses
-    List<String> v4s = new ArrayList<String>();
-    v4s.add("193.5.6.198");
-    v4s.add("89.65.3.87");
-    List<String> v6s = new ArrayList<String>();
-    v6s.add("2001:678:9::1");
-    v6s.add("FE80:0000:0000:0000:0202:B3FF:FE1E:8329");
-    Nameserver.IpAddresses ipAddresses = new Nameserver.IpAddresses(v4s, v6s);
-    //end creating IpAdresses
-
-    Nameserver nameserver = new Nameserver(linksList, noticeList, remarksList, "en", Nameserver.OBJECT_CLASS_NAME, events, statusesList, DomainName.of("whois.example.com"), "This is a Handle", DomainName.of("ns.example"), DomainName.of("ns.example"), ipAddresses);
+    Nameserver nameserver = new Nameserver(linksList, noticeList, remarksList, "en", Nameserver.OBJECT_CLASS_NAME, events, statusesList, DomainName.of("whois.example.com"), "This is a Handle", DomainName.of("ns.example"), DomainName.of("ns.example"), someIpAddresses());
     when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
     mockMvc.perform(get("/nameserver/ns.example")
             .accept(MediaType.parseMediaType("application/rdap+json")))
@@ -209,8 +179,8 @@ public class NameserverControllerTest {
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"links\":[{\"value\":\"http://example.com/domain/example\"," +
                     "\"href\":\"http://example.com/domain/example\",\"type\":\"application/rdap+json\"},{\"value\":\"http://example.com/nameserver/ns.example\"," +
                     "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":[\"Title 1\",\"Title 2\"]," +
-                    "\"media\":\"This is media\",\"type\":\"application/rdap+json\"}],\"notices\":[{\"title\":\"Notice\",\"description\":[\"Call this a description!\",\"This one to!\"]}]," +
-                    "\"remarks\":[{\"type\":\"RemarkType\",\"description\":[\"Describes the remark\"]}],\"lang\":\"en\",\"objectClassName\":\"nameserver\"," +
+                    "\"media\":\"This is media\",\"type\":\"application/rdap+json\"}],\"notices\":[{\"title\":\"Notice title\",\"type\":\"Notice type\",\"description\":[\"Call this a description!\",\"This one to!\"]}]," +
+                    "\"remarks\":[{\"title\":\"Remark title\",\"type\":\"RemarkType\",\"description\":[\"Describes the remark\"]}],\"lang\":\"en\",\"objectClassName\":\"nameserver\"," +
                     "\"events\":[{\"eventAction\":\"REGISTRATION\",\"eventActor\":\"Master-of-RDAP\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"}," +
                     "{\"eventAction\":\"LAST_CHANGED\",\"eventActor\":\"RDAP-Slave\",\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"," +
                     "\"links\":[{\"href\":\"http://example.com/lastChangedTarget\"},{\"value\":\"http://example.com/lastChangedContextURI\",\"rel\":\"related\"," +
