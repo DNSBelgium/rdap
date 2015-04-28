@@ -23,4 +23,5 @@ public interface NameserverService {
 
   Nameserver getNameserver(DomainName domainName) throws Error;
 
+  NameserversSearchResult searchNameservers(String partialNameserverName) throws Error;
 }

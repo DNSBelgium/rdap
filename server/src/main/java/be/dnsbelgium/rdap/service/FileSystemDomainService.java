@@ -17,6 +17,7 @@ package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.Domain;
+import be.dnsbelgium.rdap.core.DomainsSearchResult;
 import be.dnsbelgium.rdap.core.Error;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -28,6 +29,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class FileSystemDomainService implements DomainService {
 
@@ -62,4 +64,8 @@ public class FileSystemDomainService implements DomainService {
     throw new Error.DomainNotFound(domainName);
   }
 
+  @Override
+  public DomainsSearchResult searchDomains(String partialDomainName) throws Error {
+    throw new Error.NotImplemented();
+  }
 }

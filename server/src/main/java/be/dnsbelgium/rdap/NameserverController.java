@@ -74,7 +74,7 @@ public final class NameserverController extends AbstractController {
   @ResponseBody
   protected Error handleResourceNotFoundException(Error.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
     response.setStatus(error.getErrorCode());
-    String location = baseRedirectURL + "/nameserver/" + URLEncoder.encode(error.getDomainName().getStringValue(), "UTF-8");
+    String location = baseRedirectURL + "/nameserver/" + URLEncoder.encode(error.getDomainName(), "UTF-8");
     response.addHeader(Controllers.LOCATION_HEADER, location);
     return error;
   }

@@ -108,6 +108,14 @@ public class Error extends Exception {
     }
   }
 
+  public static class NotImplemented extends Error {
+
+    private static final long serialVersionUID = 1908478239735418778L;
+    public NotImplemented() {
+      super(404, "Not implemented");
+    }
+  }
+
   public static class AutNumNotFound extends Error {
 
     private static final long serialVersionUID = 3356523501894745257L;
@@ -187,14 +195,14 @@ public class Error extends Exception {
   public static class NotAuthoritative extends Error {
 
     private static final long serialVersionUID = 7010767440479876394L;
-    private final DomainName domainName;
+    private String domainName;
 
-    public NotAuthoritative(DomainName domainName) {
-      super(301, String.format("Not authoritative for %s", domainName.toLDH().getStringValue()));
+    public NotAuthoritative(String domainName) {
+      super(301, String.format("Not authoritative for %s", domainName));
       this.domainName = domainName;
     }
 
-    public DomainName getDomainName() {
+    public String getDomainName() {
       return domainName;
     }
   }

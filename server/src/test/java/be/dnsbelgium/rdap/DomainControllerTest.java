@@ -82,7 +82,7 @@ public class DomainControllerTest extends AbstractControllerTest {
 
   @Test
   public void testNotAuthoritative() throws Exception {
-    when(domainService.getDomain(Mockito.any(DomainName.class))).thenThrow(new Error.NotAuthoritative(DomainName.of("example")));
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenThrow(new Error.NotAuthoritative("example.com"));
     mockMvc.perform(get("/domain/example")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/domain/example"));
   }
 

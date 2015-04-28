@@ -17,10 +17,14 @@ package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.Domain;
+import be.dnsbelgium.rdap.core.DomainsSearchResult;
 import be.dnsbelgium.rdap.core.Error;
+
+import java.util.List;
 
 public interface DomainService {
 
   Domain getDomain(DomainName domainName) throws Error;
 
+  DomainsSearchResult searchDomains(String partialDomainName) throws Error;
 }
