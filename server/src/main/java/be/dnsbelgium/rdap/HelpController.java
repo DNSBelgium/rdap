@@ -1,7 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.rdap.core.*;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.HelpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +23,18 @@ public final class HelpController extends AbstractController {
 
   @RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public Help get() throws Error {
+  public Help get() throws RDAPError {
     try {
       Help help = helpService.getHelp();
       if (help == null) {
-        throw new Error.HelpNotFound();
+        throw new RDAPError.HelpNotFound();
       } else {
         help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
       }
       return help;
     } catch (Exception e) {
       logger.error("Some errors not handled", e);
-      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 }

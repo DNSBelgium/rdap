@@ -1,7 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.rdap.core.*;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.EntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +24,21 @@ public class SearchEntitiesController extends AbstractController {
 
   @RequestMapping(value = "/{partialHandle}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public EntitiesSearchResult search(@PathVariable("partialHandle") final String partialHandle) throws Error {
+  public EntitiesSearchResult search(@PathVariable("partialHandle") final String partialHandle) throws RDAPError {
     try {
       EntitiesSearchResult result = entityService.search(partialHandle);
       if (result == null) {
         logger.debug("Entity search result for '{}' is null. Throwing NotAuthoritative Error", partialHandle);
-        throw new Error.NotAuthoritative(partialHandle);
+        throw new RDAPError.NotAuthoritative(partialHandle);
       } else {
         result.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
       }
       return result;
-    } catch(Error e) {
+    } catch(RDAPError e) {
       throw e;
     } catch(Exception e) {
       logger.error("Some errors not handled", e);
-      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 }

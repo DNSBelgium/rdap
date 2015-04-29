@@ -19,7 +19,7 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.core.LabelException;
 import be.dnsbelgium.rdap.core.Domain;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.DomainService;
 import com.ibm.icu.text.IDNA;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public final class DomainController extends AbstractController {
 
   @RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public Domain get(@PathVariable("domainName") final String domainName) throws Error {
+  public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
     LOGGER.debug("Query for domain {}", domainName);
     final DomainName dn;
     try {
@@ -67,7 +67,7 @@ public final class DomainController extends AbstractController {
       Domain result = domainService.getDomain(dn);
       if (result == null) {
         LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
-        throw new Error.DomainNotFound(dn);
+        throw RDAPError.domainNotFound(dn);
       } else {
         result.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
       }
@@ -77,18 +77,18 @@ public final class DomainController extends AbstractController {
       for (IDNA.Error error : e.getErrors()) {
         description.add(error.name());
       }
-      throw new Error(400, "Invalid domain name", description, e);
-    } catch (Error e) {
+      throw new RDAPError(400, "Invalid domain name", description, e);
+    } catch (RDAPError e) {
       throw e;
     } catch (Exception e) {
       LOGGER.error("Some errors not handled", e);
-      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 
-  @ExceptionHandler(value = Error.NotAuthoritative.class)
+  @ExceptionHandler(value = RDAPError.NotAuthoritative.class)
   @ResponseBody
-  protected Error handleResourceNotFoundException(Error.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
+  protected RDAPError handleResourceNotFoundException(RDAPError.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
     response.setStatus(error.getErrorCode());
     String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName(), "UTF-8");
     response.addHeader(Controllers.LOCATION_HEADER, location);

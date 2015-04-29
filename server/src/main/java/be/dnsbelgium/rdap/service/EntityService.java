@@ -17,11 +17,11 @@ package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.rdap.core.EntitiesSearchResult;
 import be.dnsbelgium.rdap.core.Entity;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 
 public interface EntityService {
 
-  Entity getEntity(String handle) throws Error;
+  Entity getEntity(String handle) throws RDAPError;
 
-  EntitiesSearchResult search(String partialHandle) throws Error;
+  EntitiesSearchResult search(String partialHandle) throws RDAPError;
 }

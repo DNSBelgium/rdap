@@ -16,10 +16,10 @@
 package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.rdap.core.*;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 
 public interface AutNumService {
 
-  AutNum getAutNum(int autNum) throws Error;
+  AutNum getAutNum(int autNum) throws RDAPError;
 
 }

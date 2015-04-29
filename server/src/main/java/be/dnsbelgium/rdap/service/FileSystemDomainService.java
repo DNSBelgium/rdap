@@ -18,7 +18,7 @@ package be.dnsbelgium.rdap.service;
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.DomainsSearchResult;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -29,7 +29,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class FileSystemDomainService implements DomainService {
 
@@ -48,7 +47,7 @@ public class FileSystemDomainService implements DomainService {
   }
 
   @Override
-  public Domain getDomain(DomainName domainName) throws Error {
+  public Domain getDomain(DomainName domainName) throws RDAPError {
     LOGGER.debug("Current locale: {}", LocaleContextHolder.getLocale());
     File domainNameFile = new File(directory, domainName.getStringValue());
     try {
@@ -61,11 +60,21 @@ public class FileSystemDomainService implements DomainService {
     } catch (Exception e) {
       LOGGER.error("Unhandled error in parsing JSON file", e);
     }
-    throw new Error.DomainNotFound(domainName);
+    throw new RDAPError.DomainNotFound(domainName);
   }
 
   @Override
-  public DomainsSearchResult searchDomains(String partialDomainName) throws Error {
-    throw new Error.NotImplemented();
+  public DomainsSearchResult searchDomainsByName(String name) throws RDAPError {
+    throw new RDAPError.NotImplemented();
+  }
+
+  @Override
+  public DomainsSearchResult searchDomainsByNsLdhName(String nsLdhName) throws RDAPError {
+    throw new RDAPError.NotImplemented();
+  }
+
+  @Override
+  public DomainsSearchResult searchDomainsByNsIp(String nsLdhName) throws RDAPError {
+    throw new RDAPError.NotImplemented();
   }
 }

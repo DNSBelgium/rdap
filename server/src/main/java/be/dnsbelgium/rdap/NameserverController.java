@@ -3,7 +3,7 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.core.LabelException;
 import be.dnsbelgium.rdap.core.Nameserver;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.NameserverService;
 import com.ibm.icu.text.IDNA;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public final class NameserverController extends AbstractController {
 
   @RequestMapping(value = "/{nameserverName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public Nameserver get(@PathVariable("nameserverName") final String nameserverName) throws Error {
+  public Nameserver get(@PathVariable("nameserverName") final String nameserverName) throws RDAPError {
     logger.debug("Query for nameserver {}", nameserverName);
     final DomainName domainName;
     try {
@@ -51,7 +51,7 @@ public final class NameserverController extends AbstractController {
       Nameserver nameserver = nameserverService.getNameserver(domainName);
       if (nameserver == null) {
         logger.debug("Query result for {} is null. Throwing NameserverNotFound Error");
-        throw new Error.NameserverNotFound(domainName);
+        throw new RDAPError.NameserverNotFound(domainName);
       } else {
         nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
       }
@@ -61,18 +61,18 @@ public final class NameserverController extends AbstractController {
       for (IDNA.Error error : e.getErrors()) {
         description.add(error.name());
       }
-      throw new Error(400, "Invalid nameserver name", description, e);
-    } catch (Error e) {
+      throw new RDAPError(400, "Invalid nameserver name", description, e);
+    } catch (RDAPError e) {
       throw e;
     } catch (Exception e) {
       logger.error("Some errors not handled", e);
-      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 
-  @ExceptionHandler(value = Error.NotAuthoritative.class)
+  @ExceptionHandler(value = RDAPError.NotAuthoritative.class)
   @ResponseBody
-  protected Error handleResourceNotFoundException(Error.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
+  protected RDAPError handleResourceNotFoundException(RDAPError.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
     response.setStatus(error.getErrorCode());
     String location = baseRedirectURL + "/nameserver/" + URLEncoder.encode(error.getDomainName(), "UTF-8");
     response.addHeader(Controllers.LOCATION_HEADER, location);

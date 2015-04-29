@@ -2,8 +2,7 @@ package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.*;
-import be.dnsbelgium.rdap.core.Error;
-import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.NameserverService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -16,16 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.annotation.Resource;
 import java.net.URI;
@@ -92,7 +87,7 @@ public class NameserverControllerTest extends AbstractControllerTest {
 
   @Test
   public void testNotAuthoritative() throws Exception {
-    when(nameserverService.getNameserver(any(DomainName.class))).thenThrow(new Error.NotAuthoritative(DomainName.of("ns.example")));
+    when(nameserverService.getNameserver(any(DomainName.class))).thenThrow(new RDAPError.NotAuthoritative("ns.example"));
     mockMvc.perform(get("/nameserver/ns.example")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/nameserver/ns.example"));
   }
 

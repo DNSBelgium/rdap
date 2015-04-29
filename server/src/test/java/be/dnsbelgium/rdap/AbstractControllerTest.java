@@ -3,6 +3,7 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.core.TelephoneNumber;
 import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.exception.ExceptionAdvice;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import be.dnsbelgium.vcard.Contact;
 import org.joda.time.DateTime;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -62,6 +64,11 @@ public class AbstractControllerTest {
       handlerMapping.setUseSuffixPatternMatch(false);
       handlerMapping.setUseTrailingSlashMatch(false);
       return handlerMapping;
+    }
+
+    @Bean
+    public ExceptionAdvice exceptionAdvice() {
+      return new ExceptionAdvice();
     }
   }
 
@@ -168,5 +175,43 @@ public class AbstractControllerTest {
             .addEmailAddress("le@former.oracle.com")
             .setLanguages("en", "de", "es")
             .build();
+  }
+
+  protected List<Domain.Variant> someVariants() {
+    List<Domain.Variant.Relation> relations1 = new ArrayList<Domain.Variant.Relation>();
+    relations1.add(Domain.Variant.Relation.Default.UNREGISTERED);
+    relations1.add(Domain.Variant.Relation.Default.RESTRICTED_REGISTRATION);
+    List<Domain.Variant.Name> names1 = new ArrayList<Domain.Variant.Name>();
+    names1.add(new Domain.Variant.Name(DomainName.of("exomple.com"), DomainName.of("exomple.com")));
+    names1.add(new Domain.Variant.Name(DomainName.of("eximple.com"), DomainName.of("eximple.com")));
+    List<Domain.Variant.Relation> relations2 = new ArrayList<Domain.Variant.Relation>();
+    relations2.add(Domain.Variant.Relation.Default.REGISTERED);
+    List<Domain.Variant.Name> names2 = new ArrayList<Domain.Variant.Name>();
+    names2.add(new Domain.Variant.Name(DomainName.of("xn--exmple-jta.com"), DomainName.of("exàmple.com")));
+    List<Domain.Variant> variants = new ArrayList<Domain.Variant>();
+    variants.add(new Domain.Variant(relations1, "IdnTable", names1));
+    variants.add(new Domain.Variant(relations2, "IdnTable2", names2));
+    return variants;
+  }
+
+  protected SecureDNS aSecureDNS() {
+    SecureDNS.DSData dsData1 = new SecureDNS.DSData(64156, 8, "DC48B4183F9AC496574DEB8633F627A6DE207493", 1, null, null);
+    SecureDNS.DSData dsData2 = new SecureDNS.DSData(64156, 8, "DE3BBED2664B02B9FEC6FF81D8539B14A5714A2C7A92E8FE58914200 C30B1958", 2, null, null);
+    List<SecureDNS.DSData> dsList = new ArrayList<SecureDNS.DSData>();
+    dsList.add(dsData1);
+    dsList.add(dsData2);
+    return new SecureDNS(true, true, 6000, dsList, null);
+  }
+
+  protected IPNetwork anIPNetwork() throws Exception {
+    return new IPNetwork(someLinks(), someNotices(), someRemarks(), "en", IPNetwork.OBJECT_CLASS_NAME, someEvents(), someStatuses(), DomainName.of("whois.example.com"), "Handle", InetAddress.getByName("193.12.32.98"), InetAddress.getByName("193.12.32.98"), "Name", "Type", "Country", "ParentHandle", someEntities());
+  }
+
+  protected List<Entity> someEntities() {
+    List<Entity> entityList = new ArrayList<Entity>();
+    Contact vCard = new Contact.Builder().addOU("This is an OU").addStreet("street 1").setFormattedName("This is a formatted name").build();
+    Entity registrant = new Entity(null, null, null, "en", Entity.OBJECT_CLASS_NAME, null, null, null, "REGISTRANT", vCard, someRoles(), null, null);
+    entityList.add(registrant);
+    return entityList;
   }
 }

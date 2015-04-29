@@ -20,14 +20,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Thread safe
- */
+@JsonPropertyOrder({"rdapConformance"})
 class Common {
 
   public static final String DEFAULT_RDAP_CONFORMANCE = "rdap_level_0";

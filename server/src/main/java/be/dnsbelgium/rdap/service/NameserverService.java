@@ -17,11 +17,11 @@ package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.*;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 
 public interface NameserverService {
 
-  Nameserver getNameserver(DomainName domainName) throws Error;
+  Nameserver getNameserver(DomainName domainName) throws RDAPError;
 
-  NameserversSearchResult searchNameservers(String partialNameserverName) throws Error;
+  NameserversSearchResult searchNameservers(String partialNameserverName) throws RDAPError;
 }

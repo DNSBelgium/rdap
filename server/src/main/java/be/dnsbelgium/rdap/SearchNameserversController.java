@@ -1,7 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.rdap.core.*;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.NameserverService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,21 +24,21 @@ public class SearchNameserversController extends AbstractController {
 
   @RequestMapping(value = "/{partialNameserverName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public NameserversSearchResult search(@PathVariable("partialNameserverName") String partialNameserverName) throws Error {
+  public NameserversSearchResult search(@PathVariable("partialNameserverName") String partialNameserverName) throws RDAPError {
     try {
       NameserversSearchResult result = nameserverService.searchNameservers(partialNameserverName);
       if (result == null) {
         logger.debug("Nameserver search result for '{}' is null. Throwing DomainNotFound Error", partialNameserverName);
-        throw new Error.NotAuthoritative(partialNameserverName);
+        throw new RDAPError.NotAuthoritative(partialNameserverName);
       } else {
         result.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
       }
       return result;
-    } catch(Error e) {
+    } catch(RDAPError e) {
       throw e;
     } catch(Exception e) {
       logger.error("Some errors not handled", e);
-      throw new Error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
     }
   }
 }

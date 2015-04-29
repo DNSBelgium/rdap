@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
-public class Error extends Exception {
+public class RDAPError extends Exception {
 
   private static final long serialVersionUID = 3000647771812593816L;
   private final int errorCode;
@@ -55,31 +55,31 @@ public class Error extends Exception {
   private final List<String> description;
 
   @JsonCreator
-  public Error(
-      @JsonProperty("errorCode") int errorCode,
-      @JsonProperty("title") String title,
-      @JsonProperty("description") List<String> description) {
+  public RDAPError(
+          @JsonProperty("errorCode") int errorCode,
+          @JsonProperty("title") String title,
+          @JsonProperty("description") List<String> description) {
     this.errorCode = errorCode;
     this.title = title;
     this.description = description == null ? null : new ImmutableList.Builder<String>().addAll(description).build();
   }
 
   @JsonCreator
-  public Error(
-      @JsonProperty("errorCode") int errorCode,
-      @JsonProperty("title") String title,
-      @JsonProperty("description") String description) {
+  public RDAPError(
+          @JsonProperty("errorCode") int errorCode,
+          @JsonProperty("title") String title,
+          @JsonProperty("description") String description) {
     this(errorCode, title, description == null ? null : Arrays.asList(description));
   }
 
   @JsonCreator
-  public Error(
-      @JsonProperty("errorCode") int errorCode,
-      @JsonProperty("title") String title) {
+  public RDAPError(
+          @JsonProperty("errorCode") int errorCode,
+          @JsonProperty("title") String title) {
     this(errorCode, title, (List<String>) null);
   }
 
-  public Error(int errorCode, String title, List<String> description, Throwable cause) {
+  public RDAPError(int errorCode, String title, List<String> description, Throwable cause) {
     this(errorCode, title, description);
     this.initCause(cause);
   }
@@ -99,7 +99,24 @@ public class Error extends Exception {
     return description;
   }
 
-  public static class HelpNotFound extends Error {
+  public static DomainNotFound domainNotFound(DomainName domainName) {
+    return new DomainNotFound(domainName);
+  }
+
+  public static AutNumNotFound autNumNotFound(int autNum) {
+    return new AutNumNotFound(autNum);
+  }
+
+  public static class BadRequest extends RDAPError {
+
+    private static final long serialVersionUID = -7970785038966067523L;
+
+    public BadRequest() {
+      super(400, "Invalid request. Check typa and number of params.");
+    }
+  }
+
+  public static class HelpNotFound extends RDAPError {
 
     private static final long serialVersionUID = -2365389916154054286L;
 
@@ -108,7 +125,7 @@ public class Error extends Exception {
     }
   }
 
-  public static class NotImplemented extends Error {
+  public static class NotImplemented extends RDAPError {
 
     private static final long serialVersionUID = 1908478239735418778L;
     public NotImplemented() {
@@ -116,7 +133,7 @@ public class Error extends Exception {
     }
   }
 
-  public static class AutNumNotFound extends Error {
+  public static class AutNumNotFound extends RDAPError {
 
     private static final long serialVersionUID = 3356523501894745257L;
     private final int autNum;
@@ -131,7 +148,7 @@ public class Error extends Exception {
     }
   }
 
-  public static class IPNotFound extends Error {
+  public static class IPNotFound extends RDAPError {
 
     private static final long serialVersionUID = -7523573051976600864L;
     private final String ipAddress;
@@ -146,7 +163,7 @@ public class Error extends Exception {
     }
   }
 
-  public static class EntityNotFound extends Error {
+  public static class EntityNotFound extends RDAPError {
 
     private static final long serialVersionUID = -5264750084274730969L;
     private final String handle;
@@ -161,7 +178,7 @@ public class Error extends Exception {
     }
   }
 
-  public static class NameserverNotFound extends Error {
+  public static class NameserverNotFound extends RDAPError {
 
     private static final long serialVersionUID = -3617347189246764940L;
     private final DomainName nameserverName;
@@ -177,7 +194,7 @@ public class Error extends Exception {
 
   }
 
-  public static class DomainNotFound extends Error {
+  public static class DomainNotFound extends RDAPError {
 
     private static final long serialVersionUID = -1355753652647945804L;
     private final DomainName domainName;
@@ -192,7 +209,7 @@ public class Error extends Exception {
     }
   }
 
-  public static class NotAuthoritative extends Error {
+  public static class NotAuthoritative extends RDAPError {
 
     private static final long serialVersionUID = 7010767440479876394L;
     private String domainName;

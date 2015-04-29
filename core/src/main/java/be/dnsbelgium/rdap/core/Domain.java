@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-@JsonPropertyOrder({"rdapConformance"})
 public final class Domain extends Common {
   
   public static final String OBJECT_CLASS_NAME = "domain";
