@@ -17,12 +17,9 @@ package be.dnsbelgium.rdap.core;
 
 import be.dnsbelgium.core.DomainName;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 import java.util.List;
-import java.util.Set;
 
-@JsonPropertyOrder({"rdapConformance"})
 public final class AutNum extends Common {
 
   public static final String OBJECT_CLASS_NAME = "autnum";
@@ -44,7 +41,6 @@ public final class AutNum extends Common {
       @JsonProperty("notices") List<Notice> notices,
       @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
-      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -54,7 +50,7 @@ public final class AutNum extends Common {
       @JsonProperty("name") String name,
       @JsonProperty("type") String type,
       @JsonProperty("country") String country) {
-    super(links, notices, remarks, lang, objectClassName, events, status, port43);
+    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43);
     this.handle = handle;
     this.startAutnum = startAutnum;
     this.endAutnum = endAutnum;

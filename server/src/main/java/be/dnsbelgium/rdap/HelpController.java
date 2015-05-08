@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "help")
-public final class HelpController extends AbstractController {
+public final class HelpController {
 
   private final static Logger logger = LoggerFactory.getLogger(HelpController.class);
 
@@ -27,9 +27,7 @@ public final class HelpController extends AbstractController {
     try {
       Help help = helpService.getHelp();
       if (help == null) {
-        throw new RDAPError.HelpNotFound();
-      } else {
-        help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+        throw RDAPError.helpNotFound();
       }
       return help;
     } catch (Exception e) {

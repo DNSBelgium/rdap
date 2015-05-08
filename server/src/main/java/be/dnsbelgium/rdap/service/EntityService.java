@@ -23,5 +23,7 @@ public interface EntityService {
 
   Entity getEntity(String handle) throws RDAPError;
 
-  EntitiesSearchResult search(String partialHandle) throws RDAPError;
+  EntitiesSearchResult searchByFn(String fn) throws RDAPError;
+
+  EntitiesSearchResult searchByHandle(String handle) throws RDAPError;
 }

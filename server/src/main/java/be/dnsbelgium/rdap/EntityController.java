@@ -7,21 +7,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
 @Controller
 @RequestMapping(value = "entity")
-public class EntityController extends AbstractController {
+public class EntityController {
 
   private final static Logger logger = LoggerFactory.getLogger(EntityController.class);
 
-  private final String baseRedirectURL;
+  private String baseRedirectURL;
 
-  private final int redirectThreshold;
+  private int redirectThreshold;
 
+  @Autowired
   public EntityController(
           @Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
           @Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
@@ -36,20 +36,10 @@ public class EntityController extends AbstractController {
   @ResponseBody
   public Entity get(@PathVariable("handle") final String handle) throws RDAPError {
     logger.debug("Query for entity with handle: {}", handle);
-    Entity entity;
-    try {
-      entity = entityService.getEntity(handle);
-      if (entity == null) {
-        logger.debug("Entity result for {} is null. Throwing EntityNotFound Error", handle);
-        throw new RDAPError.EntityNotFound(handle);
-      } else {
-        entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-      }
-    } catch (RDAPError e) {
-      throw e;
-    } catch (Exception e) {
-      logger.error("Some errors not handled", e);
-      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+    Entity entity = entityService.getEntity(handle);
+    if (entity == null) {
+      logger.debug("Entity result for {} is null. Throwing EntityNotFound Error", handle);
+      throw RDAPError.entityNotFound(handle);
     }
     return entity;
   }

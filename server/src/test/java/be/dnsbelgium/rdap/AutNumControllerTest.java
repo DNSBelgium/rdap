@@ -76,30 +76,31 @@ public class AutNumControllerTest extends AbstractControllerTest {
 
   @Test
   public void testMinimal() throws Exception {
-    AutNum autNum = new AutNum(null, null, null, "en", AutNum.OBJECT_CLASS_NAME, null, null, null, "AutNumHandle", 6000, 6300, "AutNumName", "AutNumType", "Belgium");
+    AutNum autNum = new AutNum(null, null, null, "en", null, null, null, "AutNumHandle", 6000, 6300, "AutNumName", "AutNumType", "Belgium");
+    autNum.addRdapConformance(AutNum.DEFAULT_RDAP_CONFORMANCE);
     when(autNumService.getAutNum(anyInt())).thenReturn(autNum);
     mockMvc.perform(get("/autnum/6000")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"lang\":\"en\",\"objectClassName\":\"autnum\",\"handle\":\"AutNumHandle\",\"startAutnum\":6000,\"endAutnum\":6300,\"name\":\"AutNumName\",\"type\":\"AutNumType\",\"country\":\"Belgium\"}"));
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\",\"lang\":\"en\",\"handle\":\"AutNumHandle\",\"startAutnum\":6000,\"endAutnum\":6300,\"name\":\"AutNumName\",\"type\":\"AutNumType\",\"country\":\"Belgium\"}"));
   }
 
   @Test
   public void testMaximal() throws Exception {
-    AutNum autNum = new AutNum(someLinks(), someNotices(), someRemarks(), "en", AutNum.OBJECT_CLASS_NAME, someEvents(), someStatuses(),
+    AutNum autNum = new AutNum(someLinks(), someNotices(), someRemarks(), "en", someEvents(), someStatuses(),
             DomainName.of("whois.example.com"), "Handle", 6000, 6300, "Name", "Type", "Country");
+    autNum.addRdapConformance(AutNum.DEFAULT_RDAP_CONFORMANCE);
     when(autNumService.getAutNum(anyInt())).thenReturn(autNum);
     mockMvc.perform(get("/autnum/6000")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"]," +
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\"," +
                     "\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]," +
                     "\"notices\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]}]," +
                     "\"remarks\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]}]," +
                     "\"lang\":\"en\"," +
-                    "\"objectClassName\":\"autnum\"," +
                     "\"events\":[{\"eventAction\":\"REGISTRATION\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]},{\"eventAction\":\"LAST_CHANGED\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]}]," +
                     "\"status\":[\"active\",\"delete prohibited\",\"some specific status\"]," +
                     "\"port43\":\"whois.example.com\"," +

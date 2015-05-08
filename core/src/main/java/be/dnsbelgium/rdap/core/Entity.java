@@ -20,14 +20,10 @@ import be.dnsbelgium.vcard.Contact;
 import com.google.common.collect.ImmutableList;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
-@JsonPropertyOrder({"rdapConformance"})
 public final class Entity extends Common {
 
   public static final String OBJECT_CLASS_NAME = "entity";

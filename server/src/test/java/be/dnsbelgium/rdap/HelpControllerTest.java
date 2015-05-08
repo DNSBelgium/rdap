@@ -1,5 +1,6 @@
 package be.dnsbelgium.rdap;
 
+import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.Help;
 import be.dnsbelgium.rdap.service.HelpService;
 import org.junit.After;
@@ -60,6 +61,7 @@ public class HelpControllerTest extends AbstractControllerTest {
   @Test
   public void testHelpSuccess() throws Exception {
     Help help = new Help(someNotices());
+    help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
     when(helpService.getHelp()).thenReturn(help);
     mockMvc.perform(get("/help")
             .accept(MediaType.parseMediaType("application/rdap+json")))

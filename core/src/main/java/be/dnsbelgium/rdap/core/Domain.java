@@ -19,7 +19,6 @@ import be.dnsbelgium.core.DomainName;
 import com.google.common.collect.ImmutableList;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,7 +160,6 @@ public final class Domain extends Common {
       @JsonProperty("notices") List<Notice> notices,
       @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
-      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -174,7 +172,7 @@ public final class Domain extends Common {
       @JsonProperty("entities") List<Entity> entities,
       @JsonProperty("publicIds") List<PublicId> publicIds,
       @JsonProperty("network") IPNetwork network) {
-    super(links, notices, remarks, lang, objectClassName, events, status, port43);
+    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43);
     this.handle = handle;
     this.ldhName = ldhName;
     this.unicodeName = unicodeName;

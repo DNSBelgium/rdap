@@ -30,3 +30,4 @@ dependencies {
 sourceSets.main.compileClasspath += configurations.providedCompile
 sourceSets.test.compileClasspath += configurations.providedCompile
 sourceSets.test.runtimeClasspath += configurations.providedCompile
+javadoc.classpath=sourceSets.main.compileClasspath

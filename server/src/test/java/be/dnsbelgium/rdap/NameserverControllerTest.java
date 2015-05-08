@@ -82,24 +82,25 @@ public class NameserverControllerTest extends AbstractControllerTest {
   @Test
   public void testNotFound() throws Exception {
     when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(null);
-    mockMvc.perform(get("/nameserver/ns.example")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameserver/ns.example.com")).andExpect(status().isNotFound());
   }
 
   @Test
   public void testNotAuthoritative() throws Exception {
-    when(nameserverService.getNameserver(any(DomainName.class))).thenThrow(new RDAPError.NotAuthoritative("ns.example"));
-    mockMvc.perform(get("/nameserver/ns.example")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/nameserver/ns.example"));
+    when(nameserverService.getNameserver(any(DomainName.class))).thenThrow(RDAPError.notAuthoritative(DomainName.of("ns.example.com")));
+    mockMvc.perform(get("/nameserver/ns.example.com")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/nameserver/ns.example.com"));
   }
 
   @Test
   public void testMinimal() throws Exception {
-    Nameserver nameserver = new Nameserver(null, null, null, null, Nameserver.OBJECT_CLASS_NAME, null, null, null, null, DomainName.of("ns.example"), null, null);
+    Nameserver nameserver = new Nameserver(null, null, null, null, null, null, null, null, DomainName.of("ns.example.com"), null, null);
+    nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
     when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
     mockMvc.perform(get("/nameserver/ns.example")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example\"}"));
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.com\"}"));
   }
 
   @Test
@@ -165,22 +166,26 @@ public class NameserverControllerTest extends AbstractControllerTest {
     statusesList.add(new Status.BasicStatus("specific status"));
     //end creating statusses
 
-    Nameserver nameserver = new Nameserver(linksList, noticeList, remarksList, "en", Nameserver.OBJECT_CLASS_NAME, events, statusesList, DomainName.of("whois.example.com"), "This is a Handle", DomainName.of("ns.example"), DomainName.of("ns.example"), someIpAddresses());
+    Nameserver nameserver = new Nameserver(linksList, noticeList, remarksList, "en", events, statusesList, DomainName.of("whois.example.com"), "This is a Handle", DomainName.of("ns.example.com"), DomainName.of("ns.example.com"), someIpAddresses());
+    nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
     when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
-    mockMvc.perform(get("/nameserver/ns.example")
+    mockMvc.perform(get("/nameserver/ns.example.com")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"links\":[{\"value\":\"http://example.com/domain/example\"," +
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"links\":[{\"value\":\"http://example.com/domain/example\"," +
                     "\"href\":\"http://example.com/domain/example\",\"type\":\"application/rdap+json\"},{\"value\":\"http://example.com/nameserver/ns.example\"," +
                     "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":[\"Title 1\",\"Title 2\"]," +
                     "\"media\":\"This is media\",\"type\":\"application/rdap+json\"}],\"notices\":[{\"title\":\"Notice title\",\"type\":\"Notice type\",\"description\":[\"Call this a description!\",\"This one to!\"]}]," +
-                    "\"remarks\":[{\"title\":\"Remark title\",\"type\":\"RemarkType\",\"description\":[\"Describes the remark\"]}],\"lang\":\"en\",\"objectClassName\":\"nameserver\"," +
+                    "\"remarks\":[{\"title\":\"Remark title\",\"type\":\"RemarkType\",\"description\":[\"Describes the remark\"]}],\"lang\":\"en\"," +
                     "\"events\":[{\"eventAction\":\"REGISTRATION\",\"eventActor\":\"Master-of-RDAP\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"}," +
                     "{\"eventAction\":\"LAST_CHANGED\",\"eventActor\":\"RDAP-Slave\",\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"," +
                     "\"links\":[{\"href\":\"http://example.com/lastChangedTarget\"},{\"value\":\"http://example.com/lastChangedContextURI\",\"rel\":\"related\"," +
                     "\"href\":\"http://example.com/lastChanged2target\",\"hreflang\":[\"mn-Cyrl-MN\",\"en\"],\"title\":[\"This is a title\"],\"media\":\"mediaString\"," +
                     "\"type\":\"application/rdap+json\"}]}],\"status\":[\"active\",\"delete prohibited\",\"specific status\"],\"port43\":\"whois.example.com\"," +
-                    "\"handle\":\"This is a Handle\",\"ldhName\":\"ns.example\",\"unicodeName\":\"ns.example\",\"ipAddresses\":{\"v4\":[\"193.5.6.198\",\"89.65.3.87\"],\"v6\":[\"2001:678:9::1\",\"FE80:0000:0000:0000:0202:B3FF:FE1E:8329\"]}}"));
+                    "\"handle\":\"This is a Handle\"," +
+                    "\"ldhName\":\"ns.example.com\"," +
+                    "\"unicodeName\":\"ns.example.com\"," +
+                    "\"ipAddresses\":{\"v4\":[\"193.5.6.198\",\"89.65.3.87\"],\"v6\":[\"2001:678:9::1\",\"FE80:0000:0000:0000:0202:B3FF:FE1E:8329\"]}}"));
   }
 }

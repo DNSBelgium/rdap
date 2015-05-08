@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "nameserver")
-public final class NameserverController extends AbstractController {
+public final class NameserverController {
 
   private final static Logger logger = LoggerFactory.getLogger(NameserverController.class);
 
@@ -51,9 +51,7 @@ public final class NameserverController extends AbstractController {
       Nameserver nameserver = nameserverService.getNameserver(domainName);
       if (nameserver == null) {
         logger.debug("Query result for {} is null. Throwing NameserverNotFound Error");
-        throw new RDAPError.NameserverNotFound(domainName);
-      } else {
-        nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
+        throw RDAPError.nameserverNotFound(domainName);
       }
       return nameserver;
     } catch (LabelException.IDNParseException e) {

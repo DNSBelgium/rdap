@@ -23,5 +23,7 @@ public interface NameserverService {
 
   Nameserver getNameserver(DomainName domainName) throws RDAPError;
 
-  NameserversSearchResult searchNameservers(String partialNameserverName) throws RDAPError;
+  NameserversSearchResult searchByName(String name) throws RDAPError;
+
+  NameserversSearchResult searchByIp(String ip) throws RDAPError;
 }

@@ -107,12 +107,61 @@ public class RDAPError extends Exception {
     return new AutNumNotFound(autNum);
   }
 
+  public static BadRequest badRequest(String title, String description) {
+    return new BadRequest(title, description);
+  }
+
+  public static BadRequest badRequest(String title, List<String> description) {
+    return new BadRequest(title, description);
+  }
+
+  public static NotAuthoritative notAuthoritative(DomainName domainName) {
+    return new NotAuthoritative(domainName.getStringValue());
+  }
+
+  public static RDAPError entityNotFound(String handle) {
+    return new EntityNotFound(handle);
+  }
+
+  public static RDAPError helpNotFound() {
+    return new HelpNotFound();
+  }
+
+  public static RDAPError ipNotFound(String ipAddress) {
+    return new IPNotFound(ipAddress);
+  }
+
+  public static RDAPError nameserverNotFound(DomainName domainName) {
+    return new NameserverNotFound(domainName);
+  }
+
+  public static RDAPError notImplemented() {
+    return new NotImplemented();
+  }
+
+  public static RDAPError noResults(String query) {
+    return new NoResults(query);
+  }
+
+  public static class NoResults extends RDAPError {
+
+    private static final long serialVersionUID = -3752099182358813007L;
+
+    private NoResults(String query) {
+      super(HttpStatus.NOT_FOUND, String.format("No results for query %s", query));
+    }
+  }
+
   public static class BadRequest extends RDAPError {
 
     private static final long serialVersionUID = -7970785038966067523L;
 
-    public BadRequest() {
-      super(400, "Invalid request. Check typa and number of params.");
+    private BadRequest(String title, String description) {
+      super(HttpStatus.BAD_REQUEST, title, description);
+    }
+
+    private BadRequest(String title, List<String> description) {
+      super(HttpStatus.BAD_REQUEST, title, description);
     }
   }
 
@@ -120,16 +169,17 @@ public class RDAPError extends Exception {
 
     private static final long serialVersionUID = -2365389916154054286L;
 
-    public HelpNotFound() {
-      super(404, "Help not found");
+    private HelpNotFound() {
+      super(HttpStatus.NOT_FOUND, "Help not found");
     }
   }
 
   public static class NotImplemented extends RDAPError {
 
     private static final long serialVersionUID = 1908478239735418778L;
-    public NotImplemented() {
-      super(404, "Not implemented");
+
+    private NotImplemented() {
+      super(HttpStatus.NOT_IMPLEMENTED, "Not implemented");
     }
   }
 
@@ -138,8 +188,8 @@ public class RDAPError extends Exception {
     private static final long serialVersionUID = 3356523501894745257L;
     private final int autNum;
 
-    public AutNumNotFound(int autNum) {
-      super(404, String.format("AutNum %s not found", autNum));
+    private AutNumNotFound(int autNum) {
+      super(HttpStatus.NOT_FOUND, String.format("AutNum %s not found", autNum));
       this.autNum = autNum;
     }
 
@@ -153,8 +203,8 @@ public class RDAPError extends Exception {
     private static final long serialVersionUID = -7523573051976600864L;
     private final String ipAddress;
 
-    public IPNotFound(String ipAddress) {
-      super(404, String.format("IP %s not found", ipAddress));
+    private IPNotFound(String ipAddress) {
+      super(HttpStatus.NOT_FOUND, String.format("IP %s not found", ipAddress));
       this.ipAddress = ipAddress;
     }
 
@@ -168,8 +218,8 @@ public class RDAPError extends Exception {
     private static final long serialVersionUID = -5264750084274730969L;
     private final String handle;
 
-    public EntityNotFound(String handle) {
-      super(404, String.format("Entity %s not found", handle));
+    private EntityNotFound(String handle) {
+      super(HttpStatus.NOT_FOUND, String.format("Entity %s not found", handle));
       this.handle = handle;
     }
 
@@ -183,8 +233,8 @@ public class RDAPError extends Exception {
     private static final long serialVersionUID = -3617347189246764940L;
     private final DomainName nameserverName;
 
-    public NameserverNotFound(DomainName nameserverName) {
-      super(404, String.format("Nameserver %s not found", nameserverName.toLDH().getStringValue()));
+    private NameserverNotFound(DomainName nameserverName) {
+      super(HttpStatus.NOT_FOUND, String.format("Nameserver %s not found", nameserverName.toLDH().getStringValue()));
       this.nameserverName = nameserverName;
     }
 
@@ -199,8 +249,8 @@ public class RDAPError extends Exception {
     private static final long serialVersionUID = -1355753652647945804L;
     private final DomainName domainName;
 
-    public DomainNotFound(DomainName domainName) {
-      super(404, String.format("Domain %s not found", domainName.toLDH().getStringValue()));
+    private DomainNotFound(DomainName domainName) {
+      super(HttpStatus.NOT_FOUND, String.format("Domain %s not found", domainName.toLDH().getStringValue()));
       this.domainName = domainName;
     }
 
@@ -214,8 +264,8 @@ public class RDAPError extends Exception {
     private static final long serialVersionUID = 7010767440479876394L;
     private String domainName;
 
-    public NotAuthoritative(String domainName) {
-      super(301, String.format("Not authoritative for %s", domainName));
+    private NotAuthoritative(String domainName) {
+      super(HttpStatus.MOVED_PERMANENTLY, String.format("Not authoritative for %s", domainName));
       this.domainName = domainName;
     }
 
@@ -223,5 +273,4 @@ public class RDAPError extends Exception {
       return domainName;
     }
   }
-
 }

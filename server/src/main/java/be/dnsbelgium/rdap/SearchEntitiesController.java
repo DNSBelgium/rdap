@@ -1,44 +1,52 @@
 package be.dnsbelgium.rdap;
 
-import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.core.EntitiesSearchResult;
 import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.EntityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "entities")
-public class SearchEntitiesController extends AbstractController {
+public class SearchEntitiesController {
 
   private final static Logger logger = LoggerFactory.getLogger(SearchEntitiesController.class);
 
   @Autowired
   private EntityService entityService;
 
-  @RequestMapping(value = "/{partialHandle}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+  @RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public EntitiesSearchResult search(@PathVariable("partialHandle") final String partialHandle) throws RDAPError {
-    try {
-      EntitiesSearchResult result = entityService.search(partialHandle);
-      if (result == null) {
-        logger.debug("Entity search result for '{}' is null. Throwing NotAuthoritative Error", partialHandle);
-        throw new RDAPError.NotAuthoritative(partialHandle);
-      } else {
-        result.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-      }
-      return result;
-    } catch(RDAPError e) {
-      throw e;
-    } catch(Exception e) {
-      logger.error("Some errors not handled", e);
-      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+  public EntitiesSearchResult search(
+          @RequestParam(value = "fn", required = false) final String fn,
+          @RequestParam(value = "handle", required = false) final String handle) throws RDAPError {
+    EntitiesSearchResult result = null;
+    String query = checkParams(fn, handle);
+    if (fn != null) {
+      result = entityService.searchByFn(fn);
     }
+    if (handle != null) {
+      result = entityService.searchByHandle(handle);
+    }
+    if (result == null || result.entitySearchResults == null || result.entitySearchResults.isEmpty()) {
+      throw RDAPError.noResults(query);
+    }
+    return result;
+  }
+
+  private String checkParams(String fn, String handle) throws RDAPError {
+    if (fn == null && handle == null) {
+      throw RDAPError.badRequest("Param missing", "One and only one of 'fn' or 'handle' should be provided");
+    }
+    if (fn != null && handle != null) {
+      throw RDAPError.badRequest("Too many params", "One and only one of 'fn' or 'handle' should be provided");
+    }
+     return fn != null ? fn : handle;
   }
 }

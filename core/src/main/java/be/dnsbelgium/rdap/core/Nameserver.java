@@ -19,17 +19,13 @@ import be.dnsbelgium.core.DomainName;
 import com.google.common.collect.ImmutableList;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
 import java.net.InetAddress;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-@JsonPropertyOrder({"rdapConformance"})
 public final class Nameserver extends Common {
 
   public static final String OBJECT_CLASS_NAME = "nameserver";
@@ -93,7 +89,6 @@ public final class Nameserver extends Common {
       @JsonProperty("notices") List<Notice> notices,
       @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
-      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -101,7 +96,7 @@ public final class Nameserver extends Common {
       @JsonProperty("ldhName") DomainName ldhName,
       @JsonProperty("unicodeName") DomainName unicodeName,
       @JsonProperty("ipAddresses") IpAddresses ipAddresses) {
-    super(links, notices, remarks, lang, objectClassName, events, status, port43);
+    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43);
     this.handle = handle;
     this.ldhName = ldhName;
     this.unicodeName = unicodeName;

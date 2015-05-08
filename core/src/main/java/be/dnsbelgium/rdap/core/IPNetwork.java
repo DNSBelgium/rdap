@@ -25,8 +25,7 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.Set;
 
-@JsonPropertyOrder({"rdapConformance"})
-public class IPNetwork extends Common {
+public final class IPNetwork extends Common {
 
   public static final String OBJECT_CLASS_NAME = "ip network";
 

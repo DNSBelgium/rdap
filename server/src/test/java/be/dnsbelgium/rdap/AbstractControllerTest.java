@@ -6,6 +6,7 @@ import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.exception.ExceptionAdvice;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import be.dnsbelgium.vcard.Contact;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
@@ -28,7 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
   protected final DateTime createTime = DateTime.now().toDateTime(DateTimeZone.UTC).minusDays(200);
   protected final DateTime lastChangedTime = createTime.plusDays(100);
@@ -70,6 +71,12 @@ public class AbstractControllerTest {
     public ExceptionAdvice exceptionAdvice() {
       return new ExceptionAdvice();
     }
+
+    @Bean
+    public ObjectMapper getObjectMapper() {
+      return new CustomObjectMapper();
+    }
+
   }
 
   protected List<Link> someLinks() throws Exception {
@@ -123,8 +130,8 @@ public class AbstractControllerTest {
 
   protected List<Nameserver> someNameservers() throws Exception {
     List<Nameserver> nameservers = new ArrayList<Nameserver>();
-    nameservers.add(new Nameserver(someLinks(), someNotices(), someRemarks(), "en", Nameserver.OBJECT_CLASS_NAME, someEvents(), someStatuses(), DomainName.of("whois.example.com"), "Handle", DomainName.of("ns.xn--exmple-jta.com"), DomainName.of("ns.exàmple.com"), someIpAddresses()));
-    nameservers.add(new Nameserver(someLinks(), someNotices(), someRemarks(), "en", Nameserver.OBJECT_CLASS_NAME, someEvents(), someStatuses(), DomainName.of("whois.example.com"), "Handle", DomainName.of("ns.xn--exmple-jta.com"), DomainName.of("ns.exàmple.com"), someIpAddresses()));
+    nameservers.add(new Nameserver(someLinks(), someNotices(), someRemarks(), "en", someEvents(), someStatuses(), DomainName.of("whois.example.com"), "Handle", DomainName.of("ns.xn--exmple-jta.com"), DomainName.of("ns.exàmple.com"), someIpAddresses()));
+    nameservers.add(new Nameserver(someLinks(), someNotices(), someRemarks(), "en", someEvents(), someStatuses(), DomainName.of("whois.example.com"), "Handle", DomainName.of("ns.xn--exmple-jta.com"), DomainName.of("ns.exàmple.com"), someIpAddresses()));
     return nameservers;
   }
 

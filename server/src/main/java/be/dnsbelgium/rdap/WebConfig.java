@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.dnsbelgium.weirds.spring.rest;
+package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
+import be.dnsbelgium.rdap.service.*;
+import be.dnsbelgium.rdap.service.impl.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,36 @@ import java.util.Properties;
 public class WebConfig extends WebMvcConfigurationSupport {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
+
+  @Bean
+  public DomainService getDomainService() {
+    return new DefaultDomainService();
+  }
+
+  @Bean
+  public NameserverService getNameserverService() {
+    return new DefaultNameserverService();
+  }
+
+  @Bean
+  public EntityService getEntityService() {
+    return new DefaultEntityService();
+  }
+
+  @Bean
+  public IPService getIPService() {
+    return new DefaultIPService();
+  }
+
+  @Bean
+  public AutNumService getAutNumService() {
+    return new DefaultAutNumService();
+  }
+
+  @Bean
+  public HelpService getHelpService() {
+    return new DefaultHelpService();
+  }
 
   @Override
   public final void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {

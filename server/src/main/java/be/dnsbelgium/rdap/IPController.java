@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("ip")
-public final class IPController extends AbstractController {
+public final class IPController {
 
   private final static Logger logger = LoggerFactory.getLogger(IPController.class);
 
@@ -56,9 +56,7 @@ public final class IPController extends AbstractController {
       ipNetwork = ipService.getIPNetwork(CIDR.of(ipAddress));
       if (ipNetwork == null) {
         logger.debug("IP result for {} is null. Throwing IPNotFound Error", ipAddress);
-        throw new RDAPError.IPNotFound(ipAddress);
-      } else {
-        ipNetwork.addRdapConformance(IPNetwork.DEFAULT_RDAP_CONFORMANCE);
+        throw RDAPError.ipNotFound(ipAddress);
       }
     } catch (RDAPError e) {
       throw e;

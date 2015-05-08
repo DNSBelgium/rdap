@@ -71,12 +71,13 @@ public class IPControllerTest extends AbstractControllerTest {
   public void testIPMinimal() throws Exception {
     InetAddress inetAddress = InetAddress.getByName("193.12.32.98");
     IPNetwork ipNetwork = new IPNetwork(null, null, null, "en", IPNetwork.OBJECT_CLASS_NAME, null, null, null, null, inetAddress, inetAddress, null, "IPv4", "USA", null, null);
+    ipNetwork.addRdapConformance(IPNetwork.DEFAULT_RDAP_CONFORMANCE);
     when(ipService.getIPNetwork(any(CIDR.class))).thenReturn(ipNetwork);
     mockMvc.perform(get("/ip/193.12.32.98")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"lang\":\"en\",\"objectClassName\":\"ip network\"," +
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"ip network\",\"lang\":\"en\"," +
                     "\"startAddress\":\"193.12.32.98\",\"endAddress\":\"193.12.32.98\",\"type\":\"IPv4\",\"country\":\"USA\"}"));
   }
 
@@ -85,12 +86,13 @@ public class IPControllerTest extends AbstractControllerTest {
     InetAddress startAddress = InetAddress.getByName("FE80:0000:0000:0000:0202:B3FF:FE1E:0000");
     InetAddress endAddress = InetAddress.getByName("FE80:0000:0000:0000:0202:B3FF:FE1E:FFFF");
     IPNetwork ipNetwork = new IPNetwork(null, null, null, "en", IPNetwork.OBJECT_CLASS_NAME, null, null, null, null, startAddress, endAddress, null, "IPv6", "USA", null, null);
+    ipNetwork.addRdapConformance(IPNetwork.DEFAULT_RDAP_CONFORMANCE);
     when(ipService.getIPNetwork(any(CIDR.class))).thenReturn(ipNetwork);
     mockMvc.perform(get("/ip/FE80:0000:0000:0000:0202:B3FF:FE1E:1111/112")
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"lang\":\"en\",\"objectClassName\":\"ip network\"," +
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"ip network\",\"lang\":\"en\"," +
                     "\"startAddress\":\"fe80:0:0:0:202:b3ff:fe1e:0\",\"endAddress\":\"fe80:0:0:0:202:b3ff:fe1e:ffff\",\"type\":\"IPv6\",\"country\":\"USA\"}"));
   }
 }
