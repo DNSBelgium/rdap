@@ -115,9 +115,6 @@ subprojects {
   apply plugin: 'maven'
 
   uploadArchives {
-    onlyIf {
-      System.env.SOURCE_BUILD_NUMBER
-    }
     repositories {
       mavenDeployer {
         beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
