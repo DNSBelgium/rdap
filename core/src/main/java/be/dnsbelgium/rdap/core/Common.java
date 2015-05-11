@@ -17,55 +17,63 @@ package be.dnsbelgium.rdap.core;
 
 import be.dnsbelgium.core.DomainName;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Thread safe
- */
+@JsonPropertyOrder({"rdapConformance", "objectClassName"})
 class Common {
 
   public static final String DEFAULT_RDAP_CONFORMANCE = "rdap_level_0";
 
-  private final Set<String> rdapConformance;
+  public Set<String> rdapConformance;
 
-  private final List<Link> links;
+  public List<Link> links;
 
-  private final List<Notice> notices;
+  public List<Notice> notices;
 
-  private final List<Notice> remarks;
+  public List<Notice> remarks;
 
-  private final String lang;
+  public String lang;
 
-  private final List<Event> events;
+  public String objectClassName;
 
-  private final List<Status> status;
+  public List<Event> events;
 
-  private final DomainName port43;
+  public List<Status> status;
+
+  public DomainName port43;
 
   @JsonCreator
   public Common(
-      @JsonProperty("rdapConformance") Set<String> rdapConformance,
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
       @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
+      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43
   ) {
-    this.rdapConformance = rdapConformance == null ? new ImmutableSet.Builder<String>().add(DEFAULT_RDAP_CONFORMANCE).build() : rdapConformance;
     this.links = links == null ? null : new ImmutableList.Builder<Link>().addAll(links).build();
     this.notices = notices == null ? null : new ImmutableList.Builder<Notice>().addAll(notices).build();
     this.remarks = remarks == null ? null : new ImmutableList.Builder<Notice>().addAll(remarks).build();
     this.lang = lang;
+    this.objectClassName = objectClassName;
     this.events = events == null ? null : new ImmutableList.Builder<Event>().addAll(events).build();
     this.status = status == null ? null : new ImmutableList.Builder<Status>().addAll(status).build();
     this.port43 = port43;
+  }
+
+  public void addRdapConformance(String conformance) {
+    if (rdapConformance == null) {
+      rdapConformance = new HashSet<String>();
+    }
+    rdapConformance.add(conformance);
   }
 
   public Set<String> getRdapConformance() {
@@ -86,6 +94,10 @@ class Common {
 
   public String getLang() {
     return lang;
+  }
+
+  public String getObjectClassName() {
+    return objectClassName;
   }
 
   public List<Event> getEvents() {

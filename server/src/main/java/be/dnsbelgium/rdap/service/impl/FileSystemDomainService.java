@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.dnsbelgium.rdap.service;
+package be.dnsbelgium.rdap.service.impl;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.Domain;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -29,9 +29,9 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import java.io.File;
 import java.io.IOException;
 
-public class FileSystemDomainService implements DomainService {
+public class FileSystemDomainService extends DefaultDomainService {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(FileSystemDomainService.class);
+  private static final Logger logger = LoggerFactory.getLogger(FileSystemDomainService.class);
 
   private File directory;
 
@@ -46,8 +46,8 @@ public class FileSystemDomainService implements DomainService {
   }
 
   @Override
-  public Domain getDomain(DomainName domainName) throws Error {
-    LOGGER.debug("Current locale: {}", LocaleContextHolder.getLocale());
+  public Domain getDomainImpl(DomainName domainName) throws RDAPError {
+    logger.debug("Current locale: {}", LocaleContextHolder.getLocale());
     File domainNameFile = new File(directory, domainName.getStringValue());
     try {
       if (!domainNameFile.isFile() || !domainNameFile.getCanonicalFile().getParent().equals(directory.getCanonicalPath())) {
@@ -55,11 +55,10 @@ public class FileSystemDomainService implements DomainService {
       }
       return mapper.readValue(domainNameFile, Domain.class);
     } catch (IOException e) {
-      LOGGER.debug("Error in parsing JSON file", e);
+      logger.debug("Error in parsing JSON file", e);
     } catch (Exception e) {
-      LOGGER.error("Unhandled error in parsing JSON file", e);
+      logger.error("Unhandled error in parsing JSON file", e);
     }
-    throw new Error.DomainNotFound(domainName);
+    throw RDAPError.domainNotFound(domainName);
   }
-
 }

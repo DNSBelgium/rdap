@@ -28,6 +28,8 @@ public final class Notice {
 
   private final String title;
 
+  private final String type;
+
   private final List<String> description;
 
   private final List<Link> links;
@@ -35,15 +37,21 @@ public final class Notice {
   @JsonCreator
   public Notice(
       @JsonProperty("title") String title,
+      @JsonProperty("type") String type,
       @JsonProperty("description") List<String> description,
       @JsonProperty("links") List<Link> links) {
     this.title = title;
+    this.type = type;
     this.description = (description == null) ? null : new ImmutableList.Builder<String>().addAll(description).build();
     this.links = (links == null) ? null : new ImmutableList.Builder<Link>().addAll(links).build();
   }
 
   public String getTitle() {
     return title;
+  }
+
+  public String getType() {
+    return type;
   }
 
   public List<String> getDescription() {

@@ -28,14 +28,23 @@ public interface Status {
 
   public static enum Default implements Status {
     VALIDATED("validated"),
+    RENEW_PROHIBITED("renew prohibited"),
     UPDATE_PROHIBITED("update prohibited"),
     TRANSFER_PROHIBITED("transfer prohibited"),
     DELETE_PROHIBITED("delete prohibited"),
     PROXY("proxy"),
     PRIVATE("private"),
-    REDACTED("redacted"),
+    REMOVED("removed"),
     OBSCURED("obscured"),
-    ASSOCIATED("associated");
+    ASSOCIATED("associated"),
+    ACTIVE("active"),
+    INACTIVE("inactive"),
+    LOCKED("locked"),
+    PENDING_CREATE("pending create"),
+    PENDING_RENEW("pending renew"),
+    PENDING_TRANSFER("pending transfer"),
+    PENDING_UPDATE("pending update"),
+    PENDING_DELETE("pending delete");
 
     private final String value;
 
@@ -69,9 +78,7 @@ public interface Status {
 
   public static final class Factory {
 
-    private Factory() {
-
-    }
+    private Factory() {}
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Factory.class);
 
@@ -79,11 +86,9 @@ public interface Status {
       try {
         return Default.valueOf(status.toUpperCase(Locale.ENGLISH));
       } catch (IllegalArgumentException iae) {
-        LOGGER.debug("Not a default status, returning a BasicStatus", iae);
+        LOGGER.debug("Not a default status, returning a BasicStatus");
         return new BasicStatus(status);
       }
     }
   }
-
-
 }

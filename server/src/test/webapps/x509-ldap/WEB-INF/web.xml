@@ -25,7 +25,7 @@
 
   <filter>
     <filter-name>CORSFilter</filter-name>
-    <filter-class>be.dnsbelgium.servlet.CORSFilter</filter-class>
+    <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
   </filter>
 
   <filter>

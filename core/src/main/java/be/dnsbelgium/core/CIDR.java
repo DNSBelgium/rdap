@@ -15,6 +15,7 @@
  */
 package be.dnsbelgium.core;
 
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -34,10 +35,7 @@ public class CIDR {
     byte[] mask = ByteUtils.getMask(size, address.length * 8);
     byte[] maskedAddress = ByteUtils.and(address, mask);
 
-    if (!ByteUtils.isSame(address, maskedAddress)) {
-      throw new IllegalArgumentException("Invalid address");
-    }
-    this.address = address.clone();
+    this.address = maskedAddress;
     this.size = size;
     this.mask = mask;
   }
@@ -67,8 +65,9 @@ public class CIDR {
     String[] parts = cidr.split("\\/");
     if (parts.length == 1) {
       try {
-        InetAddress address = InetAddress.getByName(parts[1]);
-        return new CIDR(address.getAddress(), address.getAddress().length);
+        InetAddress address = InetAddress.getByName(parts[0]);
+        int length = address instanceof Inet4Address ? 32 : 128;
+        return new CIDR(address.getAddress(), length);
       } catch (UnknownHostException e) {
         throw new IllegalArgumentException(e);
       }

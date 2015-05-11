@@ -17,32 +17,53 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.CIDR;
-import be.dnsbelgium.rdap.core.IPNetwork;
+import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.IPService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("ip")
 public final class IPController {
+
+  private final static Logger logger = LoggerFactory.getLogger(IPController.class);
 
   @Autowired
   private IPService ipService;
 
   @RequestMapping(value = "/{ipaddress}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public IPNetwork get(@PathVariable("ipaddress") String ipAddress) {
-    return ipService.getIPNetwork(CIDR.of(ipAddress));
+  public IPNetwork get(@PathVariable("ipaddress") String ipAddress) throws RDAPError {
+    logger.debug("Query for ip {}", ipAddress);
+    return getNetwork(ipAddress);
   }
 
   @RequestMapping(value = "/{ipaddress}/{size}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
-  public IPNetwork get(@PathVariable("ipaddress") String ipAddress, @PathVariable("size") int size) {
-    return ipService.getIPNetwork(CIDR.of(ipAddress+"/"+size));
+  public IPNetwork get(@PathVariable("ipaddress") String ipAddress, @PathVariable("size") int size) throws RDAPError {
+    ipAddress = ipAddress+"/"+size;
+    return getNetwork(ipAddress);
   }
 
+  private IPNetwork getNetwork(String ipAddress) throws RDAPError {
+    IPNetwork ipNetwork;
+    try {
+      ipNetwork = ipService.getIPNetwork(CIDR.of(ipAddress));
+      if (ipNetwork == null) {
+        logger.debug("IP result for {} is null. Throwing IPNotFound Error", ipAddress);
+        throw RDAPError.ipNotFound(ipAddress);
+      }
+    } catch (RDAPError e) {
+      throw e;
+    } catch(Exception e) {
+      logger.error("Some errors not handled", e);
+      throw new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+    }
+    return ipNetwork;
+  }
 }

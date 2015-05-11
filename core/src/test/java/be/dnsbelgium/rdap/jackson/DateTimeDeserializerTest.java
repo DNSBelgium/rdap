@@ -24,7 +24,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class DateTimDeserializerTest extends AbstractDeserializerTest<DateTimeDeserializer, DateTime> {
+public class DateTimeDeserializerTest extends AbstractDeserializerTest<DateTimeDeserializer, DateTime> {
 
   @Override
   public DateTimeDeserializer getDeserializer() {
