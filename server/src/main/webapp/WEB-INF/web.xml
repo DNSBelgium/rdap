@@ -29,7 +29,7 @@
 
   <filter>
     <filter-name>CORSFilter</filter-name>
-    <filter-class>be.dnsbelgium.servlet.CORSFilter</filter-class>
+    <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
   </filter>
 
   <filter>
@@ -53,7 +53,7 @@
   </filter-mapping>
 
   <servlet>
-    <servlet-name>weirds</servlet-name>
+    <servlet-name>rdap</servlet-name>
     <servlet-class>
       org.springframework.web.servlet.DispatcherServlet
     </servlet-class>
@@ -65,13 +65,13 @@
     </init-param>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>be.dnsbelgium.weirds.spring.rest</param-value>
+      <param-value>be.dnsbelgium.rdap.WebConfig</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>weirds</servlet-name>
+    <servlet-name>rdap</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 

@@ -16,10 +16,14 @@
 package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.DomainName;
-import be.dnsbelgium.rdap.core.Nameserver;
+import be.dnsbelgium.rdap.core.*;
+import be.dnsbelgium.rdap.core.RDAPError;
 
 public interface NameserverService {
 
-  Nameserver getNameserver(DomainName domainName);
+  Nameserver getNameserver(DomainName domainName) throws RDAPError;
 
+  NameserversSearchResult searchByName(String name) throws RDAPError;
+
+  NameserversSearchResult searchByIp(String ip) throws RDAPError;
 }

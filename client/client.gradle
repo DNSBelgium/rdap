@@ -1,6 +1,7 @@
 apply plugin: 'application'
 
 mainClassName = 'be.dnsbelgium.rdap.client.RDAPCLI'
+applicationName = 'rdap'
 
 configurations {
   rpm 

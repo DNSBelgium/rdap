@@ -15,15 +15,18 @@
  */
 package be.dnsbelgium.rdap.core;
 
+import com.google.common.collect.ImmutableList;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
+
+import java.util.List;
 
 public class Event {
 
   public interface Action {
 
     public static enum Default implements Action {
-      REGISTRATION, REREGISTRATION, LAST_CHANGED, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER;
+      REGISTRATION, REREGISTRATION, LAST_CHANGED, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER, LOCKED, UNLOCKED;
       private final String value;
 
       private Default() {
@@ -35,9 +38,7 @@ public class Event {
         return value;
       }
     }
-
     String getValue();
-
   }
 
   private final Action eventAction;
@@ -46,13 +47,17 @@ public class Event {
 
   private final DateTime eventDate;
 
+  private final List<Link> links;
+
   public Event(
       @JsonProperty("eventAction") Action eventAction,
       @JsonProperty("eventActor") String eventActor,
-      @JsonProperty("eventDate") DateTime eventDate) {
+      @JsonProperty("eventDate") DateTime eventDate,
+      @JsonProperty("links") List<Link> links) {
     this.eventAction = eventAction;
     this.eventActor = eventActor;
     this.eventDate = eventDate;
+    this.links = (links == null) ? null : new ImmutableList.Builder<Link>().addAll(links).build();
   }
 
   public Action getEventAction() {
@@ -65,5 +70,9 @@ public class Event {
 
   public DateTime getEventDate() {
     return eventDate;
+  }
+
+  public List<Link> getLinks() {
+    return links;
   }
 }

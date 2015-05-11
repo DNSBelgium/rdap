@@ -21,19 +21,19 @@ import com.google.common.collect.ImmutableList;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 public final class Entity extends Common {
+
+  public static final String OBJECT_CLASS_NAME = "entity";
 
   public interface Role {
 
     String getValue();
 
     public static enum Default implements Role {
-      REGISTRANT, TECH, ADMIN, ABUSE, BILLING, REGISTRAR, RESELLER, SPONSOR, PROXY;
+      REGISTRANT, TECHNICAL, ADMINISTRATIVE, ABUSE, BILLING, REGISTRAR, RESELLER, SPONSOR, PROXY, NOTIFICATIONS, NOC;
 
       private final String value;
 
@@ -76,11 +76,11 @@ public final class Entity extends Common {
 
   @JsonCreator
   public Entity(
-      @JsonProperty("rdapConformance") Set<String> rdapConformance,
       @JsonProperty("links") List<Link> links,
       @JsonProperty("notices") List<Notice> notices,
       @JsonProperty("remarks") List<Notice> remarks,
       @JsonProperty("lang") String lang,
+      @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
@@ -89,7 +89,7 @@ public final class Entity extends Common {
       @JsonProperty("roles") List<Role> roles,
       @JsonProperty("asEventActor") List<Event> asEventActor,
       @JsonProperty("publicIds") List<PublicId> publicIds) {
-    super(rdapConformance, links, notices, remarks, lang, events, status, port43);
+    super(links, notices, remarks, lang, objectClassName, events, status, port43);
     this.handle = handle;
     this.vCard = vCard;
     this.roles = roles == null ? null : new ImmutableList.Builder<Role>().addAll(roles).build();
@@ -115,56 +115,5 @@ public final class Entity extends Common {
 
   public List<PublicId> getPublicIds() {
     return publicIds;
-  }
-
-  public static class Builder {
-
-    private Set<String> rdapConformance;
-
-    private List<Link> links;
-
-    private List<Notice> notices;
-
-    private List<Notice> remarks;
-
-    private String lang;
-
-    private List<Event> events;
-
-    private List<Status> status;
-
-    private DomainName port43;
-
-    private String handle;
-
-    private Contact vCard;
-
-    private List<Role> roles;
-
-    private List<Event> asEventActor;
-
-    private List<PublicId> publicIds;
-
-    public Builder setvCard(Contact contact) {
-      this.vCard = contact;
-      return this;
-    }
-
-    public Builder addRole(Role role) {
-      if (this.roles == null) {
-        this.roles = new ArrayList<Role>();
-      }
-      this.roles.add(role);
-      return this;
-    }
-
-    public Entity build() {
-      return new Entity(rdapConformance, links, notices, remarks, lang, events, status, port43, handle, vCard, roles, asEventActor, publicIds);
-    }
-
-    public Builder setHandle(String handle) {
-      this.handle = handle;
-      return this;
-    }
   }
 }

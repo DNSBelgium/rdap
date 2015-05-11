@@ -15,10 +15,15 @@
  */
 package be.dnsbelgium.rdap.service;
 
+import be.dnsbelgium.rdap.core.EntitiesSearchResult;
 import be.dnsbelgium.rdap.core.Entity;
+import be.dnsbelgium.rdap.core.RDAPError;
 
 public interface EntityService {
 
-  Entity getEntity(String handle);
+  Entity getEntity(String handle) throws RDAPError;
 
+  EntitiesSearchResult searchByFn(String fn) throws RDAPError;
+
+  EntitiesSearchResult searchByHandle(String handle) throws RDAPError;
 }

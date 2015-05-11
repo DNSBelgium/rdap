@@ -17,10 +17,16 @@ package be.dnsbelgium.rdap.service;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.core.Domain;
-import be.dnsbelgium.rdap.core.Error;
+import be.dnsbelgium.rdap.core.DomainsSearchResult;
+import be.dnsbelgium.rdap.core.RDAPError;
 
 public interface DomainService {
 
-  Domain getDomain(DomainName domainName) throws Error;
+  Domain getDomain(DomainName domainName) throws RDAPError;
 
+  DomainsSearchResult searchDomainsByName(String name) throws RDAPError;
+
+  DomainsSearchResult searchDomainsByNsLdhName(String nsLdhName) throws RDAPError;
+
+  DomainsSearchResult searchDomainsByNsIp(String nsLdhName) throws RDAPError;
 }
