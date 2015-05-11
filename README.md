@@ -1,6 +1,11 @@
 # RDAP Client + Server
 
-Implementation of the [RDAP protocol](http://tools.ietf.org/html/rfc7480)
+Implementation of the RDAP protocol
+[RFC-7480](http://tools.ietf.org/html/rfc7480)
+[RFC-7481](http://tools.ietf.org/html/rfc7481)
+[RFC-7482](http://tools.ietf.org/html/rfc7482)
+[RFC-7483](http://tools.ietf.org/html/rfc7483)
+[RFC-7484](http://tools.ietf.org/html/rfc7484)
 
 # Include RDAP library in your project
 Maven:
