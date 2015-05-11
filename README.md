@@ -83,8 +83,8 @@ From source (requires Java and Gradle)
     cd rdap/client
     gradle distTar
     # as root
-    tar -C /opt -xf build/distributions/rdap-client-1.0.tar
-    export PATH="$PATH:/opt/client-0.2.0/bin"
+    tar -C /opt -xf build/distributions/rdap-<version>.tar
+    export PATH="$PATH:/opt/rdap-<version>/bin"
     rdap --help
 
 From RPM
