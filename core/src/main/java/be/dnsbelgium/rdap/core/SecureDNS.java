@@ -43,16 +43,16 @@ import java.util.List;
 
 public class SecureDNS {
 
-  private final boolean zoneSigned;
-  private final boolean delegationSigned;
+  private final Boolean zoneSigned;
+  private final Boolean delegationSigned;
   private final int maxSigLife;
   private final List<DSData> dsData;
   private final List<KeyData> keyData;
 
   @JsonCreator
   public SecureDNS(
-      @JsonProperty("zoneSigned") boolean zoneSigned,
-      @JsonProperty("delegationSigned") boolean delegationSigned,
+      @JsonProperty("zoneSigned") Boolean zoneSigned,
+      @JsonProperty("delegationSigned") Boolean delegationSigned,
       @JsonProperty("maxSigLife") int maxSigLife,
       @JsonProperty("dsData") List<DSData> dsData,
       @JsonProperty("keyData") List<KeyData> keyData) {
@@ -63,11 +63,11 @@ public class SecureDNS {
     this.keyData = keyData == null? new ImmutableList.Builder<KeyData>().build() : ImmutableList.copyOf(keyData);
   }
 
-  public boolean isZoneSigned() {
+  public Boolean isZoneSigned() {
     return zoneSigned;
   }
 
-  public boolean isDelegationSigned() {
+  public Boolean isDelegationSigned() {
     return delegationSigned;
   }
 
