@@ -1,7 +1,6 @@
 # RDAP Client + Server
-[![Build Status](https://buildhive.cloudbees.com/job/DNSBelgium/job/rdap/badge/icon)](https://buildhive.cloudbees.com/job/DNSBelgium/job/rdap/)
 
-Implementation of the [RDAP protocol](http://tools.ietf.org/wg/weirds/)
+Implementation of the [RDAP protocol](http://tools.ietf.org/html/rfc7480)
 
 # UTS #46
 
@@ -13,52 +12,41 @@ You can also set a System property with
 
     -Dicu4j.configuration=file:///path/to/file
 
-
 # DomainName
 
     DomainName.of("xn--belgi-rsa.be").getTLD()
 
-# Create a server project
+# Extend the default service implementation(s):
 
-    mvn archetype:create -DarchetypeGroupId=be.dnsbelgium.rdap \
-                     -DarchetypeArtifactId=archetype \
-                     -DarchetypeVersion=0.2.0 \
-                     -DgroupId=com.mycompany.app \
-                     -DartifactId=myproject
-
-Implement MyDomainService
-
-    import be.dnsbelgium.core.DomainName;
-    import be.dnsbelgium.rdap.DomainController;
-    import be.dnsbelgium.rdap.core.Notice;
-    import be.dnsbelgium.rdap.core.Status;
-    import be.dnsbelgium.rdap.service.DomainService;
-    import be.dnsbelgium.rdap.core.Domain;
-    import com.google.common.collect.Lists;
-
-    import javax.annotation.Resource;
-
-    public class MyDomainService implements DomainService {
+    public class MyDomainService extends DefaultDomainService {
 
       @Override
-      public Domain getDomain(DomainName domainName) {
-
-        if (domainName.getLevelSize() > 2) {
-          throw new DomainController.DomainNotFoundException(domainName);
+      public Domain getDomainImpl(DomainName domainName) {
+        String tld = domainName.getTldLabel().getStringValue();
+        if (!supportedTlds.contains(tld)) {
+          throw RDAPError.notAuthoritative(domainName);
         }
-
-        return new Domain.Builder()
-            .setLDHName(domainName.toLDH().getStringValue())
-            .addStatus(new Status.BasicStatus("active"))
-            .build();
-
+        Domain domain = domainDAO.getDomain(domainName);
+        if (domain == null) {
+          throw RDAPError.noResults(domainName.getStringValue());        
+        }
+        return domain
       }
-
     }
 
-Although the standard doesn't allow you, you can get the Accept-Language header of the client (e.g. to only return the Notices in the client's preferred language)
+# Make sure you inject your implementation
+Extend WebConfig and override methods to inject your implementation(s)
+    
+    @Configuration    
+    public class Config extends WebConfig {
 
-    Locale l = LocaleContextHolder.getLocale();
+      @Bean
+      @Override
+      public DomainService getDomainService() {
+        return new MyDomainService();
+      }
+      ...
+    }
 
 # RDAP Extensions
 
@@ -87,57 +75,15 @@ Make sure you use the @JsonGenerator annotations in case of immutable objects. E
 
     }
 
-# vCard Extensions
-
-Simply add Properties with custom names. In case of a new type, you must create a serializer for it and register it in the CustomObjectMapper
-(extend CustomObjectMapper, add the Serializer in the construc
-
-    package be.dnsbelgium.weirds.spring.rest;
-
-    import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
-    import org.codehaus.jackson.JsonGenerator;
-    import org.codehaus.jackson.map.JsonSerializer;
-    import org.codehaus.jackson.map.ObjectMapper;
-    import org.codehaus.jackson.map.SerializerProvider;
-
-    import java.io.IOException;
-    import java.util.List;
-
-    public class MyConfig extends WebConfig {
-
-      public static class HelloWorldJsonSerializer extends JsonSerializer {
-
-        @Override
-        public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-          jsonGenerator.writeString("Hello, World!");
-        }
-      }
-
-      @Override
-      public ObjectMapper getObjectMapper() {
-        return new CustomObjectMapper() {
-          @Override
-          public List<JsonSerializer> getSerializers() {
-            List<JsonSerializer> serializers = super.getSerializers();
-            serializers.add(new HelloWorldJsonSerializer());
-            return serializers;
-          }
-        };
-      }
-
-    }
-
-
-
 # Installing the client
 
-From source (requires Java and Maven)
+From source (requires Java and Gradle)
 
     git clone git@github.com:DNSBelgium/rdap.git
     cd rdap/client
-    mvn assembly:assembly
+    gradle distTar
     # as root
-    tar -C /opt -zxf target/client-0.2.0-bin.tar.gz
+    tar -C /opt -xf build/distributions/rdap-client-1.0.tar
     export PATH="$PATH:/opt/client-0.2.0/bin"
     rdap --help
 

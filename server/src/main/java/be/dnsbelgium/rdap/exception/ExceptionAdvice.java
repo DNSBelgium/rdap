@@ -3,10 +3,8 @@ package be.dnsbelgium.rdap.exception;
 import be.dnsbelgium.core.LabelException;
 import be.dnsbelgium.rdap.core.RDAPError;
 import com.ibm.icu.text.IDNA;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -22,9 +20,6 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionAdvice {
   private final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
-
-  @Autowired
-  private static ObjectMapper objectMapper;
 
   @ExceptionHandler(value = RDAPError.class)
   @ResponseBody

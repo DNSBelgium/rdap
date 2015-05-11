@@ -35,7 +35,7 @@ import java.net.URLEncoder;
 @RequestMapping(value = "domain")
 public final class DomainController {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(DomainController.class);
+  private final Logger logger = LoggerFactory.getLogger(DomainController.class);
 
   private final String baseRedirectURL;
 
@@ -55,12 +55,12 @@ public final class DomainController {
   @RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
   public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
-    LOGGER.debug("Query for domain {}", domainName);
+    logger.debug("Query for domain {}", domainName);
     final DomainName dn;
     dn = DomainName.of(domainName);
     Domain result = domainService.getDomain(dn);
     if (result == null) {
-      LOGGER.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
+      logger.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
       throw RDAPError.domainNotFound(dn);
     }
     return result;
