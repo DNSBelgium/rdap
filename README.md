@@ -2,19 +2,19 @@
 
 Implementation of the [RDAP protocol](http://tools.ietf.org/html/rfc7480)
 
-# UTS #46
+# Include RDAP library in your project
+Maven:
 
-You can change the Unicode IDNA Compatibility processing by creating a icu4j.properties file with
-
-    idna.options=126
-
-You can also set a System property with
-
-    -Dicu4j.configuration=file:///path/to/file
-
-# DomainName
-
-    DomainName.of("xn--belgi-rsa.be").getTLD()
+    <dependency>
+      <groupId>be.dnsbelgium</groupId>
+      <artifactId>rdap-server</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+Gradle:
+    
+    dependencies {
+      be.dnsbelgium:rdap-server:1.0.0
+    }
 
 # Extend the default service implementation(s):
 
@@ -34,6 +34,14 @@ You can also set a System property with
       }
     }
 
+Methods in DefaultXXXService ending in Impl can be overridden. rdap_level_0 rdapconformance will be set for you if you ommit it.
+The default implementations will return:
+    
+    {
+        "errorCode": 501,
+        "title": "Not implemented"
+    }
+
 # Make sure you inject your implementation
 Extend WebConfig and override methods to inject your implementation(s)
     
@@ -47,6 +55,10 @@ Extend WebConfig and override methods to inject your implementation(s)
       }
       ...
     }
+
+# DomainName
+
+    DomainName.of("xn--belgi-rsa.be").getTLD()
 
 # RDAP Extensions
 
@@ -90,5 +102,5 @@ From source (requires Java and Gradle)
 From RPM
 
     su -
-    rpm -ivh rdap-client-0.2.0.rpm
+    rpm -ivh rdap-<version>.rpm
     man rdap
