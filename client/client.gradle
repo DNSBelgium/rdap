@@ -24,7 +24,7 @@ task clientRpm(dependsOn: distZip) << {
 
   def unzippedDir = new File(buildDir, 'unzipped')
   unzippedDir.mkdirs()
-  ant.unzip(src: "${distsDir}/rdap-client-${version}.zip", dest: unzippedDir.canonicalPath)
+  ant.unzip(src: "${distsDir}/rdap-${version}.zip", dest: unzippedDir.canonicalPath)
 
   FileTree redlineDeps = configurations.rpm.asFileTree
   ant.taskdef(name: 'redlinerpm', classname: 'org.freecompany.redline.ant.RedlineTask', classpath: redlineDeps.asPath)
@@ -37,9 +37,9 @@ task clientRpm(dependsOn: distZip) << {
       license: 'Apache License, Version 2.0',
       architecture: 'NOARCH', 
       destination: rpmDir) {
-    tarfileset(prefix: '/opt/rdap/bin', dir: unzippedDir.canonicalPath+"/rdap-client-${version}/bin", filemode: '744') 
-    tarfileset(prefix: '/opt/rdap/lib', dir: unzippedDir.canonicalPath+"/rdap-client-${version}/lib") 
-    link(target: '/opt/rdap/bin/rdap-client', path: '/usr/bin/rdap')
+    tarfileset(prefix: "/opt/rdap-${version}/bin", dir: unzippedDir.canonicalPath+"/rdap-${version}/bin", filemode: '744')
+    tarfileset(prefix: "/opt/rdap-${version}/lib", dir: unzippedDir.canonicalPath+"/rdap-${version}/lib")
+    link(target: "/opt/rdap-${version}/bin/rdap", path: '/usr/bin/rdap')
     tarfileset(prefix: '/usr/share/man/man1', dir: 'build') {
       include(name: 'rdap.1.gz')
     } 

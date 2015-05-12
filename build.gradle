@@ -61,7 +61,7 @@ ext {
 allprojects {
 
   group 'be.dnsbelgium'
-  version = '1.0.0'
+  version = '1.0.1'
 }
 
 subprojects {
@@ -94,7 +94,9 @@ subprojects {
   }
 
   signing {
-    sign configurations.archives
+    if (signing()) {
+      sign configurations.archives
+    }
   }
 
   task sourcesJar(type: Jar, dependsOn: classes) {
@@ -117,7 +119,12 @@ subprojects {
   uploadArchives {
     repositories {
       mavenDeployer {
-        beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+        beforeDeployment { MavenDeployment deployment ->
+          if (signing()){
+            signing.signPom(deployment)
+          }
+        }
 
         repository(url: sonatype_staging_url) {
           authentication(userName: sonatype_username, password: sonatype_password)
@@ -146,6 +153,14 @@ subprojects {
 
           developers {
             developer {
+              id 'johanheylen'
+              name 'Johan Heylen'
+            }
+            developer {
+              id 'stoal'
+              name 'Stijn Niclaes'
+            }
+            developer {
               id 'vandepitte'
               name 'Pieter Vandepitte'
             }
@@ -153,8 +168,9 @@ subprojects {
         }
       }
     }
-
   }
-
+}
+boolean signing() {
+  return project.hasProperty("siging.keyId")
 }
 
