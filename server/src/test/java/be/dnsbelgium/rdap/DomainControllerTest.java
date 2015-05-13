@@ -80,7 +80,11 @@ public class DomainControllerTest extends AbstractControllerTest {
 
   @Test
   public void testAcceptJson() throws Exception {
-
+    DomainName domainName = DomainName.of("example.be");
+    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    mockMvc.perform(get("/domain/example.be").accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotAcceptable());
   }
 
   @Test

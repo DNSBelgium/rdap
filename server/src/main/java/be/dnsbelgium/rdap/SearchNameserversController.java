@@ -29,7 +29,7 @@ public class SearchNameserversController {
     String query = checkParams(name, ip);
     if (name != null) {
       result = nameserverService.searchByName(name);
-     }
+    }
     if (ip != null) {
       result = nameserverService.searchByIp(ip);
     }
