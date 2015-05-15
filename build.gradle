@@ -83,6 +83,7 @@ subprojects {
   test {
     //forkEvery = 5
     //maxParallelForks = Runtime.runtime.availableProcessors() - 1
+    systemProperties 'file.encoding': 'UTF-8'
     testLogging {
       //exceptionFormat "full"
       //events 'started', 'passed', 'skipped', 'failed'
@@ -90,6 +91,7 @@ subprojects {
   }
 
   tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
     //options.compilerArgs << "-Xlint:all"
   }
 

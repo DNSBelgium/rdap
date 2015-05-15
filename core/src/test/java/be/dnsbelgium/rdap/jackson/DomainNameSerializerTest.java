@@ -28,7 +28,7 @@ public class DomainNameSerializerTest extends AbstractSerializerTest<DomainNameS
     serializeAndAssertEquals(getObjectMapper().writeValueAsString(expected), DomainName.of(expected));
     expected = "xn--bcher-kva.example";
     serializeAndAssertEquals(getObjectMapper().writeValueAsString(expected), DomainName.of(expected));
-    expected = "bücher.example";
+    expected = "b\u00FCcher.example";
     serializeAndAssertEquals(getObjectMapper().writeValueAsString(expected), DomainName.of(expected));
   }
 

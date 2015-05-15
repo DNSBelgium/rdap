@@ -45,17 +45,17 @@ public class LabelTest {
   @Test
   public void testToUnicode() {
     Label label = Label.of("xn--bcher-kva");
-    assertEquals("bücher", label.toUnicode().getStringValue());
+    assertEquals("b\u00FCcher", label.toUnicode().getStringValue());
   }
 
   @Test
   public void testToLDH() {
-    Label label = Label.of("bücher");
+    Label label = Label.of("b\u00FCcher");
     assertEquals("xn--bcher-kva", label.toLDH().getStringValue());
     // test combining characters in Unicode
     label = Label.of("Bu\u0308cher");
     assertEquals("xn--bcher-kva", label.toLDH().getStringValue());
-    assertEquals("bücher", label.getStringValue());
+    assertEquals("b\u00FCcher", label.getStringValue());
   }
 
   @Test
