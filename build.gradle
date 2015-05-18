@@ -173,6 +173,6 @@ subprojects {
   }
 }
 boolean signing() {
-  return project.hasProperty("siging.keyId")
+  return project.hasProperty("signing.keyId")
 }
 
