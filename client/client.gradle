@@ -9,7 +9,8 @@ configurations {
 
 dependencies {
   compile project(':rdap-core')
-  compile lib.httpclient, lib.jansi, lib.commons_cli
+  compile lib.httpclient, lib.commons_cli
+  compile lib.yaml
   testCompile lib.junit
   rpm 'org.redline-rpm:redline:1.1.12'
 }

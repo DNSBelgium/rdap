@@ -21,28 +21,26 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.ssl.*;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.BasicClientConnectionManager;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.util.DefaultPrettyPrinter;
-import org.fusesource.jansi.AnsiConsole;
+import org.codehaus.jackson.util.MinimalPrettyPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
+import javax.net.ssl.SSLContext;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.security.*;
-import java.util.Collections;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Command line RDAP client (Command Line Interface)
@@ -54,8 +52,6 @@ public final class RDAPCLI {
   }
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RDAPCLI.class);
-  public static final String HTTP = "http";
-  public static final String HTTPS = "https";
 
   public static enum Type {
     DOMAIN, ENTITY, NAMESERVER, AUTNUM, IP
@@ -63,8 +59,6 @@ public final class RDAPCLI {
 
 
   public static void main(String[] args) {
-
-    AnsiConsole.systemInstall();
 
     LOGGER.debug("Create the command line parser");
     CommandLineParser parser = new GnuParser();
@@ -77,9 +71,7 @@ public final class RDAPCLI {
       CommandLine line = parser.parse(options, args);
 
       if (line.hasOption("help")) {
-        HelpFormatter hf = new HelpFormatter();
-        hf.printHelp("rdap [ OPTIONS ]... [ QUERY ] [ TYPE ]\n", null /* header */, options, null /* footer */, true);
-        System.out.println();
+        printHelp(options);
         return;
       }
 
@@ -88,86 +80,97 @@ public final class RDAPCLI {
       }
       String query = line.getArgs()[0];
 
-      Type type = (line.getArgs().length == 2) ? Type.valueOf(line.getArgs()[1].toUpperCase()) : guess(query);
+      Type type = (line.getArgs().length == 2) ? Type.valueOf(line.getArgs()[1].toUpperCase()) : guessQueryType(query);
 
       LOGGER.debug("Query: {}, Type: {}", query, type);
 
       try {
-        URL url = new URL(line.getOptionValue(RDAPOptions.URL));
-        int port = url.getPort();
-        if (port == -1 && HTTP.equalsIgnoreCase(url.getProtocol())) {
-          port = 80;
+        SSLContextBuilder sslContextBuilder = SSLContexts.custom();
+        if (line.hasOption(RDAPOptions.TRUSTSTORE)) {
+          sslContextBuilder.loadTrustMaterial(RDAPClient.getKeyStoreFromFile(new File(line.getOptionValue(RDAPOptions.TRUSTSTORE)), line.getOptionValue(RDAPOptions.TRUSTSTORE_TYPE, RDAPOptions.DEFAULT_STORETYPE), line.getOptionValue(RDAPOptions.TRUSTSTORE_PASS, RDAPOptions.DEFAULT_PASS)));
         }
-        if (port == -1 && HTTPS.equalsIgnoreCase(url.getProtocol())) {
-          port = 443;
+        if (line.hasOption(RDAPOptions.KEYSTORE)) {
+          sslContextBuilder.loadKeyMaterial(RDAPClient.getKeyStoreFromFile(new File(line.getOptionValue(RDAPOptions.KEYSTORE)), line.getOptionValue(RDAPOptions.KEYSTORE_TYPE, RDAPOptions.DEFAULT_STORETYPE), line.getOptionValue(RDAPOptions.KEYSTORE_PASS, RDAPOptions.DEFAULT_PASS)), line.getOptionValue(RDAPOptions.KEYSTORE_PASS, RDAPOptions.DEFAULT_PASS).toCharArray());
         }
+        SSLContext sslContext = sslContextBuilder.build();
 
-        KeyStore trustStore = line.hasOption(RDAPOptions.TRUSTSTORE)
-            ? RDAPClient.getKeyStoreFromFile(new File(line.getOptionValue(RDAPOptions.TRUSTSTORE)), line.getOptionValue(RDAPOptions.TRUSTSTORE_TYPE, RDAPOptions.DEFAULT_STORETYPE), line.getOptionValue(RDAPOptions.TRUSTSTORE_PASS, RDAPOptions.DEFAULT_PASS))
-            : null;
-        KeyStore keyStore = line.hasOption(RDAPOptions.KEYSTORE)
-            ? RDAPClient.getKeyStoreFromFile(new File(line.getOptionValue(RDAPOptions.KEYSTORE)), line.getOptionValue(RDAPOptions.KEYSTORE_TYPE, RDAPOptions.DEFAULT_STORETYPE), line.getOptionValue(RDAPOptions.KEYSTORE_PASS, RDAPOptions.DEFAULT_PASS))
-            : null;
-        SSLSocketFactory socketFactory = new SSLSocketFactory(keyStore, line.getOptionValue(RDAPOptions.KEYPASS, RDAPOptions.DEFAULT_PASS), trustStore);
+        final String url = line.getOptionValue(RDAPOptions.URL);
+        final HttpHost host = Utils.httpHost(url);
 
-        Scheme scheme = new Scheme(HTTPS, port, socketFactory);
-
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(scheme);
-
-        HttpClientBuilder builder = HttpClientBuilder.create();
-
-
-        DefaultHttpClient httpClient = new DefaultHttpClient(new BasicClientConnectionManager(registry));
-        httpClient.getParams().setParameter(ClientPNames.DEFAULT_HOST,
-            new HttpHost(url.getHost(), url.getPort(), url.getProtocol()));
-
-
-        if (line.hasOption(RDAPOptions.USERNAME) && line.hasOption(RDAPOptions.PASSWORD)) {
-          httpClient.getCredentialsProvider().setCredentials(
-              new AuthScope(url.getHost(), port),
-              new UsernamePasswordCredentials(line.getOptionValue(RDAPOptions.USERNAME), line.getOptionValue(RDAPOptions.PASSWORD)));
-
-          BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-          credentialsProvider.setCredentials(
-              new AuthScope(url.getHost(), port),
-              new UsernamePasswordCredentials(line.getOptionValue(RDAPOptions.USERNAME), line.getOptionValue(RDAPOptions.PASSWORD)));
-          builder.setDefaultCredentialsProvider(credentialsProvider);
-        }
 
         HashSet<Header> headers = new HashSet<Header>();
         headers.add(new BasicHeader("Accept-Language", line.getOptionValue(RDAPOptions.LANG, Locale.getDefault().toString())));
+        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+            .setDefaultHeaders(headers)
+            .setSSLSocketFactory(
+                new SSLConnectionSocketFactory(
+                    sslContext,
+                    (line.hasOption(RDAPOptions.INSECURE) ? new AllowAllHostnameVerifier() :new BrowserCompatHostnameVerifier())
+                )
+            );
 
-        httpClient.getParams().setParameter(ClientPNames.DEFAULT_HEADERS, headers);
-        builder.setDefaultHeaders(Collections.singleton(new BasicHeader("Accept-Language", line.getOptionValue(RDAPOptions.LANG, Locale.getDefault().toString()))));
-
-        RDAPClient rdapClient = new RDAPClient(httpClient);
-        if (line.hasOption(RDAPOptions.RAW)) {
-          ObjectMapper mapper = new ObjectMapper();
-          System.out.println(mapper.writer().writeValueAsString(rdapClient.getDomainAsJson(query)));
-        } else if (line.hasOption(RDAPOptions.PRETTY)) {
-          ObjectMapper mapper = new ObjectMapper();
-          System.out.println(mapper.writer(new DefaultPrettyPrinter()).writeValueAsString(rdapClient.getDomainAsJson(query)));
+        if (line.hasOption(RDAPOptions.USERNAME) && line.hasOption(RDAPOptions.PASSWORD)) {
+          BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+          credentialsProvider.setCredentials(
+              new AuthScope(host.getHostName(), host.getPort()),
+              new UsernamePasswordCredentials(line.getOptionValue(RDAPOptions.USERNAME), line.getOptionValue(RDAPOptions.PASSWORD)));
+          httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
-      } catch (UnrecoverableKeyException e) {
+
+        RDAPClient rdapClient = new RDAPClient(httpClientBuilder.build(), url);
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode json = null;
+        switch (type) {
+          case DOMAIN:
+            json = rdapClient.getDomainAsJson(query);
+            break;
+          case ENTITY:
+            json = rdapClient.getEntityAsJson(query);
+            break;
+          case AUTNUM:
+            json = rdapClient.getAutNum(query);
+            break;
+          case IP:
+            json = rdapClient.getIp(query);
+            break;
+          case NAMESERVER:
+            json = rdapClient.getNameserver(query);
+            break;
+        }
+        PrintWriter out = new PrintWriter(System.out, true);
+        if (line.hasOption(RDAPOptions.RAW)) {
+          mapper.writer().writeValue(out, json);
+        } else if (line.hasOption(RDAPOptions.PRETTY)) {
+          mapper.writer(new DefaultPrettyPrinter()).writeValue(out, json);
+        } else if (line.hasOption(RDAPOptions.YAML)) {
+          DumperOptions dumperOptions = new DumperOptions();
+          dumperOptions.setPrettyFlow(true);
+          dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+          dumperOptions.setSplitLines(true);
+          Yaml yaml = new Yaml(dumperOptions);
+          Map data = mapper.convertValue(json, Map.class);
+          yaml.dump(data, out);
+        } else {
+          mapper.writer(new MinimalPrettyPrinter()).writeValue(out, json);
+        }
+        out.flush();
+      } catch (Exception e) {
         LOGGER.error(e.getMessage(), e);
-      } catch (NoSuchAlgorithmException e) {
-        LOGGER.error(e.getMessage(), e);
-      } catch (KeyStoreException e) {
-        LOGGER.error(e.getMessage(), e);
-      } catch (KeyManagementException e) {
-        LOGGER.error(e.getMessage(), e);
-      } catch (RDAPClient.RDAPClientException e) {
-        LOGGER.error(e.getMessage(), e);
-      } catch (IOException e) {
-        LOGGER.error(e.getMessage(), e);
+        System.exit(-1);
       }
     } catch (org.apache.commons.cli.ParseException e) {
-      LOGGER.error(e.getMessage(), e);
+      printHelp(options);
+      System.exit(-1);
     }
   }
 
-  public static Type guess(String query) {
+  private static void printHelp(Options options) {
+    HelpFormatter hf = new HelpFormatter();
+    hf.printHelp("rdap [ OPTIONS ]... [ QUERY ] [ TYPE ]\n", null /* header */, options, "\n" /* footer */, true);
+  }
+
+  public static Type guessQueryType(String query) {
     try {
       if (query.matches("^\\d+$")) {
         return Type.AUTNUM;

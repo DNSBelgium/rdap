@@ -53,8 +53,8 @@ ext {
       spring_web: "org.springframework:spring-web:${spring_version}",
       spring_tx: "org.springframework:spring-tx:${spring_version}",
       spring_test: "org.springframework:spring-test:${spring_version}",
-      jansi: 'org.fusesource.jansi:jansi:1.11',
-      groovy: 'org.codehaus.groovy:groovy:2.2.1'
+      groovy: 'org.codehaus.groovy:groovy:2.2.1',
+      yaml: 'org.yaml:snakeyaml:1.15'
   ]
 }
 

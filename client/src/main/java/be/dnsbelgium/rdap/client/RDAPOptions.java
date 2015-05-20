@@ -35,14 +35,17 @@ public class RDAPOptions extends Options {
   public static final String TRUSTSTORE_TYPE = "truststoretype";
   public static final String RAW = "raw";
   public static final String PRETTY = "pretty";
+  public static final String YAML = "yaml";
   public static final String LANG = "lang";
   public static final String TRUSTSTORE = "truststore";
+  public static final String INSECURE = "insecure";
+
   private static final long serialVersionUID = 3032718269550334306L;
 
   public RDAPOptions(Locale locale) {
     super();
     addOption(null, "version", false, "display version, authors and licensing information.");
-    addOption(null, "help", false, "display a short help text.");
+    addOption("h", "help", false, "display a short help text.");
     addOption(OptionBuilder.withLongOpt("config")
         .withDescription("uses FILE as a configuration file instead of the default.")
         .hasArg()
@@ -79,7 +82,7 @@ public class RDAPOptions extends Options {
         .withArgName("PASSWORD")
         .create());
     addOption(OptionBuilder.withLongOpt(TRUSTSTORE)
-        .withDescription("Tells curl to use the specified certificate file to verify the peer. The file may contain multiple CA certificates. The certificate(s) must be\n" +
+        .withDescription("Tells rdap to use the specified certificate file to verify the peer. The file may contain multiple CA certificates. The certificate(s) must be\n" +
             " in PEM format.")
         .hasArg()
         .withArgName("FILE")
@@ -94,7 +97,7 @@ public class RDAPOptions extends Options {
         .hasArg()
         .withArgName("PASSWORD")
         .create());
-    addOption(OptionBuilder.withLongOpt("insecure")
+    addOption(OptionBuilder.withLongOpt(INSECURE)
         .withDescription("This option explicitly allows RDAP to perform \"insecure\" SSL connections")
         .create("i"));
     addOption(OptionBuilder.withLongOpt(RAW)
@@ -103,10 +106,9 @@ public class RDAPOptions extends Options {
     addOption(OptionBuilder.withLongOpt(PRETTY)
         .withDescription("Causes rdap to emit pretty-printed JSON rather than text output.")
         .create());
-    addOption(OptionBuilder.withLongOpt("location")
-        .withDescription("If  the server reports that the requested page has moved to a different location (indicated with a Location: header and a 3XX response\n" +
-            " code), this option will make curl redo the request on the new place")
-        .create("l"));
+    addOption(OptionBuilder.withLongOpt(YAML)
+        .withDescription("Causes rdap to emit pretty-printed YAML rather than text output.")
+        .create());
     addOption(OptionBuilder.withLongOpt(PASSWORD)
         .withDescription("Specify a password to be used with Basic Authentication.")
         .hasArg()
