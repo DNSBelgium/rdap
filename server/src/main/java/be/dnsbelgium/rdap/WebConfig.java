@@ -26,6 +26,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -73,6 +74,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
   @Override
   public final void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
     converters.add(converter());
+  }
+
+  @Override
+  protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    super.configureContentNegotiation(configurer);
+    configurer.favorPathExtension(false);
   }
 
   @Bean
