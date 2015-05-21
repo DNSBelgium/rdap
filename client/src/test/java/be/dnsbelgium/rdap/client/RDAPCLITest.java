@@ -23,9 +23,9 @@ public class RDAPCLITest {
 
   @Test
   public void testGuess() {
-    assertEquals(RDAPCLI.Type.AUTNUM,RDAPCLI.guess("12345"));
-    assertEquals(RDAPCLI.Type.IP,RDAPCLI.guess("127.0.0.0/8"));
-    assertEquals(RDAPCLI.Type.DOMAIN, RDAPCLI.guess("foo.example"));
-    assertEquals(RDAPCLI.Type.ENTITY,RDAPCLI.guess("handle"));
+    assertEquals(RDAPCLI.Type.AUTNUM,RDAPCLI.guessQueryType("12345"));
+    assertEquals(RDAPCLI.Type.IP,RDAPCLI.guessQueryType("127.0.0.0/8"));
+    assertEquals(RDAPCLI.Type.DOMAIN, RDAPCLI.guessQueryType("foo.example"));
+    assertEquals(RDAPCLI.Type.ENTITY,RDAPCLI.guessQueryType("handle"));
   }
 }
