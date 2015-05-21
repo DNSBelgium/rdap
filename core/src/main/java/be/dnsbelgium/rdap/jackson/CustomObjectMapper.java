@@ -42,7 +42,7 @@ public class CustomObjectMapper extends ObjectMapper {
     SimpleModule simpleModule = new SimpleModule("SimpleModule",
         new Version(1, 0, 0, null));
 
-    simpleModule.addSerializer(new ContactSerializer());
+    simpleModule.addSerializer(new RDAPContactSerializer());
     simpleModule.addSerializer(new StructuredValueSerializer());
     simpleModule.addSerializer(new TextListSerializer());
     simpleModule.addSerializer(new TextSerializer());

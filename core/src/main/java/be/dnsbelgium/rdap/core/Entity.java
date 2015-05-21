@@ -66,7 +66,7 @@ public final class Entity extends Common {
 
   private final String handle;
 
-  private final Contact vCard;
+  private final Contact vcardArray;
 
   private final List<Role> roles;
 
@@ -85,13 +85,13 @@ public final class Entity extends Common {
       @JsonProperty("status") List<Status> status,
       @JsonProperty("port43") DomainName port43,
       @JsonProperty("handle") String handle,
-      @JsonProperty("vCard") Contact vCard,
+      @JsonProperty("vcardArray") Contact vcardArray,
       @JsonProperty("roles") List<Role> roles,
       @JsonProperty("asEventActor") List<Event> asEventActor,
       @JsonProperty("publicIds") List<PublicId> publicIds) {
     super(links, notices, remarks, lang, objectClassName, events, status, port43);
     this.handle = handle;
-    this.vCard = vCard;
+    this.vcardArray = vcardArray;
     this.roles = roles == null ? null : new ImmutableList.Builder<Role>().addAll(roles).build();
     this.asEventActor = asEventActor == null ? null : new ImmutableList.Builder<Event>().addAll(asEventActor).build();
     this.publicIds = publicIds == null ? null : new ImmutableList.Builder<PublicId>().addAll(publicIds).build();
@@ -101,8 +101,8 @@ public final class Entity extends Common {
     return handle;
   }
 
-  public Contact getvCard() {
-    return vCard;
+  public Contact getvcardArray() {
+    return vcardArray;
   }
 
   public List<Role> getRoles() {
