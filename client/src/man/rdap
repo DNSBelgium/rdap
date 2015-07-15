@@ -1,5 +1,5 @@
 .\" Manpage for rdap.
-.\" Contact vivek@nixcraft.net.in to correct errors or typos.
+.\" Contact support@dnsbelgium.be to correct errors or typos.
 .TH RDAP 1 "13 June 2013" "RDAP 0.1.0" "RDAP man page"
 .SH NAME
 rdap \- RDAP client
