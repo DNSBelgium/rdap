@@ -16,8 +16,8 @@
 package be.dnsbelgium.rdap.spring.security;
 
 import be.dnsbelgium.rdap.Controllers;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
@@ -33,7 +33,7 @@ public class RDAPErrorHandler extends AccessDeniedHandlerImpl {
   public RDAPErrorHandler() {
     super();
     mapper = new ObjectMapper();
-    mapper.setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
+    mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
   }
 
   @Override

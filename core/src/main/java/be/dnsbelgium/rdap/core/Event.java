@@ -15,8 +15,8 @@
  */
 package be.dnsbelgium.rdap.core;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 
 import java.util.List;

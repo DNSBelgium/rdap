@@ -1,8 +1,8 @@
 package be.dnsbelgium.rdap.jackson;
 
 import be.dnsbelgium.vcard.Contact;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.SerializerProvider;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
 import java.io.IOException;
 

@@ -6,14 +6,14 @@ import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.exception.ExceptionAdvice;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import be.dnsbelgium.vcard.Contact;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -53,8 +53,8 @@ public abstract class AbstractControllerTest {
     }
 
     @Bean
-    MappingJacksonHttpMessageConverter converter() {
-      MappingJacksonHttpMessageConverter converter = new MappingJacksonHttpMessageConverter();
+    MappingJackson2HttpMessageConverter converter() {
+      MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
       converter.setObjectMapper(new CustomObjectMapper());
       return converter;
     }

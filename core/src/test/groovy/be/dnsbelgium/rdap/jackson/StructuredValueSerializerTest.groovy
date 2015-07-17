@@ -17,9 +17,9 @@ package be.dnsbelgium.rdap.jackson
 
 import be.dnsbelgium.vcard.Contact
 import be.dnsbelgium.vcard.datatype.StructuredValue
-import org.codehaus.jackson.map.BeanProperty
-import org.codehaus.jackson.map.JsonSerializer
-import org.codehaus.jackson.map.SerializerProvider
+import com.fasterxml.jackson.databind.BeanProperty
+import com.fasterxml.jackson.databind.JsonSerializer
+import com.fasterxml.jackson.databind.SerializerProvider
 import org.junit.Test
 
 import static org.mockito.Matchers.any

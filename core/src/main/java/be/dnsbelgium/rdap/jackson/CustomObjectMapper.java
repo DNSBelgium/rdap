@@ -15,30 +15,22 @@
  */
 package be.dnsbelgium.rdap.jackson;
 
-import be.dnsbelgium.core.DomainName;
-import be.dnsbelgium.rdap.core.Domain;
-import be.dnsbelgium.rdap.core.Entity;
-import be.dnsbelgium.rdap.core.Event;
-import be.dnsbelgium.rdap.core.Status;
-import be.dnsbelgium.vcard.Contact;
-import org.codehaus.jackson.Version;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.map.module.SimpleModule;
-import org.joda.time.DateTime;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.Version;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomObjectMapper extends ObjectMapper {
 
   public CustomObjectMapper() {
-    super.configure(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS, false);
-    setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-    configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-    configure(SerializationConfig.Feature.WRITE_EMPTY_JSON_ARRAYS, false);
+    super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
     SimpleModule simpleModule = new SimpleModule("SimpleModule",
         new Version(1, 0, 0, null));
 
@@ -53,14 +45,6 @@ public class CustomObjectMapper extends ObjectMapper {
     for (JsonSerializer serializer: getSerializers()) {
       simpleModule.addSerializer(serializer);
     }
-
-    simpleModule.addDeserializer(Contact.class, new ContactDeserializer());
-    simpleModule.addDeserializer(DomainName.class, new DomainNameDeserializer());
-    simpleModule.addDeserializer(Entity.Role.class, new RoleDeserializer());
-    simpleModule.addDeserializer(DateTime.class, new DateTimeDeserializer());
-    simpleModule.addDeserializer(Event.Action.class, new ActionDeserializer());
-    simpleModule.addDeserializer(Status.class, new StatusDeserializer());
-    simpleModule.addDeserializer(Domain.Variant.Relation.class, new RelationDeserializer());
 
     registerModule(simpleModule);
   }

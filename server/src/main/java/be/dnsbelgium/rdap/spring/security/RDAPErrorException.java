@@ -15,9 +15,9 @@
  */
 package be.dnsbelgium.rdap.spring.security;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonProperty;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;

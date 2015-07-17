@@ -18,14 +18,14 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import be.dnsbelgium.rdap.service.*;
 import be.dnsbelgium.rdap.service.impl.*;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -83,8 +83,8 @@ public class WebConfig extends WebMvcConfigurationSupport {
   }
 
   @Bean
-  MappingJacksonHttpMessageConverter converter() {
-    MappingJacksonHttpMessageConverter converter = new MappingJacksonHttpMessageConverter();
+  MappingJackson2HttpMessageConverter converter() {
+    MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
     converter.setObjectMapper(getObjectMapper());
     return converter;
   }
