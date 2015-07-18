@@ -1,9 +1,9 @@
-# RDAP library
+# RDAP server library
 
-This java library aims to make it very easy to build an RDAP server that talks with your registry back-end.
+This java library makes it very easy to build an RDAP server that talks with your registry back-end.
 
 # Features
-* A library to include in your Java web application to significantly ease the implementation of an RDAP server
+* Include this library in your Java web application to significantly ease implementing an RDAP server
 * Can be combined with any back-end by simply implementing one or more methods
 * All you need to do is retrieve the data and populate some POJO's
 * The library takes care of parsing the incoming RDAP requests, calling the right methods and generating JSON responses
@@ -22,10 +22,10 @@ This library understands and supports the following RFC's:
 
 # How it works
 
-* The library contains a number of POJO's (plain old Java objects) representing all the data structures defined in rfc7483
+* The library contains a number of POJO's (plain old Java objects) representing the data structures defined in rfc7483
 * You need to write the code to populate these objects whenever a query comes in
 
-# The flow:
+# The flow
 Let's assume that you have implemented a class com.example.rdap.MyDomainService which extends DefaultDomainService
 and that you have deployed your application in an application server listening at port 8080
 
@@ -123,7 +123,7 @@ Extend WebConfig and override methods to make sure your classes are being used i
 
     }
 
-# Configure org.springframework.web.servlet.DispatcherServlet
+# Configure the DispatcherServlet
 
 This servlet needs to know your WebConfig implementation. The easiest way to do this is by passing in the fully qualified classname in web.xml
 
