@@ -38,7 +38,7 @@ and that you have deployed your application in an application server listening a
 
 ## Java web application example implementation
 
-We have created a sample project which could help you in implemention. You can find both the src and instructions in the following project: [rdap-server-sample-gtld](https://github.com/johanheylen/rdap-server-sample-gtld)
+We have created a sample project which could help you in implemention. You can find both the source and instructions in the following project: [rdap-server-sample-gtld](https://github.com/johanheylen/rdap-server-sample-gtld)
 
 ## Build your own implementation
 
