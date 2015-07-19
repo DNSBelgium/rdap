@@ -81,7 +81,7 @@ You only need to do the following to use your own Service implementations:
 
 The following sections describe these steps in more detail
 
-# Extend the default service implementation(s):
+## Extend the default service implementation(s):
 
     For example:
 
@@ -109,7 +109,7 @@ while in this example DomainDAO is supposed to be a class that you have implemen
 
 The methods in DefaultXXXService ending in Impl can be overridden. rdap_level_0 rdapconformance will be set for you if you omit it.
 
-# Make sure you inject your implementation
+## Make sure you inject your implementation
 Extend WebConfig and override methods to make sure your classes are being used instead of the default implementations:
     
     @Configuration    
@@ -123,7 +123,7 @@ Extend WebConfig and override methods to make sure your classes are being used i
 
     }
 
-# Configure the DispatcherServlet
+## Configure the DispatcherServlet
 
 This servlet needs to know your WebConfig implementation. The easiest way to do this is by passing in the fully qualified classname in web.xml
 
