@@ -36,6 +36,12 @@ and that you have deployed your application in an application server listening a
 
 # How to use this library
 
+## Java web application example implementation
+
+We have created a sample project which could help you in implemention. You can find both the src and instructions in the following project: [rdap-server-sample-gtld](https://github.com/johanheylen/rdap-server-sample-gtld)
+
+## Build your own implementation
+
 The instructions below assume that you have a recent version of the JDK and Apache Maven on your system.
 Of course you can use other build tools (Ant, Gradle, ...) instead of Maven.
 
