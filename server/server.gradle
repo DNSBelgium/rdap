@@ -19,7 +19,6 @@ dependencies {
       lib.spring_ldap_ldif_batch,
       lib.guava,
       lib.slf4j,
-      lib.log4j,
       lib.commons_pool,
       lib.aspectj,
       lib.cglib
