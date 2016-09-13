@@ -16,66 +16,95 @@
 
 package be.dnsbelgium.rdap;
 
-import be.dnsbelgium.core.DomainName;
-import be.dnsbelgium.rdap.core.Domain;
-import be.dnsbelgium.rdap.core.RDAPError;
-import be.dnsbelgium.rdap.service.DomainService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import be.dnsbelgium.core.DomainName;
+import be.dnsbelgium.rdap.core.Domain;
+import be.dnsbelgium.rdap.core.RDAPError;
+import be.dnsbelgium.rdap.service.DomainService;
 
 @Controller
 @RequestMapping(value = "domain")
 public final class DomainController {
 
-  private final Logger logger = LoggerFactory.getLogger(DomainController.class);
+	private final Logger logger = LoggerFactory.getLogger(DomainController.class);
 
-  private final String baseRedirectURL;
+	private final String baseRedirectURL;
 
-  private final int redirectThreshold;
+	private final int redirectThreshold;
 
-  @Autowired
-  public DomainController(
-          @Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
-          @Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
-    this.baseRedirectURL = baseRedirectURL;
-    this.redirectThreshold = redirectThreshold;
-  }
+	@Autowired
+	public DomainController(@Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
+			@Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
+		this.baseRedirectURL = baseRedirectURL;
+		this.redirectThreshold = redirectThreshold;
+	}
 
-  @Autowired
-  private DomainService domainService;
+	@Autowired
+	private DomainService domainService;
 
-  @RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
-  @ResponseBody
-  public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
-    logger.debug("Query for domain {}", domainName);
-    final DomainName dn;
-    dn = DomainName.of(domainName);
-    Domain result = domainService.getDomain(dn);
-    if (result == null) {
-      logger.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
-      throw RDAPError.domainNotFound(dn);
-    }
-    return result;
-  }
+	@RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@ResponseBody
+	public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
+		logger.debug("Query(GET) for domain {}", domainName);
+		final DomainName dn;
+		dn = DomainName.of(domainName);
+		Domain result = domainService.getDomain(dn);
+		if (result == null) {
+			logger.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
+			throw RDAPError.domainNotFound(dn);
+		}
+		return result;
+	}
 
-  @ExceptionHandler(value = RDAPError.NotAuthoritative.class)
-  @ResponseBody
-  protected RDAPError handleResourceNotFoundException(RDAPError.NotAuthoritative error, HttpServletResponse response) throws UnsupportedEncodingException {
-    response.setStatus(error.getErrorCode());
-    String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName(), "UTF-8");
-    response.addHeader(Controllers.LOCATION_HEADER, location);
-    return error;
-  }
+	@RequestMapping(value = "/{domainName}", method = RequestMethod.HEAD, produces = Controllers.CONTENT_TYPE)
+	public ResponseEntity<Void> head(@PathVariable("domainName") final String domainName) throws RDAPError {
+		logger.debug("Query(HEAD) for domain {}", domainName);
+		final DomainName dn;
+		dn = DomainName.of(domainName);
+		Domain result = domainService.getDomain(dn);
+		if (result == null) {
+			logger.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
+			throw RDAPError.domainNotFound(dn);
+		}
+		return new ResponseEntity<Void>(null, new HttpHeaders(), HttpStatus.OK);
+	}
 
-  public int getRedirectThreshold() {
-    return redirectThreshold;
-  }
+	@ExceptionHandler(value = RDAPError.NotAuthoritative.class)
+	@ResponseBody
+	protected RDAPError handleResourceNotFoundException(RDAPError.NotAuthoritative error, HttpServletResponse response)
+			throws UnsupportedEncodingException {
+		response.setStatus(error.getErrorCode());
+		String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName(), "UTF-8");
+		response.addHeader(Controllers.LOCATION_HEADER, location);
+		return error;
+	}
+
+	@RequestMapping(value = "/{domainName}", method = { RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.OPTIONS,
+			RequestMethod.PATCH, RequestMethod.POST, RequestMethod.TRACE }, produces = Controllers.CONTENT_TYPE)
+	@ResponseBody
+	public Domain any(@PathVariable("domainName") final String domainName) throws RDAPError {
+		throw RDAPError.methodNotAllowed();
+	}
+
+	public int getRedirectThreshold() {
+		return redirectThreshold;
+	}
 }

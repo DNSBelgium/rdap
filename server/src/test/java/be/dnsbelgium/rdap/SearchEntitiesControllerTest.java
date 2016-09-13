@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -80,4 +81,11 @@ public class SearchEntitiesControllerTest extends AbstractControllerTest {
             .andExpect(status().isNotFound())
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
   }
+  
+	@Test
+	public void testMethodNotAllowed() throws Exception {
+	    mockMvc.perform(put("/entities?handle=Handle").accept(MediaType.parseMediaType("application/rdap+json")))
+				.andExpect(status().isMethodNotAllowed());
+	}
+
 }

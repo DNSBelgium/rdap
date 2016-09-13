@@ -37,6 +37,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -75,15 +77,15 @@ public class DomainControllerTest extends AbstractControllerTest {
   @Test
   public void testNotFound() throws Exception {
     when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(null);
-    mockMvc.perform(get("/domain/example.com")).andExpect(status().isNotFound());
+    mockMvc.perform(get("/domain/example.com").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isNotFound());
   }
 
   @Test
-  public void testAcceptJson() throws Exception {
-    DomainName domainName = DomainName.of("example.be");
+  public void testAcceptRdapJson() throws Exception {
+    DomainName domainName = DomainName.of("example.com");
     Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
     when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    mockMvc.perform(get("/domain/example.be").accept(MediaType.parseMediaType("application/json")))
+    mockMvc.perform(get("/domain/example.com").accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isNotAcceptable());
   }
 
@@ -94,13 +96,27 @@ public class DomainControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testDefault() throws Exception {
+  public void testDefaultGet() throws Exception {
     DomainName domainName = DomainName.of("example.com");
     Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
     when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    mockMvc.perform(get("/domain/example.com")).andExpect(status().isOk()).andExpect(jsonPath("$.ldhName", "example.com").exists());
+    mockMvc.perform(get("/domain/example.com").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isOk()).andExpect(jsonPath("$.ldhName", "example.com").exists());
   }
 
+  @Test
+  public void testDefaultHead() throws Exception {
+    DomainName domainName = DomainName.of("example.com");
+    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    mockMvc.perform(head("/domain/example.com").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isOk());
+  }
+
+	@Test
+	public void testMethodNotAllowed() throws Exception {
+		mockMvc.perform(put("/domain/example.com").accept(MediaType.parseMediaType("application/rdap+json")))
+				.andExpect(status().isMethodNotAllowed());
+	}
+	
   @Test
   public void testNoGlue() throws Exception{
     DomainName domainName = DomainName.of("example.com");
@@ -179,4 +195,7 @@ public class DomainControllerTest extends AbstractControllerTest {
         .andExpect(content().string("{\"errorCode\":400,\"title\":\"Invalid domain name\",\"description\":[\"LEADING_HYPHEN\",\"TRAILING_HYPHEN\",\"DISALLOWED\"]}"))
             .andExpect(status().isBadRequest());
   }
+  
+  
+  
 }

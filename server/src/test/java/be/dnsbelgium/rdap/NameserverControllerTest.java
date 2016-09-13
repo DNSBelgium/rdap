@@ -34,6 +34,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -90,7 +93,16 @@ public class NameserverControllerTest extends AbstractControllerTest {
     when(nameserverService.getNameserver(any(DomainName.class))).thenThrow(RDAPError.notAuthoritative(DomainName.of("ns.example.com")));
     mockMvc.perform(get("/nameserver/ns.example.com")).andExpect(status().isMovedPermanently()).andExpect(redirectedUrl(REDIRECT_URL + "/nameserver/ns.example.com"));
   }
-
+  
+	@Test
+	public void testMinimalHead() throws Exception {
+		Nameserver nameserver = new Nameserver(null, null, null, null, null, null, null, null,
+				DomainName.of("ns.example.com"), null, null);
+		nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
+		when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
+		mockMvc.perform(head("/nameserver/ns.example.com")).andExpect(status().isOk());
+	}
+  
   @Test
   public void testMinimal() throws Exception {
     Nameserver nameserver = new Nameserver(null, null, null, null, null, null, null, null, DomainName.of("ns.example.com"), null, null);
@@ -102,6 +114,12 @@ public class NameserverControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.com\"}"));
   }
+  
+	@Test
+	public void testMethodNotAllowed() throws Exception {
+		mockMvc.perform(put("/nameserver/ns.example").accept(MediaType.parseMediaType("application/rdap+json")))
+				.andExpect(status().isMethodNotAllowed());
+	}
 
   @Test
   public void testMaximal() throws Exception {

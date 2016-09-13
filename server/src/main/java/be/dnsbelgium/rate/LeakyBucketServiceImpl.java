@@ -42,9 +42,9 @@ public class LeakyBucketServiceImpl implements LeakyBucketService {
 
   private final TimeUnit refreshTimeUnit;
 
-  private final LeakyBucketDao leakyBucketDao;
+  private final LeakyBucketDao<LeakyBucketKey> leakyBucketDao;
 
-  public LeakyBucketServiceImpl(final long ttl, final TimeUnit timeUnit, long refreshRate, TimeUnit refreshTimeUnit, LeakyBucketDao leakyBucketDao) {
+  public LeakyBucketServiceImpl(final long ttl, final TimeUnit timeUnit, long refreshRate, TimeUnit refreshTimeUnit, LeakyBucketDao<LeakyBucketKey> leakyBucketDao) {
 
     this.ttl = ttl;
     this.timeUnit = timeUnit;
