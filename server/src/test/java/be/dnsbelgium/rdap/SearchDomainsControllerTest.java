@@ -22,6 +22,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -179,4 +180,10 @@ public class SearchDomainsControllerTest extends AbstractControllerTest {
     verify(domainService, never()).searchDomainsByName(anyString());
     verify(domainService, never()).searchDomainsByNsLdhName(anyString());
   }
+  
+	@Test
+	public void testMethodNotAllowed() throws Exception {
+		mockMvc.perform(put("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("application/rdap+json")))
+				.andExpect(status().isMethodNotAllowed());
+	}
 }

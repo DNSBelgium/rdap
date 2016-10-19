@@ -1,5 +1,3 @@
-apply plugin: 'sonar-runner'
-
 ext {
   cglib_version = '3.0'
   guava_version = '15.0'
@@ -175,3 +173,16 @@ boolean signing() {
   return project.hasProperty("signing.keyId")
 }
 
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies { classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1" }
+}
+
+// To apply a third-party plugin from an external build script,
+// you have to use the plugin's fully qualified class name, rather than its ID
+apply plugin: org.sonarqube.gradle.SonarQubePlugin

@@ -22,6 +22,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -73,8 +76,25 @@ public class EntityControllerTest extends AbstractControllerTest {
     mockMvc.perform(get("/entity/123456")).andExpect(status().isInternalServerError());
   }
 
-  @Test
-  public void testMinimal() throws Exception {
+	@Test
+	public void testMethodNotAllowed() throws Exception {
+		mockMvc.perform(put("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
+				.andExpect(status().isMethodNotAllowed());
+	}
+  
+	  @Test
+	  public void testMinimalHead() throws Exception {
+	    String handle = "123456";
+	    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null);
+	    entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
+	    when(entityService.getEntity(anyString())).thenReturn(entity);
+		mockMvc.perform(head("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
+		.andExpect(status().isOk());
+	  }
+
+	
+	@Test
+  public void testMinimalGet() throws Exception {
     String handle = "123456";
     Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null);
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
