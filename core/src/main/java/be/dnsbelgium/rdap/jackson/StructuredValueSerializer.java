@@ -36,6 +36,9 @@ public class StructuredValueSerializer extends JsonSerializer<StructuredValue> {
 
   @Override
   public void serialize(StructuredValue value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    if (value.getComponents().length > 1) {
+      jgen.writeStartArray();
+    }
     for (StructuredValue.Component c : value.getComponents()) {
       // in a structured context, a list-component must start with [ and end with ]
       if (AbstractList.class.isAssignableFrom(c.value.getClass()) && ((AbstractList) c.value).getValues() != null && ((AbstractList) c.value).getValues().size() > 1) {
@@ -45,6 +48,9 @@ public class StructuredValueSerializer extends JsonSerializer<StructuredValue> {
       } else {
         provider.findValueSerializer(c.value.getClass(), null).serialize(c.value, jgen, provider);
       }
+    }
+    if (value.getComponents().length > 1) {
+      jgen.writeEndArray();
     }
   }
 }

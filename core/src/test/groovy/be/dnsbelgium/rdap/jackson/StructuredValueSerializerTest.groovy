@@ -47,7 +47,7 @@ public class StructuredValueSerializerTest extends AbstractSerializerTest<Contac
 
     def expected = [
         ["version", [:], "text", "4.0"],
-        ["n", [:], "text", "family", "given", "additional", "prefix", "suffix"]
+        ["n", [:], "text", ["family", "given", "additional", "prefix", "suffix"]]
     ]
 
     this.serializeAndAssertEquals(getObjectMapper().writeValueAsString(expected), contact, serializerProvider);
