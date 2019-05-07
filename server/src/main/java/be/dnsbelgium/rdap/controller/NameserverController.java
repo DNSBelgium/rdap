@@ -1,4 +1,4 @@
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -24,7 +24,6 @@ import com.ibm.icu.text.IDNA;
 
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.core.LabelException;
-import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.Nameserver;
 import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.NameserverService;
@@ -37,16 +36,12 @@ public final class NameserverController {
 
 	private final String baseRedirectURL;
 
-	private final int redirectThreshold;
+	private final NameserverService nameserverService;
 
 	@Autowired
-	private NameserverService nameserverService;
-
-	@Autowired
-	public NameserverController(@Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
-			@Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
+	public NameserverController(@Value("${baseRedirectURL}") String baseRedirectURL, NameserverService nameserverService) {
 		this.baseRedirectURL = baseRedirectURL;
-		this.redirectThreshold = redirectThreshold;
+		this.nameserverService = nameserverService;
 	}
 
 	@RequestMapping(value = "/{nameserverName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
@@ -121,11 +116,4 @@ public final class NameserverController {
 		throw RDAPError.methodNotAllowed();
 	}
 
-	public int getRedirectThreshold() {
-		return redirectThreshold;
-	}
-
-	public String getBaseRedirectURL() {
-		return baseRedirectURL;
-	}
 }

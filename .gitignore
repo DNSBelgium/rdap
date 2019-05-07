@@ -10,3 +10,6 @@ classes/
 # gradle
 .gradle/
 build/
+client/out/
+server/out/
+core/out/

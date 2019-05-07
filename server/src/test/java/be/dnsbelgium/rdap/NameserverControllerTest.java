@@ -1,6 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
+import be.dnsbelgium.rdap.controller.NameserverController;
 import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.NameserverService;
@@ -44,7 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = NameserverControllerTest.Config.class)
 public class NameserverControllerTest extends AbstractControllerTest {
 
-  private final static int REDIRECT_THRESHOLD = 3;
   private final static String REDIRECT_URL = "https://rdap.org";
 
   @Configuration
@@ -57,7 +57,7 @@ public class NameserverControllerTest extends AbstractControllerTest {
 
     @Bean
     public NameserverController nameserverController() {
-      return new NameserverController(REDIRECT_URL, REDIRECT_THRESHOLD);
+      return new NameserverController(REDIRECT_URL, nameserverService());
     }
   }
 

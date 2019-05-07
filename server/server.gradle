@@ -3,23 +3,12 @@ configurations { providedCompile }
 dependencies {
   compile project(':rdap-core')
   compile lib.jackson,
-      lib.cors_filter,
+      //lib.cors_filter,
       lib.spring_core,
-      lib.spring_tx,
       lib.spring_web,
       lib.spring_webmvc,
-      lib.spring_security_core,
-      lib.spring_security_web,
-      lib.spring_security_config,
-      lib.spring_security_ldap,
-      lib.spring_ldap_core,
-      lib.spring_ldap_core_tiger,
-      lib.spring_ldap_odm,
-      lib.spring_ldap_ldif_core,
-      lib.spring_ldap_ldif_batch,
       lib.guava,
       lib.slf4j,
-      lib.commons_pool,
       lib.aspectj,
       lib.cglib
     providedCompile lib.servlet_api

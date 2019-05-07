@@ -1,5 +1,6 @@
 package be.dnsbelgium.rdap;
 
+import be.dnsbelgium.rdap.controller.HelpController;
 import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.Help;
 import be.dnsbelgium.rdap.service.HelpService;
@@ -37,7 +38,7 @@ public class HelpControllerTest extends AbstractControllerTest {
 
     @Bean
     public HelpController helpController() {
-      return new HelpController();
+      return new HelpController(helpService());
     }
   }
 

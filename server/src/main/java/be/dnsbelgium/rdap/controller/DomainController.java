@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -48,22 +48,23 @@ public final class DomainController {
 
 	private final String baseRedirectURL;
 
-	private final int redirectThreshold;
+	private final DomainService domainService;
 
 	@Autowired
-	public DomainController(@Value("#{applicationProperties['baseRedirectURL']}") String baseRedirectURL,
-			@Value("#{applicationProperties['redirectThreshold']}") int redirectThreshold) {
+	public DomainController(@Value("${baseRedirectURL}") String baseRedirectURL, DomainService domainService) {
 		this.baseRedirectURL = baseRedirectURL;
-		this.redirectThreshold = redirectThreshold;
+		this.domainService = domainService;
 	}
-
-	@Autowired
-	private DomainService domainService;
 
 	@RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
 	@ResponseBody
 	public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
 		logger.debug("Query(GET) for domain {}", domainName);
+		Domain result = getDomain(domainName);
+		return result;
+	}
+
+	private Domain getDomain(@PathVariable("domainName") String domainName) throws RDAPError {
 		final DomainName dn;
 		dn = DomainName.of(domainName);
 		Domain result = domainService.getDomain(dn);
@@ -77,13 +78,7 @@ public final class DomainController {
 	@RequestMapping(value = "/{domainName}", method = RequestMethod.HEAD, produces = Controllers.CONTENT_TYPE)
 	public ResponseEntity<Void> head(@PathVariable("domainName") final String domainName) throws RDAPError {
 		logger.debug("Query(HEAD) for domain {}", domainName);
-		final DomainName dn;
-		dn = DomainName.of(domainName);
-		Domain result = domainService.getDomain(dn);
-		if (result == null) {
-			logger.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
-			throw RDAPError.domainNotFound(dn);
-		}
+		Domain result = getDomain(domainName);
 		return new ResponseEntity<Void>(null, new HttpHeaders(), HttpStatus.OK);
 	}
 
@@ -102,9 +97,5 @@ public final class DomainController {
 	@ResponseBody
 	public Domain any(@PathVariable("domainName") final String domainName) throws RDAPError {
 		throw RDAPError.methodNotAllowed();
-	}
-
-	public int getRedirectThreshold() {
-		return redirectThreshold;
 	}
 }

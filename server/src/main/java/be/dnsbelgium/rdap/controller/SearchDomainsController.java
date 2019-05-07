@@ -1,4 +1,4 @@
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import be.dnsbelgium.rdap.core.DomainsSearchResult;
 import be.dnsbelgium.rdap.core.Nameserver;
@@ -16,8 +16,12 @@ public class SearchDomainsController {
 
 	private final static Logger logger = LoggerFactory.getLogger(SearchDomainsController.class);
 
+	private final DomainService domainService;
+
 	@Autowired
-	private DomainService domainService;
+	public SearchDomainsController(DomainService domainService) {
+		this.domainService = domainService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
 	@ResponseBody

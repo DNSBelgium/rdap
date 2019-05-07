@@ -1,6 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
+import be.dnsbelgium.rdap.controller.EntityController;
 import be.dnsbelgium.rdap.core.Entity;
 import be.dnsbelgium.rdap.service.EntityService;
 import org.joda.time.format.ISODateTimeFormat;
@@ -32,9 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = EntityControllerTest.Config.class)
 public class EntityControllerTest extends AbstractControllerTest {
 
-  private final static int REDIRECT_THRESHOLD = 3;
-  private final static String REDIRECT_URL = "https://rdap.org";
-
   @Configuration
   static class Config extends AbstractControllerTest.Config {
     @Override
@@ -49,7 +47,7 @@ public class EntityControllerTest extends AbstractControllerTest {
 
     @Bean
     public EntityController entityController() {
-      return new EntityController(REDIRECT_URL, REDIRECT_THRESHOLD);
+      return new EntityController(entityService());
     }
   }
 

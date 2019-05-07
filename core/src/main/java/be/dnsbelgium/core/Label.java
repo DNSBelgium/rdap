@@ -86,10 +86,6 @@ public abstract class Label {
             super(value);
           }
 
-          /**
-           * @return
-           * @throws LabelException
-           */
           @Override
           public Label toUnicode() {
             IDNA.Info info = new IDNA.Info();
@@ -156,11 +152,6 @@ public abstract class Label {
         super(value);
       }
 
-      /**
-       * @return
-       * @throws LabelException.IDNParseException
-       */
-      @Override
       public Label toLDH() {
         IDNA.Info info = new IDNA.Info();
         StringBuilder result = new StringBuilder();
@@ -189,11 +180,6 @@ public abstract class Label {
 
   }
 
-  /**
-   * @param label
-   * @return
-   * @throws LabelException
-   */
   public static Label of(final String label) {
     if (StringUtils.isEmpty(label)) {
       return RootLabel.getInstance();

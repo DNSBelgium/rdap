@@ -21,12 +21,6 @@ public final class ByteUtils {
 
   }
 
-  /**
-   * Create a bit mask of size max_m with the m left most bits set to 1
-   * @param m
-   * @param max_m
-   * @return
-   */
   public static byte[] getMask(int m, int max_m) {
     byte[] b = new byte[max_m / 8];
     for (int i = 0; i < b.length; i++) {

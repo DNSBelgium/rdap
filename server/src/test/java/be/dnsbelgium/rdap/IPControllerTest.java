@@ -1,6 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.CIDR;
+import be.dnsbelgium.rdap.controller.IPController;
 import be.dnsbelgium.rdap.core.IPNetwork;
 import be.dnsbelgium.rdap.service.IPService;
 import org.junit.After;
@@ -40,7 +41,7 @@ public class IPControllerTest extends AbstractControllerTest {
 
     @Bean
     public IPController ipController() {
-      return new IPController();
+      return new IPController(ipService());
     }
   }
 

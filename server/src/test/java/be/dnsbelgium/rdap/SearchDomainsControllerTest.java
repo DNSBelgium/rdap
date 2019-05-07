@@ -1,6 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
+import be.dnsbelgium.rdap.controller.SearchDomainsController;
 import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.DomainsSearchResult;
 import be.dnsbelgium.rdap.core.RDAPError;
@@ -47,7 +48,7 @@ public class SearchDomainsControllerTest extends AbstractControllerTest {
 
     @Bean
     public SearchDomainsController searchDomainsController() {
-      return new SearchDomainsController();
+      return new SearchDomainsController(domainService());
     }
   }
 

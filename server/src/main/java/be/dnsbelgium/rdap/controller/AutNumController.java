@@ -1,4 +1,4 @@
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import be.dnsbelgium.rdap.core.AutNum;
 import be.dnsbelgium.rdap.core.RDAPError;
@@ -18,8 +18,12 @@ public final class AutNumController {
 
   private final Logger logger = LoggerFactory.getLogger(AutNumController.class);
 
+  private final AutNumService autNumService;
+
   @Autowired
-  private AutNumService autNumService;
+  public AutNumController(AutNumService autNumService) {
+    this.autNumService = autNumService;
+  }
 
   @RequestMapping(value = "/{autnum}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
