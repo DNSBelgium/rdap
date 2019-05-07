@@ -47,7 +47,7 @@ subprojects {
   apply plugin: 'jacoco'
   apply plugin: 'signing'
 
-  sourceCompatibility = targetCompatibility = '1.7'
+  sourceCompatibility = targetCompatibility = '1.8'
 
   repositories {
     mavenCentral()
