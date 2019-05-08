@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import be.dnsbelgium.core.CIDR;
 import be.dnsbelgium.rdap.core.*;
@@ -33,8 +33,12 @@ public final class IPController {
 
   private final static Logger logger = LoggerFactory.getLogger(IPController.class);
 
+  private final IPService ipService;
+
   @Autowired
-  private IPService ipService;
+  public IPController(IPService ipService) {
+    this.ipService = ipService;
+  }
 
   @RequestMapping(value = "/{ipaddress}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody

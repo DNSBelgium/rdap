@@ -81,7 +81,9 @@ You only need to do the following to use your own Service implementations:
 
 * Extend one or more default implementations
 
-* Extend WebConfig and override the appropriate methods to make sure your implementations are being used
+* Extend DefaultServiceConfig and override the appropriate methods to make sure your implementations are being used
+
+* Import the WebConfig
 
 * configure the org.springframework.web.servlet.DispatcherServlet
 
@@ -115,10 +117,19 @@ while in this example DomainDAO is supposed to be a class that you have implemen
 
 The methods in DefaultXXXService ending in Impl can be overridden. rdap_level_0 rdapconformance will be set for you if you omit it.
 
+## Import Webconfig and ExceptionAdviceConfig   
+WebConfig contains spring mvc related configuration and will scan for the controller classes. You will need to import this configuration (spring @Import).
+See example further.
+
+Import ExceptionAdviceConfig to use the provided exception advice.    
+
 ## Make sure you inject your implementation
-Extend WebConfig and override methods to make sure your classes are being used instead of the default implementations:
+You can extend DefaultServiceConfig to provide your classes instead of the default implementation or create a new @Configuration to provide your own implementation of all services. 
+
+For example, when choosing to extend DefaultServiceConfig and only overriding the DomainService:
     
-    @Configuration    
+    @Configuration
+    @Import(be.dnsbelgium.rdap.WebConfig.class)    
     public class Config extends WebConfig {
 
       @Bean
@@ -128,6 +139,7 @@ Extend WebConfig and override methods to make sure your classes are being used i
       }
 
     }
+    
 
 ## Configure the DispatcherServlet
 
@@ -162,6 +174,32 @@ This servlet needs to know your WebConfig implementation. The easiest way to do 
         </servlet-mapping>
 
     </web-app>
+    
+# Upgrading from 1.1.0 to 2.0.x
+A lot of unused classes and dependencies are removed. 
+For the dependencies you need to add them to your own project if you are using these dependencies directly.
+
+Removed all classes in the be.dnsbelgium.rate, be.dnsbelgium.rdap.servlet and be.dnsbelgium.rdap.spring.security packages 
+* LeakyBucket and related classes
+* LoggerFilter
+These classes were not used in the rdap-server implementation. Feel free to copy them from the 1.1.0 version if you need them.  
+
+Moved controller classes directly in the be.dnsbelgium.rdap package to be.dnsbelgium.rdap.controller
+
+The configuration in WebConfig is splitted into different parts
+* WebConfig: spring mvc related configuration, adds a @ComponentScan for the package be.dnsbelgium.rdap.controller 
+* DefaultServiceConfig: can be used to configure default implementations of the services
+* ApplicationPropertiesConfig: use PropertySourcesPlaceholderConfigurer instead of reading the application.properties file in the code
+  * the only needed configuration property is "baseRedirectURL".
+  * You can use ApplicationPropertiesConfig or use any other way supported by spring to read configuration properties.
+* ExceptionAdviceConfig: adds a ComponentScan for the package be.dnsbelgium.rdap.exception to pickup the ExceptionAdvice
+
+The configuration of the controller is also changed: 
+* unused constructor parameters are removed
+* Configuration no longer use the spel expressions pointing to applicationProperties, but use the ${} syntax :
+  * \#{applicationProperties['baseRedirectURL']} is changed into ${baseRedirectURL}
+  * \#{applicationProperties['redirectThreshold']} was not used and is removed
+   
 
 # Various other tips
 

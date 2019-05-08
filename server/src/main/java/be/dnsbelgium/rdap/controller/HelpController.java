@@ -1,4 +1,4 @@
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import be.dnsbelgium.rdap.core.Help;
 import be.dnsbelgium.rdap.core.RDAPError;
@@ -17,8 +17,12 @@ public final class HelpController {
 
   private final static Logger logger = LoggerFactory.getLogger(HelpController.class);
 
+  private final HelpService helpService;
+
   @Autowired
-  private HelpService helpService;
+  public HelpController(HelpService helpService) {
+    this.helpService = helpService;
+  }
 
   @RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody

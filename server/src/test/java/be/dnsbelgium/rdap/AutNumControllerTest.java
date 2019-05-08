@@ -1,6 +1,7 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
+import be.dnsbelgium.rdap.controller.AutNumController;
 import be.dnsbelgium.rdap.core.AutNum;
 import be.dnsbelgium.rdap.service.AutNumService;
 import org.joda.time.format.ISODateTimeFormat;
@@ -39,7 +40,7 @@ public class AutNumControllerTest extends AbstractControllerTest {
 
     @Bean
     public AutNumController autNumController() {
-      return new AutNumController();
+      return new AutNumController(autNumService());
     }
   }
 

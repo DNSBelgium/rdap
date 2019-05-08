@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.dnsbelgium.rate.spring.security;
 
-import be.dnsbelgium.rate.LeakyBucketKey;
-import org.springframework.security.core.context.SecurityContext;
+package be.dnsbelgium.rdap.controller;
 
-/**
- * A Factory for creating LeakyBucketKeys. The current SecurityContext is provided
- * @param <T>
- */
-public interface LeakyBucketKeyFactory<T extends LeakyBucketKey> {
+public final class Controllers {
 
-  T create(SecurityContext context);
+  private Controllers() {
 
+  }
+
+  public static final String CONTENT_TYPE = "application/rdap+json;charset=UTF-8";
+  public static final String LOCATION_HEADER = "Location";
 }

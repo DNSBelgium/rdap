@@ -1,5 +1,6 @@
 package be.dnsbelgium.rdap;
 
+import be.dnsbelgium.rdap.controller.SearchEntitiesController;
 import be.dnsbelgium.rdap.core.EntitiesSearchResult;
 import be.dnsbelgium.rdap.core.Entity;
 import be.dnsbelgium.rdap.service.EntityService;
@@ -40,7 +41,7 @@ public class SearchEntitiesControllerTest extends AbstractControllerTest {
 
     @Bean
     public SearchEntitiesController searchEntitiesController() {
-      return new SearchEntitiesController();
+      return new SearchEntitiesController(entityService());
     }
   }
 

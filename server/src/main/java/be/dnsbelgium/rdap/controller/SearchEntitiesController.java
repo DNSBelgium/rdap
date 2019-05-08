@@ -1,4 +1,4 @@
-package be.dnsbelgium.rdap;
+package be.dnsbelgium.rdap.controller;
 
 import be.dnsbelgium.rdap.core.EntitiesSearchResult;
 import be.dnsbelgium.rdap.core.Nameserver;
@@ -19,8 +19,12 @@ public class SearchEntitiesController {
 
 	private final static Logger logger = LoggerFactory.getLogger(SearchEntitiesController.class);
 
+	private final EntityService entityService;
+
 	@Autowired
-	private EntityService entityService;
+	public SearchEntitiesController(EntityService entityService) {
+		this.entityService = entityService;
+	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
 	@ResponseBody
