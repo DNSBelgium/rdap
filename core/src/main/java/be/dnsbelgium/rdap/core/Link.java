@@ -109,10 +109,22 @@ public final class Link {
 
     private String type;
 
+    public Builder(String href) throws URISyntaxException {
+      this.href = new URI(href);
+    }
+
     public Builder(String value, String rel, String href) throws URISyntaxException {
       this.value = new URI(value);
       this.rel = rel;
       this.href = new URI(href);
+    }
+
+    public void withMedia(String media) {
+      this.media = media;
+    }
+
+    public void withType(String type) {
+      this.type = type;
     }
 
     public Builder addHreflang(String hreflang) {
