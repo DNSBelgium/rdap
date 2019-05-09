@@ -3,7 +3,6 @@ configurations { providedCompile }
 dependencies {
   compile project(':rdap-core')
   compile lib.jackson,
-      //lib.cors_filter,
       lib.spring_core,
       lib.spring_web,
       lib.spring_webmvc,
