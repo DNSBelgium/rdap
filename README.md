@@ -117,11 +117,15 @@ while in this example DomainDAO is supposed to be a class that you have implemen
 
 The methods in DefaultXXXService ending in Impl can be overridden. rdap_level_0 rdapconformance will be set for you if you omit it.
 
-## Import Webconfig and ExceptionAdviceConfig   
+## Import Webconfig, ExceptionAdviceConfig and ControllerConfig   
 WebConfig contains spring mvc related configuration and will scan for the controller classes. You will need to import this configuration (spring @Import).
 See example further.
 
-Import ExceptionAdviceConfig to use the provided exception advice.    
+Import ExceptionAdviceConfig to use the provided exception advice.
+
+Import ControllerConfig to scan for the controllers. 
+Alternative for the ControllerConfig: add a @ComponentScan for the "be.dnsbelgium.rdap.controllers" package to your application. 
+This last approach solves the problem that if you want to add @WebMvcTest tests to your application, all controllers are loaded (and consequently all services need to be mocked or present)     
 
 ## Make sure you inject your implementation
 You can extend DefaultServiceConfig to provide your classes instead of the default implementation or create a new @Configuration to provide your own implementation of all services. 
@@ -187,7 +191,8 @@ These classes were not used in the rdap-server implementation. Feel free to copy
 Moved controller classes directly in the be.dnsbelgium.rdap package to be.dnsbelgium.rdap.controller
 
 The configuration in WebConfig is splitted into different parts
-* WebConfig: spring mvc related configuration, adds a @ComponentScan for the package be.dnsbelgium.rdap.controller 
+* WebConfig: spring mvc related configuration, 
+* ControllerConfig: adds a @ComponentScan for the package be.dnsbelgium.rdap.controller 
 * DefaultServiceConfig: can be used to configure default implementations of the services
 * ApplicationPropertiesConfig: use PropertySourcesPlaceholderConfigurer instead of reading the application.properties file in the code
   * the only needed configuration property is "baseRedirectURL".

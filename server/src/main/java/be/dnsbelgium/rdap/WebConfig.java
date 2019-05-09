@@ -29,7 +29,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.List;
 
 @Configuration
-@ComponentScan(basePackages = "be.dnsbelgium.rdap.controller")
 public class WebConfig extends WebMvcConfigurationSupport {
 
   @Override
