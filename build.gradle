@@ -1,16 +1,11 @@
 ext {
-  cglib_version = '3.0'
   guava_version = '15.0'
   slf4j_version = '1.7.5'
-  // jackson_version = '2.5.4'
-  //spring_version = '4.1.7.RELEASE'
   jackson_version = '2.9.8'
   spring_version = '5.1.6.RELEASE'
 
   lib = [
       commons_cli: 'commons-cli:commons-cli:1.2',
-      cglib: "cglib:cglib-nodep:${cglib_version}",
-      aspectj: 'org.aspectj:aspectjweaver:1.7.2',
       icu4j: 'com.ibm.icu:icu4j:51.1',
       guava: "com.google.guava:guava:${guava_version}",
       commons_lang: 'commons-lang:commons-lang:2.6',

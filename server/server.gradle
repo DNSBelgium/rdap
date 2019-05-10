@@ -7,9 +7,7 @@ dependencies {
       lib.spring_web,
       lib.spring_webmvc,
       lib.guava,
-      lib.slf4j,
-      lib.aspectj,
-      lib.cglib
+      lib.slf4j
     providedCompile lib.servlet_api
   testCompile lib.spring_test, lib.jsonpath
   testCompile "org.apache.logging.log4j:log4j-slf4j-impl:2.11.2"
