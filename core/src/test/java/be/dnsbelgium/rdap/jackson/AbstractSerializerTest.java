@@ -41,7 +41,7 @@ public abstract class AbstractSerializerTest<T extends JsonSerializer, S> {
     JsonFactory factory = new JsonFactory();
     T serializer = getSerializer();
     StringWriter sw = new StringWriter();
-    JsonGenerator jgen = factory.createJsonGenerator(sw);
+    JsonGenerator jgen = factory.createGenerator(sw);
     serializer.serialize(o, jgen, sp); // unchecked
     jgen.flush();
     sw.flush();

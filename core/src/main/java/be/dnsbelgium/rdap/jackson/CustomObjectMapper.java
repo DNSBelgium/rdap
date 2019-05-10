@@ -28,11 +28,10 @@ public class CustomObjectMapper extends ObjectMapper {
 
   public CustomObjectMapper() {
     super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    setSerializationInclusion(JsonInclude.Include.NON_NULL);
     configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
+    setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     SimpleModule simpleModule = new SimpleModule("SimpleModule",
-        new Version(1, 0, 0, null));
+        new Version(1, 0, 0, null, null, null));
 
     simpleModule.addSerializer(new RDAPContactSerializer());
     simpleModule.addSerializer(new StructuredValueSerializer());
@@ -50,7 +49,7 @@ public class CustomObjectMapper extends ObjectMapper {
   }
 
   public List<JsonSerializer> getSerializers() {
-    return new ArrayList<JsonSerializer>();
+    return new ArrayList<>();
   }
 
 }
