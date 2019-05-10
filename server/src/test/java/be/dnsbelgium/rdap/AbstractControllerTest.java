@@ -4,22 +4,15 @@ import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.core.TelephoneNumber;
 import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.exception.ExceptionAdvice;
-import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import be.dnsbelgium.vcard.Contact;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.annotation.Resource;
 import java.math.BigInteger;
@@ -46,44 +39,11 @@ public abstract class AbstractControllerTest {
   }
 
   @Configuration
-  abstract static class Config extends WebMvcConfigurationSupport {
-
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-      converters.add(converter());
-    }
-
-    @Override
-    protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-      super.configureContentNegotiation(configurer);
-      configurer.favorPathExtension(false);
-    }
-
-    @Bean
-    MappingJackson2HttpMessageConverter converter() {
-      MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-      converter.setObjectMapper(new CustomObjectMapper());
-      return converter;
-    }
-
-    @Bean
-    public RequestMappingHandlerMapping requestMappingHandlerMapping() {
-      RequestMappingHandlerMapping handlerMapping = super.requestMappingHandlerMapping();
-      handlerMapping.setUseSuffixPatternMatch(false);
-      handlerMapping.setUseTrailingSlashMatch(false);
-      return handlerMapping;
-    }
-
+  abstract static class Config extends WebConfig {
     @Bean
     public ExceptionAdvice exceptionAdvice() {
       return new ExceptionAdvice();
     }
-
-    @Bean
-    public ObjectMapper getObjectMapper() {
-      return new CustomObjectMapper();
-    }
-
   }
 
   protected List<Link> someLinks() throws Exception {
@@ -168,27 +128,27 @@ public abstract class AbstractControllerTest {
 
   protected Contact aContact() {
     return new Contact.Builder()
-            .setFormattedName("Larry Ellison")
-            .setGivenName("Larry")
-            .setFamilyName("Ellison")
-            .setOrganization("Retirees Inc.")
-            .addOU("This is an OU")
-            .addOU("This is another OU")
-            .addStreet("street 1")
-            .addStreet("street 2")
-            .addLocality("New York")
-            .addLocality("Brooklyn")
-            .addRegion("New York")
-            .addRegion("East coast")
-            .addPostalCode("12345")
-            .addCountry("United states of America")
-            .addTelephoneNumber(TelephoneNumber.of(32, BigInteger.valueOf(123456)))
-            .addTelephoneNumber(TelephoneNumber.of("+32.654321"))
-            .addFaxNumber(TelephoneNumber.of(32, BigInteger.valueOf(987654)))
-            .addEmailAddress("larry.ellison@retirees.com")
-            .addEmailAddress("le@former.oracle.com")
-            .setLanguages("en", "de", "es")
-            .build();
+        .setFormattedName("Larry Ellison")
+        .setGivenName("Larry")
+        .setFamilyName("Ellison")
+        .setOrganization("Retirees Inc.")
+        .addOU("This is an OU")
+        .addOU("This is another OU")
+        .addStreet("street 1")
+        .addStreet("street 2")
+        .addLocality("New York")
+        .addLocality("Brooklyn")
+        .addRegion("New York")
+        .addRegion("East coast")
+        .addPostalCode("12345")
+        .addCountry("United states of America")
+        .addTelephoneNumber(TelephoneNumber.of(32, BigInteger.valueOf(123456)))
+        .addTelephoneNumber(TelephoneNumber.of("+32.654321"))
+        .addFaxNumber(TelephoneNumber.of(32, BigInteger.valueOf(987654)))
+        .addEmailAddress("larry.ellison@retirees.com")
+        .addEmailAddress("le@former.oracle.com")
+        .setLanguages("en", "de", "es")
+        .build();
   }
 
   protected List<Domain.Variant> someVariants() {
