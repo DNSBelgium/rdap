@@ -35,11 +35,6 @@ public class EntityControllerTest extends AbstractControllerTest {
 
   @Configuration
   static class Config extends AbstractControllerTest.Config {
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-      converters.add(converter());
-    }
-
     @Bean
     public EntityService entityService() {
       return mock(EntityService.class);

@@ -31,7 +31,7 @@ import java.util.List;
 public class WebConfig extends WebMvcConfigurationSupport {
 
   @Override
-  public final void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
+  public void configureMessageConverters(final List<HttpMessageConverter<?>> converters) {
     converters.add(converter());
   }
 
