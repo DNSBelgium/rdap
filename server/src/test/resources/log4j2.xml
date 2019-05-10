@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30" packages="be.dnsbelgium.blackbox.log4j2">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d [%t] %-5level %c -TEST- %msg%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <logger name="be.dnsbelgium" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

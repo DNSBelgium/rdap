@@ -2,8 +2,10 @@ ext {
   cglib_version = '3.0'
   guava_version = '15.0'
   slf4j_version = '1.7.5'
-  jackson_version = '2.5.4'
-  spring_version = '4.1.7.RELEASE'
+  // jackson_version = '2.5.4'
+  //spring_version = '4.1.7.RELEASE'
+  jackson_version = '2.9.8'
+  spring_version = '5.1.6.RELEASE'
 
   lib = [
       commons_cli: 'commons-cli:commons-cli:1.2',
@@ -15,12 +17,12 @@ ext {
       httpclient: 'org.apache.httpcomponents:httpclient:4.3.1',
       servlet_api: 'javax.servlet:javax.servlet-api:3.1.0',
       joda_time: 'joda-time:joda-time:2.3',
-      junit: 'junit:junit:4.11',
+      junit: 'junit:junit:4.12',
       dnsjava: 'dnsjava:dnsjava:2.1.1',
       slf4j: "org.slf4j:slf4j-api:${slf4j_version}",
       jackson: ["com.fasterxml.jackson.core:jackson-core:${jackson_version}","com.fasterxml.jackson.core:jackson-databind:${jackson_version}"],
       mockito: 'org.mockito:mockito-all:1.9.5',
-      jsonpath: 'com.jayway.jsonpath:json-path:0.9.1',
+      jsonpath: 'com.jayway.jsonpath:json-path:2.4.0',
       spring_core: "org.springframework:spring-core:${spring_version}",
       spring_aop: "org.springframework:spring-aop:${spring_version}",
       spring_context: "org.springframework:spring-context:${spring_version}",

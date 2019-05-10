@@ -12,6 +12,7 @@ dependencies {
       lib.cglib
     providedCompile lib.servlet_api
   testCompile lib.spring_test, lib.jsonpath
+  testCompile "org.apache.logging.log4j:log4j-slf4j-impl:2.11.2"
 }
 
 sourceSets.main.compileClasspath += configurations.providedCompile
