@@ -5,16 +5,21 @@ import be.dnsbelgium.core.TelephoneNumber;
 import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.exception.ExceptionAdvice;
 import be.dnsbelgium.vcard.Contact;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Before;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.URI;
@@ -187,5 +192,13 @@ public abstract class AbstractControllerTest {
     Entity registrant = new Entity(null, null, null, "en", Entity.OBJECT_CLASS_NAME, null, null, null, "REGISTRANT", vCard, someRoles(), null, null);
     entityList.add(registrant);
     return entityList;
+  }
+
+  protected String createExpectedJson(String file) throws IOException {
+    ClassPathResource cpr = new ClassPathResource(file);
+    String expectedJson = Files.toString(cpr.getFile(), Charsets.UTF_8);
+    expectedJson = expectedJson.replace("lastChangedTime", lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()));
+    expectedJson = expectedJson.replace("createTime", createTime.toString(ISODateTimeFormat.dateTimeNoMillis()));
+    return expectedJson;
   }
 }

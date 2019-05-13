@@ -1,0 +1,129 @@
+{
+  "rdapConformance": [
+    "rdap_level_0"
+  ],
+  "objectClassName": "entity",
+  "handle": "123456",
+  "vcardArray": [
+    "vcard",
+    [
+      [
+        "version",
+        {},
+        "text",
+        "4.0"
+      ],
+      [
+        "n",
+        {},
+        "text",
+        [
+        "Ellison",
+        "Larry",
+        null,
+        null,
+        null
+        ]
+      ],
+      [
+        "fn",
+        {},
+        "text",
+        "Larry Ellison"
+      ],
+      [
+        "adr",
+        {},
+        "text",
+        [
+        null,
+        null,
+        [
+          "street 1",
+          "street 2"
+        ],
+        [
+          "New York",
+          "Brooklyn"
+        ],
+        [
+          "New York",
+          "East coast"
+        ],
+        "12345",
+        "United states of America"
+        ]
+      ],
+      [
+        "org",
+        {},
+        "text",
+        [
+        "Retirees Inc.",
+        "This is an OU",
+        "This is another OU"
+        ]
+      ],
+      [
+        "tel",
+        {
+          "type": "tel"
+        },
+        "text",
+        "tel:+32.123456"
+      ],
+      [
+        "tel",
+        {
+          "type": "tel"
+        },
+        "text",
+        "tel:+32.654321"
+      ],
+      [
+        "tel",
+        {
+          "type": "fax"
+        },
+        "text",
+        "tel:+32.987654"
+      ],
+      [
+        "email",
+        {},
+        "text",
+        "larry.ellison@retirees.com"
+      ],
+      [
+        "email",
+        {},
+        "text",
+        "le@former.oracle.com"
+      ],
+      [
+        "lang",
+        {
+          "pref": "1"
+        },
+        "text",
+        "en"
+      ],
+      [
+        "lang",
+        {
+          "pref": "2"
+        },
+        "text",
+        "de"
+      ],
+      [
+        "lang",
+        {
+          "pref": "3"
+        },
+        "text",
+        "es"
+      ]
+    ]
+  ]
+}
