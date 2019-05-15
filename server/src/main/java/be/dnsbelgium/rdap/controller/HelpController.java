@@ -27,6 +27,7 @@ public final class HelpController {
   @RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
   @ResponseBody
   public Help get() throws RDAPError {
+    logger.debug("Query(GET) for help");
     Help help = helpService.getHelp();
     if (help == null) {
       throw RDAPError.helpNotFound();
