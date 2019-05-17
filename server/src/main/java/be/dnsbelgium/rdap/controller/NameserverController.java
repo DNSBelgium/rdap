@@ -53,7 +53,7 @@ public final class NameserverController {
 			domainName = DomainName.of(nameserverName);
 			Nameserver nameserver = nameserverService.getNameserver(domainName);
 			if (nameserver == null) {
-				logger.debug("Query(GET) result for {} is null. Throwing NameserverNotFound Error");
+				logger.debug("Query(GET) result for {} is null. Throwing NameserverNotFound Error", nameserverName);
 				throw RDAPError.nameserverNotFound(domainName);
 			}
 			return nameserver;
@@ -79,7 +79,7 @@ public final class NameserverController {
 			domainName = DomainName.of(nameserverName);
 			Nameserver nameserver = nameserverService.getNameserver(domainName);
 			if (nameserver == null) {
-				logger.debug("Query(HEAD) result for {} is null. Throwing NameserverNotFound Error");
+				logger.debug("Query(HEAD) result for {} is null. Throwing NameserverNotFound Error", nameserverName);
 				throw RDAPError.nameserverNotFound(domainName);
 			}
 			return new ResponseEntity<Void>(null, new HttpHeaders(), HttpStatus.OK);

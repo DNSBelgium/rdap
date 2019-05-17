@@ -134,7 +134,7 @@ For example, when choosing to extend DefaultServiceConfig and only overriding th
     
     @Configuration
     @Import(be.dnsbelgium.rdap.WebConfig.class)    
-    public class Config extends WebConfig {
+    public class Config extends DefaultServiceConfig {
 
       @Bean
       @Override
@@ -180,8 +180,7 @@ This servlet needs to know your WebConfig implementation. The easiest way to do 
     </web-app>
     
 # Upgrading from 1.1.0 to 2.0.x
-A lot of unused classes and dependencies are removed. 
-For the dependencies you need to add them to your own project if you are using these dependencies directly.
+A lot of unused classes and dependencies are removed.
 
 Removed all classes in the be.dnsbelgium.rate, be.dnsbelgium.rdap.servlet and be.dnsbelgium.rdap.spring.security packages 
 * LeakyBucket and related classes
@@ -190,7 +189,7 @@ These classes were not used in the rdap-server implementation. Feel free to copy
 
 Moved controller classes directly in the be.dnsbelgium.rdap package to be.dnsbelgium.rdap.controller
 
-The configuration in WebConfig is splitted into different parts
+The configuration in WebConfig is split into different parts
 * WebConfig: spring mvc related configuration, 
 * ControllerConfig: adds a @ComponentScan for the package be.dnsbelgium.rdap.controller 
 * DefaultServiceConfig: can be used to configure default implementations of the services
@@ -201,7 +200,7 @@ The configuration in WebConfig is splitted into different parts
 
 The configuration of the controller is also changed: 
 * unused constructor parameters are removed
-* Configuration no longer use the spel expressions pointing to applicationProperties, but use the ${} syntax :
+* Configuration no longer use the SpEL expressions pointing to applicationProperties, but use the ${} syntax :
   * \#{applicationProperties['baseRedirectURL']} is changed into ${baseRedirectURL}
   * \#{applicationProperties['redirectThreshold']} was not used and is removed
    

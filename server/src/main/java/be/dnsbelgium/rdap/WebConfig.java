@@ -38,6 +38,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
   @Override
   protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     super.configureContentNegotiation(configurer);
+    // make sure spring does not interpret extensions of domain name (.com)
     configurer.favorPathExtension(false);
   }
 
