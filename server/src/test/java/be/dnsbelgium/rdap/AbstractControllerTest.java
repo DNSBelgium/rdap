@@ -189,7 +189,7 @@ public abstract class AbstractControllerTest {
   protected List<Entity> someEntities() {
     List<Entity> entityList = new ArrayList<Entity>();
     Contact vCard = new Contact.Builder().addOU("This is an OU").addStreet("street 1").setFormattedName("This is a formatted name").build();
-    Entity registrant = new Entity(null, null, null, "en", Entity.OBJECT_CLASS_NAME, null, null, null, "REGISTRANT", vCard, someRoles(), null, null);
+    Entity registrant = new Entity(null, null, null, "en", Entity.OBJECT_CLASS_NAME, null, null, null, "REGISTRANT", vCard, someRoles(), null, null, null);
     entityList.add(registrant);
     return entityList;
   }

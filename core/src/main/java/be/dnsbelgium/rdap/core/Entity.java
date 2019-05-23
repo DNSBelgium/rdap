@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,6 +31,7 @@ public final class Entity extends Common {
   public interface Role {
 
     String getValue();
+
 
     public static enum Default implements Role {
       REGISTRANT, TECHNICAL, ADMINISTRATIVE, ABUSE, BILLING, REGISTRAR, RESELLER, SPONSOR, PROXY, NOTIFICATIONS, NOC;
@@ -62,17 +63,12 @@ public final class Entity extends Common {
     }
 
   }
-
-
   private final String handle;
-
   private final Contact vcardArray;
-
   private final List<Role> roles;
-
   private final List<Event> asEventActor;
-
   private final List<PublicId> publicIds;
+  private List<Entity> entities;
 
   @JsonCreator
   public Entity(
@@ -88,13 +84,15 @@ public final class Entity extends Common {
       @JsonProperty("vcardArray") Contact vcardArray,
       @JsonProperty("roles") List<Role> roles,
       @JsonProperty("asEventActor") List<Event> asEventActor,
-      @JsonProperty("publicIds") List<PublicId> publicIds) {
+      @JsonProperty("publicIds") List<PublicId> publicIds,
+      @JsonProperty("entities") List<Entity> entities) {
     super(links, notices, remarks, lang, objectClassName, events, status, port43);
     this.handle = handle;
     this.vcardArray = vcardArray;
     this.roles = roles == null ? null : new ImmutableList.Builder<Role>().addAll(roles).build();
     this.asEventActor = asEventActor == null ? null : new ImmutableList.Builder<Event>().addAll(asEventActor).build();
     this.publicIds = publicIds == null ? null : new ImmutableList.Builder<PublicId>().addAll(publicIds).build();
+    this.entities = (entities == null) ? null : new ImmutableList.Builder<Entity>().addAll(entities).build();
   }
 
   public String getHandle() {
@@ -115,5 +113,9 @@ public final class Entity extends Common {
 
   public List<PublicId> getPublicIds() {
     return publicIds;
+  }
+
+  public List<Entity> getEntities() {
+    return entities;
   }
 }

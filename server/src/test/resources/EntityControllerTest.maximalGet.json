@@ -406,8 +406,8 @@
     ]
   ],
   "roles": [
-    "REGISTRANT",
-    "ADMINISTRATIVE"
+    "registrant",
+    "administrative"
   ],
   "asEventActor": [
     {

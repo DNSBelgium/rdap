@@ -370,8 +370,8 @@
         ]
       ],
       "roles": [
-        "REGISTRANT",
-        "ADMINISTRATIVE"
+        "registrant",
+        "administrative"
       ]
     }
   ],
@@ -710,8 +710,8 @@
           ]
         ],
         "roles": [
-          "REGISTRANT",
-          "ADMINISTRATIVE"
+          "registrant",
+          "administrative"
         ]
       }
     ]

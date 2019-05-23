@@ -71,7 +71,7 @@ public class EntityControllerTest extends AbstractControllerTest {
   @Test
   public void testMinimalHead() throws Exception {
     String handle = "123456";
-    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null);
+    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.getEntity(anyString())).thenReturn(entity);
     mockMvc.perform(head("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
@@ -83,7 +83,7 @@ public class EntityControllerTest extends AbstractControllerTest {
     String expectedJson = createExpectedJson("EntityControllerTest.minimalGet.json");
 
     String handle = "123456";
-    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null);
+    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.getEntity(anyString())).thenReturn(entity);
     mockMvc.perform(get("/entity/" + handle)
@@ -110,7 +110,8 @@ public class EntityControllerTest extends AbstractControllerTest {
         aContact(),
         someRoles(),
         someEvents(),
-        somePublicIds());
+        somePublicIds(),
+        someEntities());
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.getEntity(eq(handle))).thenReturn(entity);
     mockMvc.perform(get("/entity/" + handle)
