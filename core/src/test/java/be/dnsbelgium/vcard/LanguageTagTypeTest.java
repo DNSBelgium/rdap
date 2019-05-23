@@ -27,7 +27,7 @@ public class LanguageTagTypeTest {
   public void testValidLanguageTagType() {
     LanguageTag type = new LanguageTag("EN");
     assertEquals("en", type.getStringValue());
-    assertEquals("language-tag", type.getTypeName());
+    assertEquals("text", type.getTypeName());
   }
 
   @Test
