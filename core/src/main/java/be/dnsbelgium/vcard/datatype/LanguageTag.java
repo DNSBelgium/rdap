@@ -37,6 +37,6 @@ public class LanguageTag extends Text {
 
   @Override
   public String getTypeName() {
-    return "language-tag";
+    return "text";
   }
 }
