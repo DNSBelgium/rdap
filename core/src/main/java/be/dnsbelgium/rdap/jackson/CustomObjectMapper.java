@@ -41,6 +41,8 @@ public class CustomObjectMapper extends ObjectMapper {
     simpleModule.addSerializer(new DomainNameSerializer());
     simpleModule.addSerializer(new DateTimeSerializer());
     simpleModule.addSerializer(new StatusSerializer());
+    simpleModule.addSerializer(new EntityRoleSerializer());
+
     for (JsonSerializer serializer: getSerializers()) {
       simpleModule.addSerializer(serializer);
     }
