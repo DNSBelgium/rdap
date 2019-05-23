@@ -95,11 +95,8 @@ public class ContactSerializer extends JsonSerializer<Contact> {
       // end write property parameters
       // start write property type
       String value = "text";
-      if (property.getParameters() != null) {
-        Set<String> types = property.getParameters().get("VALUE");
-        if (types != null) {
-          value = types.iterator().next();
-        }
+      if (property.getValue() != null && property.getValue().getTypeName() != null){
+        value = property.getValue().getTypeName();
       }
       jsonGenerator.writeString(value);
       // end write property type
