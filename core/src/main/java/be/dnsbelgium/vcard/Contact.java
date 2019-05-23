@@ -337,14 +337,13 @@ public class Contact {
     }
 
     public Contact build() {
-      if (StringUtils.isEmpty(formattedName)) {
-        throw new IllegalStateException("formattedName must not be empty");
-      }
       List<Property> properties = new ArrayList<Property>();
       if (!StringUtils.isEmpty(this.familyName) || !StringUtils.isEmpty(givenName)) {
         properties.add(new Property.N(this.familyName, this.givenName, null, null, null));
       }
-      properties.add(new Property.FN(null, null, this.formattedName));
+      if (!StringUtils.isEmpty(this.formattedName)) {
+        properties.add(new Property.FN(null, null, this.formattedName));
+      }
       if (!this.street.isEmpty() || !this.locality.isEmpty() || !this.region.isEmpty() || !this.postalCode.isEmpty() || !this.country.isEmpty()) {
         properties.add(
             new Property(
