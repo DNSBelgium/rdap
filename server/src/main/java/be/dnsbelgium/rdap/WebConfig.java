@@ -42,9 +42,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
     super.configureContentNegotiation(configurer);
     // make sure spring does not interpret extensions of domain name (.com)
     configurer.favorPathExtension(false);
-    // make sure spring returns "application/rdap+json;charset=UTF-8", would be "application/json" without this
-    // see https://github.com/spring-projects/spring-framework/issues/21927
-    configurer.defaultContentType(MediaType.valueOf(Controllers.CONTENT_TYPE));
   }
 
   @Bean
