@@ -18,7 +18,7 @@ package be.dnsbelgium.core;
 import com.google.common.collect.ImmutableSet;
 import com.ibm.icu.text.IDNA;
 import com.ibm.icu.text.UnicodeSet;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

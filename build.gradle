@@ -8,7 +8,7 @@ ext {
       commons_cli: 'commons-cli:commons-cli:1.2',
       icu4j: 'com.ibm.icu:icu4j:51.1',
       guava: "com.google.guava:guava:${guava_version}",
-      commons_lang: 'commons-lang:commons-lang:2.6',
+      commons_lang: 'org.apache.commons:commons-lang3:3.8.1',
       httpclient: 'org.apache.httpcomponents:httpclient:4.3.1',
       servlet_api: 'javax.servlet:javax.servlet-api:3.1.0',
       joda_time: 'joda-time:joda-time:2.3',

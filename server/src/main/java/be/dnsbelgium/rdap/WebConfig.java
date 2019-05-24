@@ -15,10 +15,12 @@
  */
 package be.dnsbelgium.rdap;
 
+import be.dnsbelgium.rdap.controller.Controllers;
 import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -40,6 +42,9 @@ public class WebConfig extends WebMvcConfigurationSupport {
     super.configureContentNegotiation(configurer);
     // make sure spring does not interpret extensions of domain name (.com)
     configurer.favorPathExtension(false);
+    // make sure spring returns "application/rdap+json;charset=UTF-8", would be "application/json" without this
+    // see https://github.com/spring-projects/spring-framework/issues/21927
+    configurer.defaultContentType(MediaType.valueOf(Controllers.CONTENT_TYPE));
   }
 
   @Bean
