@@ -20,17 +20,22 @@ import com.google.common.collect.ImmutableList;
 import org.joda.time.DateTime;
 
 import java.util.List;
+import java.util.Locale;
 
 public class Event {
 
   public interface Action {
 
-    public static enum Default implements Action {
-      REGISTRATION, REREGISTRATION, LAST_CHANGED, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER, LOCKED, UNLOCKED;
+    enum Default implements Action {
+      REGISTRATION, REREGISTRATION, LAST_CHANGED{
+        public String getValue(){
+          return "last changed";
+        }
+      }, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER, LOCKED, UNLOCKED;
       private final String value;
 
-      private Default() {
-        this.value = name();
+      Default() {
+        this.value = name().toLowerCase(Locale.ENGLISH);
       }
 
       @Override

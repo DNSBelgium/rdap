@@ -202,7 +202,7 @@
   "lang": "en",
   "events": [
     {
-      "eventAction": "REGISTRATION",
+      "eventAction": "registration",
       "eventActor": "EventActor",
       "eventDate": "createTime",
       "links": [
@@ -239,7 +239,7 @@
       ]
     },
     {
-      "eventAction": "LAST_CHANGED",
+      "eventAction": "last changed",
       "eventActor": "EventActor",
       "eventDate": "lastChangedTime",
       "links": [
@@ -411,7 +411,7 @@
   ],
   "asEventActor": [
     {
-      "eventAction": "REGISTRATION",
+      "eventAction": "registration",
       "eventActor": "EventActor",
       "eventDate": "createTime",
       "links": [
@@ -448,7 +448,7 @@
       ]
     },
     {
-      "eventAction": "LAST_CHANGED",
+      "eventAction": "last changed",
       "eventActor": "EventActor",
       "eventDate": "lastChangedTime",
       "links": [
