@@ -45,7 +45,7 @@ public class SecureDNS {
 
   private final Boolean zoneSigned;
   private final Boolean delegationSigned;
-  private final int maxSigLife;
+  private final Integer maxSigLife;
   private final List<DSData> dsData;
   private final List<KeyData> keyData;
 
@@ -53,7 +53,7 @@ public class SecureDNS {
   public SecureDNS(
       @JsonProperty("zoneSigned") Boolean zoneSigned,
       @JsonProperty("delegationSigned") Boolean delegationSigned,
-      @JsonProperty("maxSigLife") int maxSigLife,
+      @JsonProperty("maxSigLife") Integer maxSigLife,
       @JsonProperty("dsData") List<DSData> dsData,
       @JsonProperty("keyData") List<KeyData> keyData) {
     this.zoneSigned = zoneSigned;
@@ -71,7 +71,7 @@ public class SecureDNS {
     return delegationSigned;
   }
 
-  public int getMaxSigLife() {
+  public Integer getMaxSigLife() {
     return maxSigLife;
   }
 
