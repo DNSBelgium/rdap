@@ -22,6 +22,14 @@ import java.net.URISyntaxException;
 
 public class Tel extends URIValue {
 
+  public static Tel unvalidatedTel(String telephoneNumber) throws URISyntaxException {
+    return new Tel(new URI("tel:" + telephoneNumber));
+  }
+
+  private Tel(URI uri){
+    super(uri);
+  }
+
   public Tel(TelephoneNumber telephoneNumber) throws URISyntaxException {
     super(new URI("tel:" + telephoneNumber.getStringValue()));
   }
