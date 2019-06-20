@@ -179,6 +179,10 @@ This servlet needs to know your WebConfig implementation. The easiest way to do 
 
     </web-app>
     
+## robots.txt
+By default, when using WebConfig the library will return a robots.txt to prevent the service being crawled by robots.
+If you want to disable this, then extend WebConfig override the addResourceHandlers to add nothing.
+    
 # Upgrading from 1.1.0 to 2.0.x
 A lot of unused classes and dependencies are removed.
 
