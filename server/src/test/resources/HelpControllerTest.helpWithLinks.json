@@ -1,0 +1,119 @@
+{
+  "rdapConformance": [
+    "rdap_level_0"
+  ],
+  "notices": [
+    {
+      "title": "Title",
+      "type": "Type",
+      "description": [
+        "Description part 1",
+        "Description part 2"
+      ],
+      "links": [
+        {
+          "value": "http://example.com/value",
+          "rel": "rel",
+          "href": "http://example.com/href",
+          "hreflang": [
+            "de",
+            "en"
+          ],
+          "title": [
+            "Title part 1",
+            "Title part 2"
+          ],
+          "media": "Media",
+          "type": "Type"
+        },
+        {
+          "value": "http://example.com/value",
+          "rel": "rel",
+          "href": "http://example.com/href",
+          "hreflang": [
+            "de",
+            "en"
+          ],
+          "title": [
+            "Title part 1",
+            "Title part 2"
+          ],
+          "media": "Media",
+          "type": "Type"
+        }
+      ]
+    },
+    {
+      "title": "Title",
+      "type": "Type",
+      "description": [
+        "Description part 1",
+        "Description part 2"
+      ],
+      "links": [
+        {
+          "value": "http://example.com/value",
+          "rel": "rel",
+          "href": "http://example.com/href",
+          "hreflang": [
+            "de",
+            "en"
+          ],
+          "title": [
+            "Title part 1",
+            "Title part 2"
+          ],
+          "media": "Media",
+          "type": "Type"
+        },
+        {
+          "value": "http://example.com/value",
+          "rel": "rel",
+          "href": "http://example.com/href",
+          "hreflang": [
+            "de",
+            "en"
+          ],
+          "title": [
+            "Title part 1",
+            "Title part 2"
+          ],
+          "media": "Media",
+          "type": "Type"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "value": "http://example.com/value",
+      "rel": "rel",
+      "href": "http://example.com/href",
+      "hreflang": [
+        "de",
+        "en"
+      ],
+      "title": [
+        "Title part 1",
+        "Title part 2"
+      ],
+      "media": "Media",
+      "type": "Type"
+    },
+    {
+      "value": "http://example.com/value",
+      "rel": "rel",
+      "href": "http://example.com/href",
+      "hreflang": [
+        "de",
+        "en"
+      ],
+      "title": [
+        "Title part 1",
+        "Title part 2"
+      ],
+      "media": "Media",
+      "type": "Type"
+    }
+  ]
+}

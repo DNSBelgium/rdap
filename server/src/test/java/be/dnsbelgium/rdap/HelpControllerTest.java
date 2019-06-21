@@ -61,6 +61,8 @@ public class HelpControllerTest extends AbstractControllerTest {
 
   @Test
   public void testHelpSuccess() throws Exception {
+    String expectedJson = createExpectedJson("HelpControllerTest.help.json");
+
     Help help = new Help(someNotices());
     help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
     when(helpService.getHelp()).thenReturn(help);
@@ -68,8 +70,22 @@ public class HelpControllerTest extends AbstractControllerTest {
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"]," +
-                    "\"notices\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":[\"Title part 1\",\"Title part 2\"],\"media\":\"Media\",\"type\":\"Type\"}]}]}"));
+            .andExpect(content().json(expectedJson, true));
+
+  }
+
+  @Test
+  public void testHelpWithLinksSuccess() throws Exception {
+    String expectedJson = createExpectedJson("HelpControllerTest.helpWithLinks.json");
+    Help help = new Help(someNotices());
+    help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+    help.links = someLinks();
+    when(helpService.getHelp()).thenReturn(help);
+    mockMvc.perform(get("/help")
+        .accept(MediaType.parseMediaType("application/rdap+json")))
+        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
+        .andExpect(status().isOk())
+        .andExpect(content().json(expectedJson, true));
 
   }
 }
