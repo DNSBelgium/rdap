@@ -31,7 +31,7 @@ public class Event {
         public String getValue(){
           return "last changed";
         }
-      }, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER, LOCKED, UNLOCKED;
+      }, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER, LOCKED, UNLOCKED, LAST_UPDATE;
       private final String value;
 
       Default() {
