@@ -129,16 +129,11 @@ subprojects {
 
           developers {
             developer {
-              id 'johanheylen'
-              name 'Johan Heylen'
-            }
-            developer {
-              id 'stoal'
-              name 'Stijn Niclaes'
-            }
-            developer {
-              id 'vandepitte'
-              name 'Pieter Vandepitte'
+              id 'dnsbelgium'
+              name 'DNS Belgium Engineering'
+              email 'engineeringd@dnsbelgium.be'
+              organization 'DNS Belgium'
+              organizationUrl 'https://www.dnsbelgium.be'
             }
           }
         }
@@ -157,7 +152,9 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
     }
-    dependencies { classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.0.1" }
+  dependencies {
+    classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.1"
+  }
 }
 
 // To apply a third-party plugin from an external build script,
