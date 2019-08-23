@@ -107,7 +107,11 @@ subprojects {
           }
         }
 
-        repository(url: sonatype_staging_url) {
+        // Destination
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+          authentication(userName: sonatype_username, password: sonatype_password)
+        }
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
           authentication(userName: sonatype_username, password: sonatype_password)
         }
 
