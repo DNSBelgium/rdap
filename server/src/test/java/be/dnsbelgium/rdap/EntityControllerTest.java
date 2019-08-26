@@ -52,25 +52,19 @@ public class EntityControllerTest extends AbstractControllerTest {
 
   @Test
   public void testNotFound() throws Exception {
-    String handle = "123456";
-
     when(entityService.getEntity(anyString())).thenReturn(null);
-    mockMvc.perform(get("/entity/" + handle)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/entity/123456")).andExpect(status().isNotFound());
   }
 
   @Test
   public void testInternalServerError() throws Exception {
-    String handle = "123456";
-
-    when(entityService.getEntity(handle)).thenThrow(new IllegalArgumentException("Some uncaught exception"));
-    mockMvc.perform(get("/entity/" + handle)).andExpect(status().isInternalServerError());
+    when(entityService.getEntity(anyString())).thenThrow(new IllegalArgumentException("Some uncaught exception"));
+    mockMvc.perform(get("/entity/123456")).andExpect(status().isInternalServerError());
   }
 
   @Test
   public void testMethodNotAllowed() throws Exception {
-    String handle = "123456";
-
-    mockMvc.perform(put("/entity/" + handle).accept(MediaType.parseMediaType("application/rdap+json")))
+    mockMvc.perform(put("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(status().isMethodNotAllowed());
   }
 
@@ -79,18 +73,8 @@ public class EntityControllerTest extends AbstractControllerTest {
     String handle = "123456";
     Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-    when(entityService.getEntity(handle)).thenReturn(entity);
+    when(entityService.getEntity(anyString())).thenReturn(entity);
     mockMvc.perform(head("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(status().isOk());
-  }
-
-  @Test
-  public void testHeadWithSlashInEntityName() throws Exception {
-    String handle = "123/456";
-    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
-    entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-    when(entityService.getEntity(handle)).thenReturn(entity);
-    mockMvc.perform(head("/entity/123/456").accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(status().isOk());
   }
 
@@ -101,7 +85,7 @@ public class EntityControllerTest extends AbstractControllerTest {
     String handle = "123456";
     Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-    when(entityService.getEntity(handle)).thenReturn(entity);
+    when(entityService.getEntity(anyString())).thenReturn(entity);
     mockMvc.perform(get("/entity/" + handle)
         .accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
