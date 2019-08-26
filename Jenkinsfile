@@ -10,6 +10,16 @@ pipeline {
     booleanParam(name: 'RELEASE', defaultValue: false, description: 'Make a new release')
   }
   stages {
+    stage('Checkout') {
+      when {
+        environment name: 'RELEASE', value: 'true'
+      }
+      steps {
+        checkout scm
+        sh "git checkout master"
+      }
+    }
+
     stage('Build') {
       steps {
         sh './gradlew clean build'
