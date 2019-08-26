@@ -6,9 +6,9 @@ pipeline {
   options {
     buildDiscarder(logRotator(numToKeepStr: '15', artifactNumToKeepStr: '15'))
   }
-//   parameters {
-//     booleanParam(name: 'RELEASE', defaultValue: false, description: 'Make a new release')
-//   }
+  parameters {
+    booleanParam(name: 'RELEASE', defaultValue: false, description: 'Make a new release')
+  }
   stages {
     stage('Build') {
       steps {
@@ -16,14 +16,14 @@ pipeline {
       }
     }
 
-//     stage('Release') {
-//       when {
-//         environment name: 'RELEASE', value: 'true'
-//       }
-//       steps {
-//         sh './gradlew release -Prelease.useAutomaticVersion=true'
-//       }
-//     }
+    stage('Release') {
+      when {
+        environment name: 'RELEASE', value: 'true'
+      }
+      steps {
+        sh './gradlew release -Prelease.useAutomaticVersion=true'
+      }
+    }
 
     stage('Publish to Maven Central') {
       steps {

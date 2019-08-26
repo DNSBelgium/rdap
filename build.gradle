@@ -74,12 +74,6 @@ subprojects {
     //options.compilerArgs << "-Xlint:all"
   }
 
-  signing {
-    if (signing()) {
-      sign configurations.archives
-    }
-  }
-
   task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
     from sourceSets.main.allSource
@@ -96,6 +90,8 @@ subprojects {
   }
 
   apply plugin: 'maven'
+
+  afterReleaseBuild.dependsOn uploadArchives
 
   uploadArchives {
     repositories {
