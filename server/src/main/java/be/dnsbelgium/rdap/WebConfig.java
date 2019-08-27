@@ -22,9 +22,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.util.UrlPathHelper;
 
 import java.util.List;
 
@@ -67,4 +69,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
     handlerMapping.setUseTrailingSlashMatch(false);
     return handlerMapping;
   }
+
+  @Override
+  public void configurePathMatch(PathMatchConfigurer configurer) {
+    UrlPathHelper urlPathHelper = new UrlPathHelper();
+    urlPathHelper.setUrlDecode(false);
+    configurer.setUrlPathHelper(urlPathHelper);
+  }
+
 }
