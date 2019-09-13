@@ -64,7 +64,7 @@ public class DomainController {
 		return result;
 	}
 
-	private Domain getDomain(@PathVariable("domainName") String domainName) throws RDAPError {
+	private Domain getDomain(String domainName) throws RDAPError {
 		final DomainName dn;
 		dn = DomainName.of(domainName);
 		Domain result = domainService.getDomain(dn);
