@@ -42,7 +42,7 @@ import be.dnsbelgium.rdap.service.DomainService;
 
 @Controller
 @RequestMapping(value = "domain")
-public final class DomainController {
+public class DomainController {
 
 	private final Logger logger = LoggerFactory.getLogger(DomainController.class);
 

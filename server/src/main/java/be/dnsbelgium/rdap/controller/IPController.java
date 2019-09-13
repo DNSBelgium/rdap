@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("ip")
-public final class IPController {
+public class IPController {
 
   private final static Logger logger = LoggerFactory.getLogger(IPController.class);
 

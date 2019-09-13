@@ -30,7 +30,7 @@ import be.dnsbelgium.rdap.service.NameserverService;
 
 @Controller
 @RequestMapping(value = "nameserver")
-public final class NameserverController {
+public class NameserverController {
 
 	private final static Logger logger = LoggerFactory.getLogger(NameserverController.class);
 

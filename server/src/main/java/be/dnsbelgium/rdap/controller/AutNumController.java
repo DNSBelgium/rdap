@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "autnum")
-public final class AutNumController {
+public class AutNumController {
 
   private final Logger logger = LoggerFactory.getLogger(AutNumController.class);
 

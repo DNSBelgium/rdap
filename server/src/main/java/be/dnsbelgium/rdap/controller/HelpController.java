@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "help")
-public final class HelpController {
+public class HelpController {
 
   private final static Logger logger = LoggerFactory.getLogger(HelpController.class);
 
