@@ -31,7 +31,8 @@ pipeline {
         environment name: 'RELEASE', value: 'true'
       }
       steps {
-        sh './gradlew release closeAndReleaseRepository -Prelease.useAutomaticVersion=true'
+        sh './gradlew release -Prelease.useAutomaticVersion=true'
+        sh './gradlew closeAndReleaseRepository'
       }
     }
 
