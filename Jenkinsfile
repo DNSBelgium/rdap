@@ -16,7 +16,6 @@ pipeline {
       }
       steps {
         checkout scm
-        sh "git pull"
         sh "git checkout master"
       }
     }
