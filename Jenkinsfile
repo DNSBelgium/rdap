@@ -17,6 +17,7 @@ pipeline {
       steps {
         checkout scm
         sh "git checkout master"
+        sh "git pull --rebase"
       }
     }
 
