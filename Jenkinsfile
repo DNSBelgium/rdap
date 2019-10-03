@@ -33,7 +33,7 @@ pipeline {
       }
       steps {
         sh './gradlew release -Prelease.useAutomaticVersion=true'
-        sh './gradlew closeAndReleaseRepository'
+        sh './gradlew closeRepository'
       }
     }
 
