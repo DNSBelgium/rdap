@@ -128,7 +128,7 @@ public class NameserverControllerTest extends AbstractControllerTest {
     Set<String> hrefLangSet = new HashSet<String>();
     hrefLangSet.add("en");
     hrefLangSet.add("nl");
-    String title = "Title 1";
+    String title = "Title";
     Link link2 = new Link(new URI("http://example.com/nameserver/ns.example"), "relrel", new URI("http://example.com/nameserver/ns.example"), hrefLangSet, title, "This is media", "application/rdap+json");
     List<Link> linksList = new ArrayList<Link>();
     linksList.add(link1);
@@ -190,7 +190,7 @@ public class NameserverControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"links\":[{\"value\":\"http://example.com/domain/example\"," +
                     "\"href\":\"http://example.com/domain/example\",\"type\":\"application/rdap+json\"},{\"value\":\"http://example.com/nameserver/ns.example\"," +
-                    "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":\"Title 1\"," +
+                    "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":\"Title\"," +
                     "\"media\":\"This is media\",\"type\":\"application/rdap+json\"}],\"notices\":[{\"title\":\"Notice title\",\"type\":\"Notice type\",\"description\":[\"Call this a description!\",\"This one to!\"]}]," +
                     "\"remarks\":[{\"title\":\"Remark title\",\"type\":\"RemarkType\",\"description\":[\"Describes the remark\"]}],\"lang\":\"en\"," +
                     "\"events\":[{\"eventAction\":\"registration\",\"eventActor\":\"Master-of-RDAP\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"}," +

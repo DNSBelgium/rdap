@@ -55,7 +55,7 @@ public abstract class AbstractControllerTest {
     Set<String> hrefLang = new HashSet<String>();
     hrefLang.add("en");
     hrefLang.add("de");
-    String title = "Title part 1";
+    String title = "Title";
     List<Link> links = new ArrayList<Link>();
     links.add(new Link(new URI("http://example.com/value"), "rel", new URI("http://example.com/href"), hrefLang, title, "Media", "Type"));
     links.add(new Link(new URI("http://example.com/value"), "rel", new URI("http://example.com/href"), hrefLang, title, "Media", "Type"));

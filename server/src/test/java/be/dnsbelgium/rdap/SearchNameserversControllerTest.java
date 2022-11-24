@@ -133,68 +133,68 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
   private String expectedContent = "{\"rdapConformance\":[\"rdap_level_0\"],\"nameserverSearchResults\":[{" +
           "\"objectClassName\":\"nameserver\"," +
           "\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"}],\"notices\":[{\"title\":\"Title\",\"type\":\"Type\"," +
           "\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\"," +
-          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\"," +
+          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\"," +
           "\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]},{" +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{" +
           "\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"}]}],\"remarks\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\"," +
           "\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{" +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\"," +
           "\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\"," +
-          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\"," +
+          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\"," +
           "\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]}],\"lang\":\"en\"," +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}],\"lang\":\"en\"," +
           "\"events\":[{\"eventAction\":\"registration\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"}]},{\"eventAction\":\"last changed\",\"eventActor\":\"EventActor\"," +
           "\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
           "\"status\":[\"active\",\"delete prohibited\",\"some specific status\"],\"port43\":\"whois.example.com\",\"handle\":\"Handle\"," +
           "\"ldhName\":\"ns.xn--exmple-jta.com\",\"unicodeName\":\"ns.ex\u00E0mple.com\",\"ipAddresses\":{\"v4\":[\"193.5.6.198\",\"89.65.3.87\"]," +
           "\"v6\":[\"2001:678:9::1\",\"FE80:0000:0000:0000:0202:B3FF:FE1E:8329\"]}},{\"objectClassName\":\"nameserver\",\"links\":[{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"}],\"notices\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\"," +
           "\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{" +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":" +
-          "\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\"," +
+          "\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\"," +
           "\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\"," +
-          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\"," +
+          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\"," +
           "\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
           "\"remarks\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"]," +
           "\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\"," +
           "\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\"," +
-          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{" +
+          "\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"}]}],\"lang\":\"en\",\"events\":[{" +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}],\"lang\":\"en\",\"events\":[{" +
           "\"eventAction\":\"registration\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) +
           "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\"," +
-          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\",\"media\":\"Media\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\"," +
+          "\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\"," +
           "\"type\":\"Type\"}]},{\"eventAction\":\"last changed\",\"eventActor\":\"EventActor\"," +
           "\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{" +
           "\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
-          "\"title\":\"Title part 1\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
-          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title part 1\"," +
+          "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
+          "\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\"," +
           "\"media\":\"Media\",\"type\":\"Type\"}]}],\"status\":[\"active\",\"delete prohibited\",\"some specific status\"]," +
           "\"port43\":\"whois.example.com\",\"handle\":\"Handle\",\"ldhName\":\"ns.xn--exmple-jta.com\",\"unicodeName\":\"ns.ex\u00E0mple.com\"," +
           "\"ipAddresses\":{\"v4\":[\"193.5.6.198\",\"89.65.3.87\"],\"v6\":[\"2001:678:9::1\",\"FE80:0000:0000:0000:0202:B3FF:FE1E:8329\"]}}]}";
