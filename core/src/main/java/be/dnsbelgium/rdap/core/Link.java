@@ -37,7 +37,7 @@ public final class Link {
 
   private final Set<String> hreflang;
 
-  private final List<String> title;
+  private final String title;
 
   private final String media;
 
@@ -49,7 +49,7 @@ public final class Link {
       @JsonProperty("rel") String rel,
       @JsonProperty("href") URI href,
       @JsonProperty("hreflang") Set<String> hreflang,
-      @JsonProperty("title") List<String> title,
+      @JsonProperty("title") String title,
       @JsonProperty("media") String media,
       @JsonProperty("type") String type) {
     if (href == null) {
@@ -60,7 +60,7 @@ public final class Link {
     this.rel = rel;
     this.href = href;
     this.hreflang = (hreflang == null) ? null : new ImmutableSet.Builder<String>().addAll(hreflang).build();
-    this.title = (title == null) ? null : new ImmutableList.Builder<String>().addAll(title).build();
+    this.title = title;
     this.media = media;
     this.type = type;
   }
@@ -81,7 +81,7 @@ public final class Link {
     return hreflang;
   }
 
-  public List<String> getTitle() {
+  public String getTitle() {
     return title;
   }
 
@@ -103,7 +103,7 @@ public final class Link {
 
     private Set<String> hreflang;
 
-    private List<String> title;
+    private String title;
 
     private String media;
 
@@ -135,13 +135,11 @@ public final class Link {
       return this;
     }
 
-    public Builder addTitle(String title) {
-      if (this.title == null) {
-        this.title = new ArrayList<String>();
-      }
-      this.title.add(title);
-      return this;
+    public void withTitle(String title) {
+
+      this.title = title;
     }
+
 
     public Link build() {
       return new Link(value, rel, href, hreflang, title, media, type);

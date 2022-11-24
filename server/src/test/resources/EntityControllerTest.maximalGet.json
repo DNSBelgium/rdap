@@ -12,10 +12,7 @@
         "de",
         "en"
       ],
-      "title": [
-        "Title part 1",
-        "Title part 2"
-      ],
+      "title": "Title part 1",
       "media": "Media",
       "type": "Type"
     },
@@ -27,10 +24,7 @@
         "de",
         "en"
       ],
-      "title": [
-        "Title part 1",
-        "Title part 2"
-      ],
+      "title": "Title part 1",
       "media": "Media",
       "type": "Type"
     }
@@ -52,10 +46,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -67,10 +58,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -92,10 +80,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -107,10 +92,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -134,10 +116,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -149,10 +128,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -174,10 +150,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -189,10 +162,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -214,10 +184,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -229,10 +196,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -251,10 +215,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -266,10 +227,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -346,7 +304,7 @@
       [
         "tel",
         {
-          "type": "tel"
+          "type": "voice"
         },
         "uri",
         "tel:+32.123456"
@@ -354,7 +312,7 @@
       [
         "tel",
         {
-          "type": "tel"
+          "type": "voice"
         },
         "uri",
         "tel:+32.654321"
@@ -423,10 +381,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -438,10 +393,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }
@@ -460,10 +412,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         },
@@ -475,10 +424,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title part 1",
           "media": "Media",
           "type": "Type"
         }

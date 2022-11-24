@@ -128,10 +128,8 @@ public class NameserverControllerTest extends AbstractControllerTest {
     Set<String> hrefLangSet = new HashSet<String>();
     hrefLangSet.add("en");
     hrefLangSet.add("nl");
-    List<String> titleList = new ArrayList<String>();
-    titleList.add("Title 1");
-    titleList.add("Title 2");
-    Link link2 = new Link(new URI("http://example.com/nameserver/ns.example"), "relrel", new URI("http://example.com/nameserver/ns.example"), hrefLangSet, titleList, "This is media", "application/rdap+json");
+    String title = "Title 1";
+    Link link2 = new Link(new URI("http://example.com/nameserver/ns.example"), "relrel", new URI("http://example.com/nameserver/ns.example"), hrefLangSet, title, "This is media", "application/rdap+json");
     List<Link> linksList = new ArrayList<Link>();
     linksList.add(link1);
     linksList.add(link2);
@@ -165,9 +163,8 @@ public class NameserverControllerTest extends AbstractControllerTest {
     Set<String> hrefLangs = new HashSet<String>();
     hrefLangs.add("en");
     hrefLangs.add("mn-Cyrl-MN");
-    List<String> eventTitleList = new ArrayList<String>();
-    eventTitleList.add("This is a title");
-    Link lcLink2 = new Link(value2, "related", href2, hrefLangs, eventTitleList, "mediaString", "application/rdap+json");
+    String eventTitle = "This is a title";
+    Link lcLink2 = new Link(value2, "related", href2, hrefLangs, eventTitle, "mediaString", "application/rdap+json");
     List<Link> lcLinkList = new ArrayList<Link>();
     lcLinkList.add(lcLink1);
     lcLinkList.add(lcLink2);
@@ -193,13 +190,13 @@ public class NameserverControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"links\":[{\"value\":\"http://example.com/domain/example\"," +
                     "\"href\":\"http://example.com/domain/example\",\"type\":\"application/rdap+json\"},{\"value\":\"http://example.com/nameserver/ns.example\"," +
-                    "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":[\"Title 1\",\"Title 2\"]," +
+                    "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":\"Title 1\"," +
                     "\"media\":\"This is media\",\"type\":\"application/rdap+json\"}],\"notices\":[{\"title\":\"Notice title\",\"type\":\"Notice type\",\"description\":[\"Call this a description!\",\"This one to!\"]}]," +
                     "\"remarks\":[{\"title\":\"Remark title\",\"type\":\"RemarkType\",\"description\":[\"Describes the remark\"]}],\"lang\":\"en\"," +
                     "\"events\":[{\"eventAction\":\"registration\",\"eventActor\":\"Master-of-RDAP\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"}," +
                     "{\"eventAction\":\"last changed\",\"eventActor\":\"RDAP-Slave\",\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\"," +
                     "\"links\":[{\"href\":\"http://example.com/lastChangedTarget\"},{\"value\":\"http://example.com/lastChangedContextURI\",\"rel\":\"related\"," +
-                    "\"href\":\"http://example.com/lastChanged2target\",\"hreflang\":[\"mn-Cyrl-MN\",\"en\"],\"title\":[\"This is a title\"],\"media\":\"mediaString\"," +
+                    "\"href\":\"http://example.com/lastChanged2target\",\"hreflang\":[\"mn-Cyrl-MN\",\"en\"],\"title\":\"This is a title\",\"media\":\"mediaString\"," +
                     "\"type\":\"application/rdap+json\"}]}],\"status\":[\"active\",\"delete prohibited\",\"specific status\"],\"port43\":\"whois.example.com\"," +
                     "\"handle\":\"This is a Handle\"," +
                     "\"ldhName\":\"ns.example.com\"," +
