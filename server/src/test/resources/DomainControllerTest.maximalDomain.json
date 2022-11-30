@@ -12,10 +12,7 @@
         "de",
         "en"
       ],
-      "title": [
-        "Title part 1",
-        "Title part 2"
-      ],
+      "title": "Title",
       "media": "Media",
       "type": "Type"
     },
@@ -27,10 +24,7 @@
         "de",
         "en"
       ],
-      "title": [
-        "Title part 1",
-        "Title part 2"
-      ],
+      "title": "Title",
       "media": "Media",
       "type": "Type"
     }
@@ -52,10 +46,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -67,10 +58,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -92,10 +80,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -107,10 +92,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -134,10 +116,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -149,10 +128,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -174,10 +150,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -189,10 +162,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -214,10 +184,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -229,10 +196,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -251,10 +215,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -266,10 +227,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -396,10 +354,7 @@
           "de",
           "en"
         ],
-        "title": [
-          "Title part 1",
-          "Title part 2"
-        ],
+        "title": "Title",
         "media": "Media",
         "type": "Type"
       },
@@ -411,10 +366,7 @@
           "de",
           "en"
         ],
-        "title": [
-          "Title part 1",
-          "Title part 2"
-        ],
+        "title": "Title",
         "media": "Media",
         "type": "Type"
       }
@@ -436,10 +388,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           },
@@ -451,10 +400,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           }
@@ -476,10 +422,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           },
@@ -491,10 +434,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           }
@@ -518,10 +458,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           },
@@ -533,10 +470,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           }
@@ -558,10 +492,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           },
@@ -573,10 +504,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           }
@@ -598,10 +526,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           },
@@ -613,10 +538,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           }
@@ -635,10 +557,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           },
@@ -650,10 +569,7 @@
               "de",
               "en"
             ],
-            "title": [
-              "Title part 1",
-              "Title part 2"
-            ],
+            "title": "Title",
             "media": "Media",
             "type": "Type"
           }
@@ -728,10 +644,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -743,10 +656,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -768,10 +678,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -783,10 +690,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -808,10 +712,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -823,10 +724,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -850,10 +748,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -865,10 +760,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -890,10 +782,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -905,10 +794,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -930,10 +816,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -945,10 +828,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -967,10 +847,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -982,10 +859,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -1023,10 +897,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         },
@@ -1038,10 +909,7 @@
             "de",
             "en"
           ],
-          "title": [
-            "Title part 1",
-            "Title part 2"
-          ],
+          "title": "Title",
           "media": "Media",
           "type": "Type"
         }
@@ -1063,10 +931,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -1078,10 +943,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -1103,10 +965,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -1118,10 +977,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -1145,10 +1001,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -1160,10 +1013,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -1185,10 +1035,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -1200,10 +1047,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -1225,10 +1069,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -1240,10 +1081,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }
@@ -1262,10 +1100,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             },
@@ -1277,10 +1112,7 @@
                 "de",
                 "en"
               ],
-              "title": [
-                "Title part 1",
-                "Title part 2"
-              ],
+              "title": "Title",
               "media": "Media",
               "type": "Type"
             }

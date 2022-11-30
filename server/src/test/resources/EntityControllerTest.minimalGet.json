@@ -67,7 +67,7 @@
       [
         "tel",
         {
-          "type": "tel"
+          "type": "voice"
         },
         "uri",
         "tel:+32.123456"
@@ -75,7 +75,7 @@
       [
         "tel",
         {
-          "type": "tel"
+          "type": "voice"
         },
         "uri",
         "tel:+32.654321"

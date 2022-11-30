@@ -371,9 +371,9 @@ public class Contact {
       }
       for (TelephoneNumber tel : telephoneNumbers) {
         try {
-          properties.add(new Property(null, "TEL", new Parameters.Builder().add("type", "tel").build(), new Tel(tel)));
+          properties.add(new Property(null, "TEL", new Parameters.Builder().add("type", "voice").build(), new Tel(tel)));
         } catch (URISyntaxException e) {
-          LOGGER.error("Could not add tel property", e);
+          LOGGER.error("Could not add voice property", e);
         }
       }
       for (TelephoneNumber fax : faxNumbers) {
