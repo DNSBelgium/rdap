@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  tools {
+    jdk 'OpenJDK 8'
+  }
   triggers {
     pollSCM('H * * * *')
   }
