@@ -148,7 +148,7 @@ subprojects {
                         developer {
                             id 'dnsbelgium'
                             name 'DNS Belgium Engineering'
-                            email 'engineeringd@dnsbelgium.be'
+                            email 'engineering@dnsbelgium.be'
                             organization 'DNS Belgium'
                             organizationUrl 'https://www.dnsbelgium.be'
                         }
