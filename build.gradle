@@ -146,6 +146,12 @@ subprojects {
         sign publishing.publications
     }
 
+    release {
+        git {
+            requireBranch.set('master')
+        }
+    }
+
     afterReleaseBuild.dependsOn publish
 
 }
