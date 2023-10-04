@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'net.researchgate.release' version '3.0.2'
     id "org.sonarqube" version "2.7.1"
-    id 'io.codearte.nexus-staging' version '0.21.0'
+    id 'io.codearte.nexus-staging' version '0.30.0'
 }
 
 ext {
