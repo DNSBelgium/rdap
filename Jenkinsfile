@@ -35,14 +35,14 @@ pipeline {
         environment name: 'RELEASE', value: 'true'
       }
       steps {
-        sh './gradlew release -Prelease.useAutomaticVersion=true'
+        sh './gradlew release -Prelease=true -Prelease.useAutomaticVersion=true'
         sh './gradlew closeRepository'
       }
     }
 
     stage('Publish to Maven Central') {
       steps {
-        sh './gradlew uploadArchives'
+        sh './gradlew publish'
       }
     }
   }

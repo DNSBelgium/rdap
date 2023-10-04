@@ -4,9 +4,9 @@ mainClassName = 'be.dnsbelgium.rdap.client.RDAPCLI'
 applicationName = 'rdap'
 
 dependencies {
-  compile project(':rdap-core')
-  compile lib.httpclient, lib.commons_cli
-  compile lib.yaml
-  testCompile lib.junit
+  implementation project(':rdap-core')
+  implementation lib.httpclient, lib.commons_cli
+  implementation lib.yaml
+  implementation lib.jackson, lib.slf4j
+  testImplementation lib.junit
 }
-

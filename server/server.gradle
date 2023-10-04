@@ -1,17 +1,20 @@
 configurations { providedCompile }
 
 dependencies {
-  compile project(':rdap-core')
-  compile lib.jackson,
+  api project(':rdap-core')
+  api lib.jackson,
       lib.spring_core,
       lib.spring_web,
       lib.spring_webmvc,
       lib.guava,
-      lib.slf4j
-    providedCompile lib.servlet_api
-  testCompile lib.spring_test, lib.jsonpath
-  testCompile "org.apache.logging.log4j:log4j-slf4j-impl:2.11.2"
-  testCompile "org.skyscreamer:jsonassert:1.5.0"
+      lib.slf4j,
+      lib.icu4j
+  compileOnly lib.servlet_api
+  testImplementation lib.servlet_api
+  testImplementation lib.junit, lib.mockito, lib.joda_time
+  testImplementation lib.spring_test, lib.jsonpath
+  testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:2.11.2"
+  testImplementation "org.skyscreamer:jsonassert:1.5.0"
 }
 
 sourceSets.main.compileClasspath += configurations.providedCompile
