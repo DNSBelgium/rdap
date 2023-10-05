@@ -35,7 +35,7 @@ ext {
             spring_webmvc         : "org.springframework:spring-webmvc:${spring_version}",
             spring_web            : "org.springframework:spring-web:${spring_version}",
             spring_test           : "org.springframework:spring-test:${spring_version}",
-            groovy                : 'org.codehaus.groovy:groovy:2.2.1',
+            groovy                : 'org.codehaus.groovy:groovy:3.0.19',
             yaml                  : 'org.yaml:snakeyaml:1.15'
     ]
 }
@@ -50,8 +50,6 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: 'signing'
     apply plugin: 'maven-publish'
-
-    sourceCompatibility = targetCompatibility = '1.8'
 
     repositories {
         mavenCentral()
@@ -70,6 +68,10 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
         //options.compilerArgs << "-Xlint:all"
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
     }
 
     nexusStaging {

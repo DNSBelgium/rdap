@@ -23,7 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.Resource;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -67,7 +66,7 @@ public class NameserverControllerTest extends AbstractControllerTest {
   @Autowired
   NameserverService nameserverService;
 
-  @Resource
+  @Autowired
   private WebApplicationContext webApplicationContext;
 
   private MockMvc mockMvc;
