@@ -40,6 +40,9 @@ and that you have deployed your application in an application server listening a
 
 We have created a sample project which could help you with your implementation. You can find both the source and instructions in the following project: [rdap-server-sample-gtld](https://github.com/DNSBelgium/rdap-server-sample-gtld)
 
+There's a second sample project that uses Spring Boot, version 3 of the RDAP Server library and Java 17.
+You can find it here: [rdap-server-sample-spring-boot-jar](https://github.com/DNSBelgium/rdap-server-sample-spring-boot-jar)
+
 ## Build your own implementation
 
 The instructions below assume that you have a recent version of the JDK and Apache Maven on your system.
@@ -49,6 +52,10 @@ Of course you can use other build tools (Ant, Gradle, ...) instead of Maven.
 
    mvn archetype:generate -DgroupId=be.yourcompany -DartifactId=rdap -DarchetypeArtifactId=maven-archetype-webapp
 
+Or alternatively use the spring initializr to generate a  new spring boot application (see also the spring boot sample). 
+
+  https://start.spring.io/
+
 ## Declare a dependency on the RDAP server library in your project
 
 Maven: add this dependency in your pom.xml file
@@ -56,16 +63,16 @@ Maven: add this dependency in your pom.xml file
     <dependency>
       <groupId>be.dnsbelgium</groupId>
       <artifactId>rdap-server</artifactId>
-      <version>1.0.3</version>
+      <version>3.0.0</version>
     </dependency>
 
 Gradle: add this snippet in your build.gradle file
     
     dependencies {
-      be.dnsbelgium:rdap-server:1.0.3
+      be.dnsbelgium:rdap-server:3.0.0
     }
 
-For other build tools, check http://mvnrepository.com/artifact/be.dnsbelgium/rdap-server/1.0.3
+For other build tools, check http://mvnrepository.com/artifact/be.dnsbelgium/rdap-server/3.0.0
 
 ## How to integrate with your back-end
 
@@ -182,6 +189,9 @@ This servlet needs to know your WebConfig implementation. The easiest way to do 
 ## robots.txt
 By default, when using WebConfig the library will return a robots.txt to prevent the service being crawled by robots.
 If you want to disable this, then extend WebConfig override the addResourceHandlers to add nothing.
+
+# Upgrading from 2.0.x to 3.x
+From version 3.x the library requires Java 17.
     
 # Upgrading from 1.1.0 to 2.0.x
 A lot of unused classes and dependencies are removed.
