@@ -105,6 +105,14 @@ public class DomainControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  public void testDefaultGetWithTrailingSlash() throws Exception {
+    DomainName domainName = DomainName.of("example.com");
+    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    mockMvc.perform(get("/domain/example.com/").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isNotFound());
+  }
+
+  @Test
   public void testDefaultHead() throws Exception {
     DomainName domainName = DomainName.of("example.com");
     Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);

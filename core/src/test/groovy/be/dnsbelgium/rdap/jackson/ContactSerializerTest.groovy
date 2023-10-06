@@ -17,13 +17,13 @@ package be.dnsbelgium.rdap.jackson
 
 import be.dnsbelgium.vcard.Contact
 import be.dnsbelgium.vcard.datatype.Text
-import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import org.junit.Test
 
-import static org.mockito.Matchers.any
-import static org.mockito.Matchers.eq
+
+import static org.mockito.ArgumentMatchers.eq
+import static org.mockito.ArgumentMatchers.isNull
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
@@ -44,7 +44,7 @@ public class ContactSerializerTest extends AbstractSerializerTest<ContactSeriali
 
         SerializerProvider serializerProvider = mock(SerializerProvider.class);
         // required to cast first param to Class, otherwise not obvious which method to mock
-        when(serializerProvider.findValueSerializer((Class) eq(Text.class), any(BeanProperty.class)))
+        when(serializerProvider.findValueSerializer((Class) eq(Text.class), isNull()))
                 .thenReturn((JsonSerializer) new TextSerializer())
                 .thenReturn((JsonSerializer) new TextSerializer());
 
@@ -66,7 +66,7 @@ public class ContactSerializerTest extends AbstractSerializerTest<ContactSeriali
 
         SerializerProvider serializerProvider = mock(SerializerProvider.class);
         // required to cast first param to Class, otherwise not obvious which method to mock
-        when(serializerProvider.findValueSerializer((Class) eq(Text.class), any(BeanProperty.class)))
+        when(serializerProvider.findValueSerializer((Class) eq(Text.class), isNull()))
                 .thenReturn((JsonSerializer) new TextSerializer());
 
         def expected = [

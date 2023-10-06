@@ -190,10 +190,20 @@ This servlet needs to know your WebConfig implementation. The easiest way to do 
 By default, when using WebConfig the library will return a robots.txt to prevent the service being crawled by robots.
 If you want to disable this, then extend WebConfig override the addResourceHandlers to add nothing.
 
-# Upgrading from 2.0.x to 3.x
+# Upgrading
+## Upgrading from 3.0.0 to 3.0.1
+Upgraded a lot of dependencies, most notably: Spring version is upgraded from 5.1.6.RELEASE to 5.3.30.
+
+The provided ExceptionAdvice class now extends ResponseEntityExceptionHandler.
+
+A request with a parameter of the wrong type will now return a 400 (bad request) response instead of a 404 (not found)
+
+WebConfig no longer sets useSuffixPatterMatch to false (as it is the default value). 
+
+## Upgrading from 2.0.x to 3.x
 From version 3.x the library requires Java 17.
     
-# Upgrading from 1.1.0 to 2.0.x
+## Upgrading from 1.1.0 to 2.0.x
 A lot of unused classes and dependencies are removed.
 
 Removed all classes in the be.dnsbelgium.rate, be.dnsbelgium.rdap.servlet and be.dnsbelgium.rdap.spring.security packages 

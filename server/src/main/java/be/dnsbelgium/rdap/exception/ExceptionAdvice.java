@@ -8,23 +8,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@ControllerAdvice
-public class ExceptionAdvice {
+@RestControllerAdvice
+public class ExceptionAdvice extends ResponseEntityExceptionHandler {
   private final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
 
   @ExceptionHandler(value = RDAPError.class)
-  @ResponseBody
   public HttpEntity<RDAPError> handleRdapError(RDAPError error, HttpServletResponse response) {
     response.setStatus(error.getErrorCode());
 
@@ -32,9 +29,8 @@ public class ExceptionAdvice {
   }
 
   @ExceptionHandler(value = LabelException.IDNParseException.class)
-  @ResponseBody
-  public HttpEntity<RDAPError> handleIDNParseException(LabelException.IDNParseException ipe, HttpServletResponse response) {
-    response.setStatus(HttpStatus.BAD_REQUEST.value());
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public HttpEntity<RDAPError> handleIDNParseException(LabelException.IDNParseException ipe) {
     List<String> description = new ArrayList<String>();
     for (IDNA.Error error : ipe.getErrors()) {
       description.add(error.name());
@@ -42,18 +38,10 @@ public class ExceptionAdvice {
     return wrapRdapErrorInHttpEntityAndSetContentType(RDAPError.badRequest("Invalid domain name", description));
   }
 
-  @ExceptionHandler(value = HttpMediaTypeNotAcceptableException.class)
-  @ResponseBody
-  public ResponseEntity<String> handleUnsupportedMediaType(HttpMediaTypeNotAcceptableException hmtnae, HttpServletResponse response) throws IOException {
-    response.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
-    return null;
-  }
-
   @ExceptionHandler(value = Exception.class)
-  @ResponseBody
-  public HttpEntity<RDAPError> handleUnhandledException(Exception e, HttpServletResponse response) {
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public HttpEntity<RDAPError> handleUnhandledException(Exception e) {
     logger.error("Some errors not handled", e);
-    response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
     return wrapRdapErrorInHttpEntityAndSetContentType(new RDAPError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error"));
   }
 

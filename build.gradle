@@ -6,25 +6,24 @@ plugins {
 }
 
 ext {
-    guava_version = '15.0'
-    slf4j_version = '1.7.5'
-    jackson_version = '2.9.8'
-    spring_version = '5.1.6.RELEASE'
+    guava_version = '32.1.2-jre'
+    slf4j_version = '2.0.9'
+    jackson_version = '2.15.2'
+    spring_version = '5.3.30'
 
     lib = [
             commons_cli           : 'commons-cli:commons-cli:1.2',
-            icu4j                 : 'com.ibm.icu:icu4j:51.1',
+            icu4j                 : 'com.ibm.icu:icu4j:73.2',
             guava                 : "com.google.guava:guava:${guava_version}",
-            commons_lang          : 'org.apache.commons:commons-lang3:3.8.1',
+            commons_lang          : 'org.apache.commons:commons-lang3:3.13.0',
             httpclient            : 'org.apache.httpcomponents:httpclient:4.3.1',
-            servlet_api           : 'javax.servlet:javax.servlet-api:3.1.0',
-            joda_time             : 'joda-time:joda-time:2.3',
-            junit                 : 'junit:junit:4.12',
-            dnsjava               : 'dnsjava:dnsjava:2.1.1',
+            servlet_api           : 'javax.servlet:javax.servlet-api:4.0.1',
+            joda_time             : 'joda-time:joda-time:2.12.5',
+            junit                 : 'junit:junit:4.13.2',
             slf4j                 : "org.slf4j:slf4j-api:${slf4j_version}",
             jackson               : ["com.fasterxml.jackson.core:jackson-core:${jackson_version}", "com.fasterxml.jackson.core:jackson-databind:${jackson_version}"],
-            mockito               : 'org.mockito:mockito-all:1.9.5',
-            jsonpath              : 'com.jayway.jsonpath:json-path:2.4.0',
+            mockito               : 'org.mockito:mockito-core:5.5.0',
+            jsonpath              : 'com.jayway.jsonpath:json-path:2.8.0',
             spring_core           : "org.springframework:spring-core:${spring_version}",
             spring_aop            : "org.springframework:spring-aop:${spring_version}",
             spring_context        : "org.springframework:spring-context:${spring_version}",
@@ -36,7 +35,7 @@ ext {
             spring_web            : "org.springframework:spring-web:${spring_version}",
             spring_test           : "org.springframework:spring-test:${spring_version}",
             groovy                : 'org.codehaus.groovy:groovy:3.0.19',
-            yaml                  : 'org.yaml:snakeyaml:1.15'
+            yaml                  : 'org.yaml:snakeyaml:2.2'
     ]
 }
 

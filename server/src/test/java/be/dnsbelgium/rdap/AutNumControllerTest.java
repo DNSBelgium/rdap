@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.mockito.Matchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -70,9 +70,9 @@ public class AutNumControllerTest extends AbstractControllerTest {
 
   @Test
   public void testWrongTypeForParam() throws Exception {
-    mockMvc.perform(get("autnum/testje")
+    mockMvc.perform(get("/autnum/testje")
             .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isBadRequest());
   }
 
   @Test

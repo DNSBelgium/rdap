@@ -106,28 +106,28 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
   public void testSearchByNameNoResultsFromService() throws Exception {
     String query = "ns1.example*.com";
     when(nameserverService.searchByName(query)).thenThrow(RDAPError.noResults(query));
-    mockMvc.perform(get("nameservers?name=" + query)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?name=" + query)).andExpect(status().isNotFound());
   }
 
   @Test
   public void testSearchByNameNoResults() throws Exception {
     String query = "ns1.example*.com";
     when(nameserverService.searchByName(query)).thenReturn(new NameserversSearchResult(new ArrayList<>()));
-    mockMvc.perform(get("nameservers?name=" + query)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?name=" + query)).andExpect(status().isNotFound());
   }
 
   @Test
   public void testSearchByIpNoResultsFromService() throws Exception {
     String ipQuery = "201.5.6.166";
     when(nameserverService.searchByIp(ipQuery)).thenThrow(RDAPError.noResults(ipQuery));
-    mockMvc.perform(get("nameservers?ip=" + ipQuery)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?ip=" + ipQuery)).andExpect(status().isNotFound());
   }
 
   @Test
   public void testSearchByIpEmptyResult() throws Exception {
     String ipQuery = "201.5.6.166";
     when(nameserverService.searchByIp(ipQuery)).thenReturn(new NameserversSearchResult(null));
-    mockMvc.perform(get("nameservers?ip=" + ipQuery)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?ip=" + ipQuery)).andExpect(status().isNotFound());
   }
 
   private String expectedContent = "{\"rdapConformance\":[\"rdap_level_0\"],\"nameserverSearchResults\":[{" +

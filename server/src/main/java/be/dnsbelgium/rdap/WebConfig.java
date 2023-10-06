@@ -62,19 +62,12 @@ public class WebConfig extends WebMvcConfigurationSupport {
     return new CustomObjectMapper();
   }
 
-  @Bean
-  public RequestMappingHandlerMapping requestMappingHandlerMapping() {
-    RequestMappingHandlerMapping handlerMapping = super.requestMappingHandlerMapping();
-    handlerMapping.setUseSuffixPatternMatch(false);
-    handlerMapping.setUseTrailingSlashMatch(false);
-    return handlerMapping;
-  }
-
   @Override
   public void configurePathMatch(PathMatchConfigurer configurer) {
     UrlPathHelper urlPathHelper = new UrlPathHelper();
     urlPathHelper.setUrlDecode(false);
     configurer.setUrlPathHelper(urlPathHelper);
+    configurer.setUseTrailingSlashMatch(false);
   }
 
 }

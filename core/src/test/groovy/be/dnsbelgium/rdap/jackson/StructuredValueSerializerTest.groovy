@@ -21,9 +21,10 @@ import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 
-import static org.mockito.Matchers.any
-import static org.mockito.Matchers.eq
+import static org.mockito.ArgumentMatchers.any
+import static org.mockito.ArgumentMatchers.eq
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
@@ -40,9 +41,9 @@ public class StructuredValueSerializerTest extends AbstractSerializerTest<Contac
 
 
     // required to cast first param to Class, otherwise not obvious which method to mock
-    when(serializerProvider.findValueSerializer((Class) eq(StructuredValue.NType.class), any(BeanProperty.class)))
+    when(serializerProvider.findValueSerializer((Class) eq(StructuredValue.NType.class), ArgumentMatchers.isNull()))
         .thenReturn((JsonSerializer) new StructuredValueSerializer());
-    when(serializerProvider.findValueSerializer((Class) eq(be.dnsbelgium.vcard.datatype.AbstractList.TextList.class), any(BeanProperty.class)))
+    when(serializerProvider.findValueSerializer((Class) eq(be.dnsbelgium.vcard.datatype.AbstractList.TextList.class), ArgumentMatchers.isNull()))
         .thenReturn((JsonSerializer) new TextListSerializer());
 
     def expected = [

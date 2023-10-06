@@ -4,8 +4,6 @@ import be.dnsbelgium.rdap.core.Nameserver;
 import be.dnsbelgium.rdap.core.NameserversSearchResult;
 import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.NameserverService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "nameservers")
 public class SearchNameserversController {
-
-	private final static Logger logger = LoggerFactory.getLogger(SearchNameserversController.class);
 
 	private final NameserverService nameserverService;
 

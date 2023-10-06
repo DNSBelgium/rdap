@@ -13,11 +13,5 @@ dependencies {
   testImplementation lib.servlet_api
   testImplementation lib.junit, lib.mockito, lib.joda_time
   testImplementation lib.spring_test, lib.jsonpath
-  testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:2.11.2"
-  testImplementation "org.skyscreamer:jsonassert:1.5.0"
+  testImplementation "org.skyscreamer:jsonassert:1.5.1"
 }
-
-sourceSets.main.compileClasspath += configurations.providedCompile
-sourceSets.test.compileClasspath += configurations.providedCompile
-sourceSets.test.runtimeClasspath += configurations.providedCompile
-javadoc.classpath=sourceSets.main.compileClasspath
