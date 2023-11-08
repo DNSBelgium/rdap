@@ -5,8 +5,9 @@ applicationName = 'rdap'
 
 dependencies {
   implementation project(':rdap-core')
-  implementation lib.httpclient, lib.commons_cli
-  implementation lib.yaml
+  implementation "commons-cli:commons-cli:1.2"
+  implementation "org.apache.httpcomponents:httpclient:4.3.1"
+  implementation "org.yaml:snakeyaml:2.2"
   implementation lib.jackson, lib.slf4j
   testImplementation lib.junit
 }
