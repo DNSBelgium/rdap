@@ -40,7 +40,7 @@ and that you have deployed your application in an application server listening a
 
 We have created a sample project which could help you with your implementation. You can find both the source and instructions in the following project: [rdap-server-sample-gtld](https://github.com/DNSBelgium/rdap-server-sample-gtld)
 
-There's a second sample project that uses Spring Boot, version 3 of the RDAP Server library and Java 17.
+There's a second sample project that uses Spring Boot 3, version 4 of the RDAP Server library and Java 17.
 You can find it here: [rdap-server-sample-spring-boot-jar](https://github.com/DNSBelgium/rdap-server-sample-spring-boot-jar)
 
 ## Build your own implementation
@@ -191,6 +191,11 @@ By default, when using WebConfig the library will return a robots.txt to prevent
 If you want to disable this, then extend WebConfig override the addResourceHandlers to add nothing.
 
 # Upgrading
+## Upgrading from 3.x to 4.x
+The Spring Framework is upgraded from 5.3.30 to 6.0.13.
+Please consult the Spring Framework documention for upgrade instructions.
+One of the changes caused by the Spring upgrade is moving from javax.servlet to jakarta.servlet
+
 ## Upgrading from 3.0.0 to 3.0.1
 Upgraded a lot of dependencies, most notably: Spring version is upgraded from 5.1.6.RELEASE to 5.3.30.
 
