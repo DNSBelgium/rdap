@@ -42,12 +42,12 @@ pipeline {
 
     stage('Publish to Maven Central') {
       environment {
-        // these are dnsbelgium specific entries for open sourcing the library
-        ORG_GRADLE_PROJECT_signing.secretKeyRingFile = credentials('ORG_GRADLE_PROJECT_signing.secretKeyRingFile')
-        ORG_GRADLE_PROJECT_signing.keyId = credentials('ORG_GRADLE_PROJECT_signing.keyId')
-        ORG_GRADLE_PROJECT_signing.password = credentials('ORG_GRADLE_PROJECT_signing.password')
-        ORG_GRADLE_PROJECT_sonatype_snapshot_url = 'https://oss.sonatype.org/content/repositories/snapshots/'
-        ORG_GRADLE_PROJECT_sonatype_staging_url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+        //these are dnsbelgium specific entries for open sourcing the library
+        //ORG_GRADLE_PROJECT_signing.secretKeyRingFile = credentials('ORG_GRADLE_PROJECT_signing.secretKeyRingFile')
+        //ORG_GRADLE_PROJECT_signing.keyId = credentials('ORG_GRADLE_PROJECT_signing.keyId')
+        //ORG_GRADLE_PROJECT_signing.password = credentials('ORG_GRADLE_PROJECT_signing.password')
+        //ORG_GRADLE_PROJECT_sonatype_snapshot_url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+        //ORG_GRADLE_PROJECT_sonatype_staging_url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
         ORG_GRADLE_PROJECT_sonatype_username = credentials('ORG_GRADLE_PROJECT_sonatype_username')
         ORG_GRADLE_PROJECT_sonatype_password = credentials('ORG_GRADLE_PROJECT_sonatype_password')
       }
