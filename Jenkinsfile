@@ -12,6 +12,10 @@ pipeline {
   parameters {
     booleanParam(name: 'RELEASE', defaultValue: false, description: 'Make a new release')
   }
+  environment {
+    ORG_GRADLE_PROJECT_sonatype_username = credentials('ORG_GRADLE_PROJECT_sonatype_username')
+    ORG_GRADLE_PROJECT_sonatype_password = credentials('ORG_GRADLE_PROJECT_sonatype_password')
+  }
   stages {
     stage('Checkout') {
       when {
