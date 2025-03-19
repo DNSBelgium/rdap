@@ -134,7 +134,10 @@ subprojects {
     }
 
     signing {
-        required { signing() }
+        def signingKeyId =signingInMemoryKeyId
+        def signingKey = signingInMemoryKey
+        def signingPassword = signingInMemoryKeyPassword
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
         sign publishing.publications
     }
 
@@ -146,8 +149,4 @@ subprojects {
 
     afterReleaseBuild.dependsOn publish
 
-}
-
-boolean signing() {
-    return project.hasProperty("signing.keyId")
 }
