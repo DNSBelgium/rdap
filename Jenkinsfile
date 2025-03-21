@@ -42,7 +42,8 @@ pipeline {
 
     stage('Publish to Maven Central') {
       environment {
-        ORG_GRADLE_PROJECT_signingInMemoryKey = credentials('ORG_GRADLE_PROJECT_signingInMemoryKey')
+        ORG_GRADLE_PROJECT_signingKeyTxtFile = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyTxt')
+        ORG_GRADLE_PROJECT_signingKey = readFile file: ORG_GRADLE_PROJECT_signingKeyTxtFile
         ORG_GRADLE_PROJECT_signingInMemoryKeyId = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyId')
         ORG_GRADLE_PROJECT_signingInMemoryKeyPassword = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyPassword')
         ORG_GRADLE_PROJECT_sonatype_username = credentials('ORG_GRADLE_PROJECT_sonatype_username')

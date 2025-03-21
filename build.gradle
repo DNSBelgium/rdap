@@ -134,7 +134,7 @@ subprojects {
     }
 
     signing {
-        def signingKeyId =signingInMemoryKeyId
+        def signingKeyId = signingInMemoryKeyId
         def signingKey = signingInMemoryKey
         def signingPassword = signingInMemoryKeyPassword
         useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
