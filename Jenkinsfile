@@ -44,8 +44,8 @@ pipeline {
       environment {
         ORG_GRADLE_PROJECT_signingKeyTxtFile = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyTxt')
         ORG_GRADLE_PROJECT_signingKey = readFile file: ORG_GRADLE_PROJECT_signingKeyTxtFile
-        ORG_GRADLE_PROJECT_signingInMemoryKeyId = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyId')
-        ORG_GRADLE_PROJECT_signingInMemoryKeyPassword = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyPassword')
+        ORG_GRADLE_PROJECT_signingKeyId = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyId')
+        ORG_GRADLE_PROJECT_signingPassword = credentials('ORG_GRADLE_PROJECT_signingInMemoryKeyPassword')
         ORG_GRADLE_PROJECT_sonatype_username = credentials('ORG_GRADLE_PROJECT_sonatype_username')
         ORG_GRADLE_PROJECT_sonatype_password = credentials('ORG_GRADLE_PROJECT_sonatype_password')
       }
