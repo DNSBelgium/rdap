@@ -134,9 +134,9 @@ subprojects {
     }
 
     signing {
-        def signingKeyId = signingInMemoryKeyId
-        def signingKey = signingInMemoryKey
-        def signingPassword = signingInMemoryKeyPassword
+        def signingKeyId = signingKeyId
+        def signingKey = signingKey
+        def signingPassword = signingPassword
         useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
         sign publishing.publications
     }
