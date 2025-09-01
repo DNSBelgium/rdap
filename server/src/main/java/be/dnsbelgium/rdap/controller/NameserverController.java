@@ -44,7 +44,7 @@ public class NameserverController {
 		this.nameserverService = nameserverService;
 	}
 
-	@RequestMapping(value = "/{nameserverName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(value = "/{nameserverName}", method = RequestMethod.GET)
 	@ResponseBody
 	public Nameserver get(@PathVariable("nameserverName") final String nameserverName) throws RDAPError {
 		logger.debug("Query(GET) for nameserver {}", nameserverName);
@@ -71,7 +71,7 @@ public class NameserverController {
 		}
 	}
 
-	@RequestMapping(value = "/{nameserverName}", method = RequestMethod.HEAD, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(value = "/{nameserverName}", method = RequestMethod.HEAD)
 	public ResponseEntity<Void> head(@PathVariable("nameserverName") final String nameserverName) throws RDAPError {
 		logger.debug("Query(HEAD) for nameserver {}", nameserverName);
 		final DomainName domainName;
@@ -110,7 +110,7 @@ public class NameserverController {
 	
 	@RequestMapping(value = "/{nameserverName}", method = { RequestMethod.DELETE, RequestMethod.PUT,
 			RequestMethod.OPTIONS, RequestMethod.PATCH, RequestMethod.POST,
-			RequestMethod.TRACE }, produces = Controllers.CONTENT_TYPE)
+			RequestMethod.TRACE })
 	@ResponseBody
 	public Nameserver any(@PathVariable("nameserverName") final String nameserverName) throws RDAPError {
 		throw RDAPError.methodNotAllowed();

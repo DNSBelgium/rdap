@@ -25,7 +25,7 @@ public class EntityController {
 		this.entityService = entityService;
 	}
 
-	@RequestMapping(value = "/{handle}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(value = "/{handle}", method = RequestMethod.GET)
 	@ResponseBody
 	public Entity get(@PathVariable("handle") final String handle) throws RDAPError {
 		logger.debug("Query(GET) for entity with handle: {}", handle);
@@ -37,7 +37,7 @@ public class EntityController {
 		return entity;
 	}
 	
-	@RequestMapping(value = "/{handle}", method = RequestMethod.HEAD, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(value = "/{handle}", method = RequestMethod.HEAD)
 	public ResponseEntity<Void> head(@PathVariable("handle") final String handle) throws RDAPError {
 		logger.debug("Query(HEAD) for entity with handle: {}", handle);
 		Entity entity = entityService.getEntity(handle);
@@ -49,7 +49,7 @@ public class EntityController {
 	}
 
 	@RequestMapping(value = "/{handle}", method = { RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.OPTIONS,
-			RequestMethod.PATCH, RequestMethod.POST, RequestMethod.TRACE }, produces = Controllers.CONTENT_TYPE)
+			RequestMethod.PATCH, RequestMethod.POST, RequestMethod.TRACE })
 	@ResponseBody
 	public Entity any(@PathVariable("handle") final String handle) throws RDAPError {
 		throw RDAPError.methodNotAllowed();

@@ -25,7 +25,7 @@ public class AutNumController {
     this.autNumService = autNumService;
   }
 
-  @RequestMapping(value = "/{autnum}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+  @RequestMapping(value = "/{autnum}", method = RequestMethod.GET)
   @ResponseBody
   public AutNum get(@PathVariable("autnum") int autNum) throws RDAPError {
     AutNum result = autNumService.getAutNum(autNum);

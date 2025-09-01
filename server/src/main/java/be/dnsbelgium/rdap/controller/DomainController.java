@@ -56,7 +56,7 @@ public class DomainController {
 		this.domainService = domainService;
 	}
 
-	@RequestMapping(value = "/{domainName}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(value = "/{domainName}", method = RequestMethod.GET)
 	@ResponseBody
 	public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
 		logger.debug("Query(GET) for domain {}", domainName);
@@ -75,7 +75,7 @@ public class DomainController {
 		return result;
 	}
 
-	@RequestMapping(value = "/{domainName}", method = RequestMethod.HEAD, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(value = "/{domainName}", method = RequestMethod.HEAD)
 	public ResponseEntity<Void> head(@PathVariable("domainName") final String domainName) throws RDAPError {
 		logger.debug("Query(HEAD) for domain {}", domainName);
 		Domain result = getDomain(domainName);
@@ -93,7 +93,7 @@ public class DomainController {
 	}
 
 	@RequestMapping(value = "/{domainName}", method = { RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.OPTIONS,
-			RequestMethod.PATCH, RequestMethod.POST, RequestMethod.TRACE }, produces = Controllers.CONTENT_TYPE)
+			RequestMethod.PATCH, RequestMethod.POST, RequestMethod.TRACE })
 	@ResponseBody
 	public Domain any(@PathVariable("domainName") final String domainName) throws RDAPError {
 		throw RDAPError.methodNotAllowed();

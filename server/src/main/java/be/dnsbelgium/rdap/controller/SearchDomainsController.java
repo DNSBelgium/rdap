@@ -23,7 +23,7 @@ public class SearchDomainsController {
 		this.domainService = domainService;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public DomainsSearchResult search(@RequestParam(value = "name", required = false) final String name,
 			@RequestParam(value = "nsLdhName", required = false) final String nsLdhName,
@@ -39,7 +39,7 @@ public class SearchDomainsController {
 	}
 
 	@RequestMapping(method = { RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.OPTIONS, RequestMethod.PATCH,
-			RequestMethod.POST, RequestMethod.TRACE }, produces = Controllers.CONTENT_TYPE)
+			RequestMethod.POST, RequestMethod.TRACE })
 	@ResponseBody
 	public Nameserver any(@RequestParam(value = "name", required = false) final String name,
 			@RequestParam(value = "nsLdhName", required = false) final String nsLdhName,
