@@ -16,12 +16,10 @@
 package be.dnsbelgium.rdap;
 
 import be.dnsbelgium.core.DomainName;
-import be.dnsbelgium.rdap.controller.Controllers;
 import be.dnsbelgium.rdap.controller.DomainController;
 import be.dnsbelgium.rdap.core.*;
 import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.DomainService;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,11 +81,27 @@ public class DomainControllerTest extends AbstractControllerTest {
 
   @Test
   public void testAcceptRdapJson() throws Exception {
-    DomainName domainName = DomainName.of("example.com");
-    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
-    mockMvc.perform(get("/domain/example.com").accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().isNotAcceptable());
+    performGetDomainTest("application/rdap+json");
+  }
+
+  @Test
+  public void testAcceptRdapJsonCharset() throws Exception {
+    performGetDomainTest("application/rdap+json;charset=UTF-8");
+  }
+
+  @Test
+  public void testAcceptJson() throws Exception {
+    performGetDomainTest("application/json");
+  }
+
+  @Test
+  public void testAcceptJsonCharset() throws Exception {
+    performGetDomainTest("application/json;charset=UTF-8");
+  }
+
+  @Test
+  public void testAcceptOtherHeader() throws Exception {
+    performGetDomainTest(String.valueOf(MediaType.TEXT_HTML));
   }
 
   @Test
@@ -98,25 +112,19 @@ public class DomainControllerTest extends AbstractControllerTest {
 
   @Test
   public void testDefaultGet() throws Exception {
-    DomainName domainName = DomainName.of("example.com");
-    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    initDomain();
     mockMvc.perform(get("/domain/example.com").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isOk()).andExpect(jsonPath("$.ldhName", "example.com").exists());
   }
 
   @Test
   public void testDefaultGetWithTrailingSlash() throws Exception {
-    DomainName domainName = DomainName.of("example.com");
-    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    initDomain();
     mockMvc.perform(get("/domain/example.com/").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isNotFound());
   }
 
   @Test
   public void testDefaultHead() throws Exception {
-    DomainName domainName = DomainName.of("example.com");
-    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    initDomain();
     mockMvc.perform(head("/domain/example.com").accept(MediaType.parseMediaType("application/rdap+json"))).andExpect(status().isOk());
   }
 
@@ -139,7 +147,7 @@ public class DomainControllerTest extends AbstractControllerTest {
             thenReturn(domain);
     mockMvc.perform(get("/domain/example.com")
             .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
             .andExpect(status().isOk())
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"domain\"," +
                     "\"ldhName\":\"example.com\",\"unicodeName\":\"example.com\"," +
@@ -159,15 +167,13 @@ public class DomainControllerTest extends AbstractControllerTest {
             .accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
             .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
             .andExpect(content().json(expectedJson));
   }
 
   @Test
   public void testBytes() throws Exception {
-    DomainName domainName = DomainName.of("example.com");
-    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
-    domain.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
-    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+    initDomain();
     mockMvc.perform(get("/domain/example.com")
         .accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
@@ -176,21 +182,28 @@ public class DomainControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testWrongMediaType() throws Exception {
-    mockMvc.perform(get("/domain/example.com")
-            .accept(MediaType.TEXT_HTML))
-        .andExpect(status().isNotAcceptable());
-  }
-
-  @Test
   public void testIDNParseException() throws Exception {
     mockMvc.perform(get("/domain/-\u2620-.be")
-        .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", Controllers.CONTENT_TYPE))
+        .accept(MediaType.parseMediaType("application/json")))
+        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
         .andExpect(content().string("{\"errorCode\":400,\"title\":\"Invalid domain name\",\"description\":[\"LEADING_HYPHEN\",\"TRAILING_HYPHEN\",\"DISALLOWED\"]}"))
             .andExpect(status().isBadRequest());
   }
-  
+
+  public void performGetDomainTest(String acceptHeader) throws Exception {
+    initDomain();
+    mockMvc.perform(get("/domain/example.com")
+            .accept(MediaType.parseMediaType(acceptHeader)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")));
+  }
+
+  public void initDomain() throws RDAPError {
+    DomainName domainName = DomainName.of("example.com");
+    Domain domain = new Domain(null, null, null, null, null, null, null, null, domainName, domainName, null, null, null, null, null, null);
+    domain.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+    when(domainService.getDomain(Mockito.any(DomainName.class))).thenReturn(domain);
+  }
   
   
 }

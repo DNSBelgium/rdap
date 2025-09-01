@@ -62,13 +62,6 @@ public class AutNumControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testWrongMediaType() throws Exception {
-    mockMvc.perform(get("/autnum/123456")
-            .accept(MediaType.TEXT_HTML))
-            .andExpect(status().isNotAcceptable());
-  }
-
-  @Test
   public void testWrongTypeForParam() throws Exception {
     mockMvc.perform(get("/autnum/testje")
             .accept(MediaType.parseMediaType("application/rdap+json")))
@@ -76,15 +69,18 @@ public class AutNumControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testMinimal() throws Exception {
-    AutNum autNum = new AutNum(null, null, null, "en", null, null, null, "AutNumHandle", 6000, 6300, "AutNumName", "AutNumType", "Belgium");
-    autNum.addRdapConformance(AutNum.DEFAULT_RDAP_CONFORMANCE);
-    when(autNumService.getAutNum(anyInt())).thenReturn(autNum);
-    mockMvc.perform(get("/autnum/6000")
-            .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\",\"lang\":\"en\",\"handle\":\"AutNumHandle\",\"startAutnum\":6000,\"endAutnum\":6300,\"name\":\"AutNumName\",\"type\":\"AutNumType\",\"country\":\"Belgium\"}"));
+  public void testMinimalJson() throws Exception {
+    performAutNumTest("application/json");
+  }
+
+  @Test
+  public void testMinimalRdapJson() throws Exception {
+    performAutNumTest("application/rdap+json;charset=utf-8");
+  }
+
+  @Test
+  public void testMinimalOtherHeader() throws Exception {
+    performAutNumTest("text/html");
   }
 
   @Test
@@ -111,5 +107,16 @@ public class AutNumControllerTest extends AbstractControllerTest {
                     "\"name\":\"Name\"," +
                     "\"type\":\"Type\"," +
                     "\"country\":\"Country\"}"));
+  }
+
+  public void performAutNumTest(String acceptHeader) throws Exception {
+    AutNum autNum = new AutNum(null, null, null, "en", null, null, null, "AutNumHandle", 6000, 6300, "AutNumName", "AutNumType", "Belgium");
+    autNum.addRdapConformance(AutNum.DEFAULT_RDAP_CONFORMANCE);
+    when(autNumService.getAutNum(anyInt())).thenReturn(autNum);
+    mockMvc.perform(get("/autnum/6000")
+                    .accept(MediaType.parseMediaType(acceptHeader)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\",\"lang\":\"en\",\"handle\":\"AutNumHandle\",\"startAutnum\":6000,\"endAutnum\":6300,\"name\":\"AutNumName\",\"type\":\"AutNumType\",\"country\":\"Belgium\"}"));
   }
 }
