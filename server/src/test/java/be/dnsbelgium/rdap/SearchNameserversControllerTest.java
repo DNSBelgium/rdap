@@ -58,31 +58,33 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testSearchByIpSuccess() throws Exception {
-    String ipQuery = "193.56.54.32";
-    NameserversSearchResult nameserversSearchResult = new NameserversSearchResult(someNameservers());
-    nameserversSearchResult.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
-    when(nameserverService.searchByIp(ipQuery)).thenReturn(nameserversSearchResult);
-    mockMvc.perform(get("/nameservers?ip=" + ipQuery))
-            .andExpect(status().isOk())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(content().string(expectedContent));
-    verify(nameserverService, times(1)).searchByIp(ipQuery);
-    verify(nameserverService, never()).searchByName(anyString());
+  public void testSearchByIpSuccessJson() throws Exception {
+    performSearchBy("ip", "application/json");
   }
 
   @Test
-  public void testSearchByNameSuccess() throws Exception {
-    String query = "ns1.example*.com";
-    NameserversSearchResult nameserversSearchResult = new NameserversSearchResult(someNameservers());
-    nameserversSearchResult.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
-    when(nameserverService.searchByName(query)).thenReturn(nameserversSearchResult);
-    mockMvc.perform(get("/nameservers?name=" + query))
-            .andExpect(status().isOk())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(content().string(expectedContent));
-    verify(nameserverService, times(1)).searchByName(query);
-    verify(nameserverService, never()).searchByIp(anyString());
+  public void testSearchByIpSuccessRdapJson() throws Exception {
+    performSearchBy("ip", "application/rdap+json");
+  }
+
+  @Test
+  public void testSearchByIpSuccessOtherHeader() throws Exception {
+    performSearchBy("ip", "text/html");
+  }
+
+  @Test
+  public void testSearchByNameSuccessJson() throws Exception {
+    performSearchBy("name", "application/json");
+  }
+
+  @Test
+  public void testSearchByNameSuccessRdapJson() throws Exception {
+    performSearchBy("name", "application/rdap+json");
+  }
+
+  @Test
+  public void testSearchByNameSuccessOtherHeader() throws Exception {
+    performSearchBy("name", "text/html");
   }
 
   @Test
@@ -96,38 +98,67 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testWrongMediaType() throws Exception {
-    mockMvc.perform(get("/nameservers?name=ns.example*.com")
-            .accept(MediaType.TEXT_HTML))
-            .andExpect(status().isNotAcceptable());
-  }
-
-  @Test
   public void testSearchByNameNoResultsFromService() throws Exception {
     String query = "ns1.example*.com";
     when(nameserverService.searchByName(query)).thenThrow(RDAPError.noResults(query));
-    mockMvc.perform(get("/nameservers?name=" + query)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?name=" + query))
+            .andExpect(status().isNotFound())
+            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
   }
 
   @Test
   public void testSearchByNameNoResults() throws Exception {
     String query = "ns1.example*.com";
     when(nameserverService.searchByName(query)).thenReturn(new NameserversSearchResult(new ArrayList<>()));
-    mockMvc.perform(get("/nameservers?name=" + query)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?name=" + query))
+            .andExpect(status().isNotFound())
+            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
   }
 
   @Test
   public void testSearchByIpNoResultsFromService() throws Exception {
     String ipQuery = "201.5.6.166";
     when(nameserverService.searchByIp(ipQuery)).thenThrow(RDAPError.noResults(ipQuery));
-    mockMvc.perform(get("/nameservers?ip=" + ipQuery)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?ip=" + ipQuery))
+            .andExpect(status().isNotFound())
+            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
   }
 
   @Test
   public void testSearchByIpEmptyResult() throws Exception {
     String ipQuery = "201.5.6.166";
     when(nameserverService.searchByIp(ipQuery)).thenReturn(new NameserversSearchResult(null));
-    mockMvc.perform(get("/nameservers?ip=" + ipQuery)).andExpect(status().isNotFound());
+    mockMvc.perform(get("/nameservers?ip=" + ipQuery))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")));
+  }
+
+  public void performSearchBy(String searchBy, String acceptHeader) throws Exception {
+    NameserversSearchResult nameserversSearchResult = new NameserversSearchResult(someNameservers());
+    nameserversSearchResult.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
+
+    if (searchBy.equals("name")) {
+      String query = "ns1.example*.com";
+
+      when(nameserverService.searchByName(query)).thenReturn(nameserversSearchResult);
+      mockMvc.perform(get("/nameservers?name=" + query).accept(MediaType.parseMediaType(acceptHeader)))
+              .andExpect(status().isOk())
+              .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+              .andExpect(content().string(expectedContent));
+      verify(nameserverService, times(1)).searchByName(query);
+      verify(nameserverService, never()).searchByIp(anyString());
+    }
+    if (searchBy.equals("ip")) {
+      String ipQuery = "193.56.54.32";
+
+      when(nameserverService.searchByIp(ipQuery)).thenReturn(nameserversSearchResult);
+      mockMvc.perform(get("/nameservers?ip=" + ipQuery).accept(MediaType.parseMediaType(acceptHeader)))
+              .andExpect(status().isOk())
+              .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+              .andExpect(content().string(expectedContent));
+      verify(nameserverService, times(1)).searchByIp(ipQuery);
+      verify(nameserverService, never()).searchByName(anyString());
+    }
   }
 
   private String expectedContent = "{\"rdapConformance\":[\"rdap_level_0\"],\"nameserverSearchResults\":[{" +

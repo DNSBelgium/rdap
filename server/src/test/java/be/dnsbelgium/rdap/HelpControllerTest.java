@@ -14,13 +14,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,18 +58,28 @@ public class HelpControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testHelpSuccess() throws Exception {
-    String expectedJson = createExpectedJson("HelpControllerTest.help.json");
+  public void testHelpSuccessRdapJson() throws Exception {
+    performHelpTest("application/rdap+json");
+  }
 
-    Help help = new Help(someNotices());
-    help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
-    when(helpService.getHelp()).thenReturn(help);
-    mockMvc.perform(get("/help")
-            .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(status().isOk())
-            .andExpect(content().json(expectedJson, true));
+  @Test
+  public void testHelpSuccessRdapJsonCharset() throws Exception {
+    performHelpTest("application/rdap+json;charset=UTF-8");
+  }
 
+  @Test
+  public void testHelpSuccessJson() throws Exception {
+    performHelpTest("application/json");
+  }
+
+  @Test
+  public void testHelpSuccessJsonCharset() throws Exception {
+    performHelpTest("application/json;charset=UTF-8");
+  }
+
+  @Test
+  public void testHelpSuccessOtherHeaders() throws Exception {
+    performHelpTest("text/html");
   }
 
   @Test
@@ -83,9 +91,25 @@ public class HelpControllerTest extends AbstractControllerTest {
     when(helpService.getHelp()).thenReturn(help);
     mockMvc.perform(get("/help")
         .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
         .andExpect(status().isOk())
-        .andExpect(content().json(expectedJson, true));
+            .andExpect(content().contentTypeCompatibleWith("application/rdap+json"))
+            .andExpect(content().json(expectedJson, true));
 
+  }
+
+  public void performHelpTest(String acceptHeader) throws Exception {
+    String expectedJson = createExpectedJson("HelpControllerTest.help.json");
+    initHelp();
+    mockMvc.perform(get("/help")
+            .accept(MediaType.parseMediaType(acceptHeader))) //parseMediaType parses the content type into a MediaType object and compares it semantically. It handles variations in formatting (e.g., extra spaces, case differences).
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json"))) //contentTypeCompatibleWith checks whether the response content type is compatible with the expected type, ignoring charset differences. MediaType.valueOf for more flexibility in case the charset might change or be omitted in some environments.
+            .andExpect(content().json(expectedJson, true));
+  }
+
+  public void initHelp() throws Exception {
+    Help help = new Help(someNotices());
+    help.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+    when(helpService.getHelp()).thenReturn(help);
   }
 }

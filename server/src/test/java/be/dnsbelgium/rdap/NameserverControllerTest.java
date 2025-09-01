@@ -37,6 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -95,30 +96,40 @@ public class NameserverControllerTest extends AbstractControllerTest {
   
 	@Test
 	public void testMinimalHead() throws Exception {
-		Nameserver nameserver = new Nameserver(null, null, null, null, null, null, null, null,
-				DomainName.of("ns.example.com"), null, null);
-		nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
-		when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
+		initNameServer();
 		mockMvc.perform(head("/nameserver/ns.example.com")).andExpect(status().isOk());
 	}
   
   @Test
-  public void testMinimal() throws Exception {
-    Nameserver nameserver = new Nameserver(null, null, null, null, null, null, null, null, DomainName.of("ns.example.com"), null, null);
-    nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
-    when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
-    mockMvc.perform(get("/nameserver/ns.example")
-            .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.com\"}"));
+  public void testAcceptRdapJsonMinimal() throws Exception {
+    performGetNameserverTest("application/rdap+json");
+  }
+
+  @Test
+  public void testAcceptRdapJsonCharsetMinimal() throws Exception {
+    performGetNameserverTest("application/rdap+json; charset=utf-8");
+  }
+
+  @Test
+  public void testAcceptJsonMinimal() throws Exception {
+    performGetNameserverTest("application/json");
+  }
+
+  @Test
+  public void testAcceptJsonCharsetMinimal() throws Exception {
+    performGetNameserverTest("application/json; charset=utf-8");
+  }
+
+  @Test
+  public void testAcceptOtherHeadersMinimal() throws Exception {
+    performGetNameserverTest("text/html; charset=utf-8");
   }
   
-	@Test
-	public void testMethodNotAllowed() throws Exception {
-		mockMvc.perform(put("/nameserver/ns.example").accept(MediaType.parseMediaType("application/rdap+json")))
-				.andExpect(status().isMethodNotAllowed());
-	}
+  @Test
+  public void testMethodNotAllowed() throws Exception {
+      mockMvc.perform(put("/nameserver/ns.example").accept(MediaType.parseMediaType("application/rdap+json")))
+              .andExpect(status().isMethodNotAllowed());
+  }
 
   @Test
   public void testMaximal() throws Exception {
@@ -184,9 +195,8 @@ public class NameserverControllerTest extends AbstractControllerTest {
     nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
     when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
     mockMvc.perform(get("/nameserver/ns.example.com")
-            .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(status().isOk())
+            .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"links\":[{\"value\":\"http://example.com/domain/example\"," +
                     "\"href\":\"http://example.com/domain/example\",\"type\":\"application/rdap+json\"},{\"value\":\"http://example.com/nameserver/ns.example\"," +
                     "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":\"Title\"," +
@@ -201,5 +211,20 @@ public class NameserverControllerTest extends AbstractControllerTest {
                     "\"ldhName\":\"ns.example.com\"," +
                     "\"unicodeName\":\"ns.example.com\"," +
                     "\"ipAddresses\":{\"v4\":[\"193.5.6.198\",\"89.65.3.87\"],\"v6\":[\"2001:678:9::1\",\"FE80:0000:0000:0000:0202:B3FF:FE1E:8329\"]}}"));
+  }
+
+  public void performGetNameserverTest(String acceptHeader) throws Exception {
+    initNameServer();
+    mockMvc.perform(get("/nameserver/ns.example")
+                    .accept(MediaType.parseMediaType(acceptHeader)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.com\"}"));
+  }
+
+  public void initNameServer() throws RDAPError {
+    Nameserver nameserver = new Nameserver(null, null, null, null, null, null, null, null, DomainName.of("ns.example.com"), null, null);
+    nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
+    when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
   }
 }

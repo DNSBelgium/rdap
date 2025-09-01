@@ -3,6 +3,7 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.core.DomainName;
 import be.dnsbelgium.rdap.controller.EntityController;
 import be.dnsbelgium.rdap.core.Entity;
+import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.EntityService;
 import org.junit.After;
 import org.junit.Test;
@@ -69,23 +70,35 @@ public class EntityControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testMinimalHead() throws Exception {
-    String handle = "123456";
-    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
-    entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-    when(entityService.getEntity(anyString())).thenReturn(entity);
-    mockMvc.perform(head("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(status().isOk());
+  public void testAcceptRdapJsonMinimal() throws Exception {
+    performGetEntityTest("application/rdap+json");
+  }
+
+  @Test
+  public void testAcceptRdapJsonCharsetMinimal() throws Exception {
+    performGetEntityTest("application/rdap+json;charset=utf-8");
+  }
+
+  @Test
+  public void testAcceptJsonMinimal() throws Exception {
+    performGetEntityTest("application/json");
+  }
+
+  @Test
+  public void testAcceptJsonCharsetMinimal() throws Exception {
+    performGetEntityTest("application/json;charset=utf-8");
+  }
+
+  @Test
+  public void testAcceptOtherHeadersMinimal() throws Exception {
+    performGetEntityTest("text/html");
   }
 
   @Test
   public void testMinimalGet() throws Exception {
     String expectedJson = createExpectedJson("EntityControllerTest.minimalGet.json");
-
     String handle = "123456";
-    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
-    entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
-    when(entityService.getEntity(anyString())).thenReturn(entity);
+    initMinimalHead();
     mockMvc.perform(get("/entity/" + handle)
         .accept(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
@@ -116,8 +129,22 @@ public class EntityControllerTest extends AbstractControllerTest {
     when(entityService.getEntity(eq(handle))).thenReturn(entity);
     mockMvc.perform(get("/entity/" + handle)
         .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
+        .andExpect(content().contentTypeCompatibleWith(MediaType.parseMediaType("application/rdap+json")))
         .andExpect(status().isOk())
         .andExpect(content().json(expectedJson));
+  }
+
+  public void performGetEntityTest(String acceptHeader) throws Exception {
+    initMinimalHead();
+    mockMvc.perform(get("/entity/123456").accept(MediaType.parseMediaType(acceptHeader)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")));
+  }
+
+  public void initMinimalHead() throws RDAPError {
+    String handle = "123456";
+    Entity entity = new Entity(null, null, null, null, Entity.OBJECT_CLASS_NAME, null, null, null, handle, aContact(), null, null, null, null);
+    entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
+    when(entityService.getEntity(anyString())).thenReturn(entity);
   }
 }

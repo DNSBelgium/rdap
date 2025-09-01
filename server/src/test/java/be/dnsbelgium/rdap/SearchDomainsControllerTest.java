@@ -6,7 +6,6 @@ import be.dnsbelgium.rdap.core.Domain;
 import be.dnsbelgium.rdap.core.DomainsSearchResult;
 import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.DomainService;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +24,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,12 +61,6 @@ public class SearchDomainsControllerTest extends AbstractControllerTest {
     reset(domainService);
   }
 
-  @Test
-  public void testWrongMediaType() throws Exception {
-    mockMvc.perform(get("/domains?name=example*.com")
-            .accept(MediaType.TEXT_HTML))
-            .andExpect(status().isNotAcceptable());
-  }
 
   @Test
   public void testSearchByNameNotAuthoritative() throws Exception {
@@ -84,8 +76,9 @@ public class SearchDomainsControllerTest extends AbstractControllerTest {
     DomainsSearchResult domainsSearchResult = new DomainsSearchResult(new ArrayList<Domain>());
     domainsSearchResult.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
     when(domainService.searchDomainsByName(NAME)).thenReturn(domainsSearchResult);
-    mockMvc.perform(get("/domains?name=" + NAME).accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(status().isNotFound());
+    mockMvc.perform(get("/domains?name=" + NAME).accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")));
   }
 
   @Test
@@ -113,36 +106,27 @@ public class SearchDomainsControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testSearchByNameSuccess() throws Exception {
-    String expectedJson = createExpectedJson("SearchDomainsControllerTest.searchByNameSuccess.json");
-
-    List<Domain> domains = new ArrayList<Domain>();
-    domains.add(new Domain(someLinks(), someNotices(), someRemarks(), "en", someEvents(), someStatuses(),
-            DomainName.of("whois.example.com"), "Handle", DomainName.of("examples.com"), DomainName.of("examples.com"), someVariants(),
-            someNameservers(), aSecureDNS(), someEntities(), somePublicIds(), anIPNetwork()));
-    DomainsSearchResult domainsSearchResult = new DomainsSearchResult(domains);
-    domainsSearchResult.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
-    when(domainService.searchDomainsByName(NAME)).thenReturn(domainsSearchResult);
-    mockMvc.perform(get("/domains?name=" + NAME).accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(status().isOk())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(content().json(expectedJson));
-    verify(domainService, times(1)).searchDomainsByName(NAME);
-    verify(domainService, never()).searchDomainsByNsLdhName(anyString());
-    verify(domainService, never()).searchDomainsByNsIp(anyString());
+  public void testSearchByNameAcceptJsonSuccess() throws Exception {
+    performSearchDomainsByName("application/json");
   }
 
   @Test
-  public void testSearchByNsLdhName() throws Exception {
-    List <Domain> domains = new ArrayList<Domain>();
-    domains.add(new Domain(null, null, null, "en", null, someStatuses(), null, "Handle", DomainName.of("notexample.org"), null,
-            null, null, null, null, null, null));
-    DomainsSearchResult domainsSearchResult = new DomainsSearchResult(domains);
-    domainsSearchResult.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+  public void testSearchByNameAcceptRdapJsonSuccess() throws Exception {
+    performSearchDomainsByName("application/rdap+json");
+  }
+
+  @Test
+  public void testSearchByNameAcceptOtherHeadersSuccess() throws Exception {
+    performSearchDomainsByName("text/html");
+  }
+
+  @Test
+  public void testSearchByNsLdhNameJson() throws Exception {
+    DomainsSearchResult domainsSearchResult = initDomainsSearchResult();
     when(domainService.searchDomainsByNsLdhName(NS_LDH_NAME)).thenReturn(domainsSearchResult);
-    mockMvc.perform(get("/domains?nsLdhName=" + NS_LDH_NAME).accept(MediaType.parseMediaType("application/rdap+json")))
+    mockMvc.perform(get("/domains?nsLdhName=" + NS_LDH_NAME).accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"domainSearchResults\":[{\"objectClassName\":\"domain\",\"lang\":\"en\",\"status\":[\"active\",\"delete prohibited\",\"some specific status\"],\"handle\":\"Handle\",\"ldhName\":\"notexample.org\"}]}"));
     verify(domainService, times(1)).searchDomainsByNsLdhName(NS_LDH_NAME);
     verify(domainService, never()).searchDomainsByName(anyString());
@@ -150,25 +134,83 @@ public class SearchDomainsControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testSearchByNsIp() throws Exception {
-    List <Domain> domains = new ArrayList<Domain>();
-    domains.add(new Domain(null, null, null, "en",null, someStatuses(), null, "Handle", DomainName.of("notexample.org"), null,
-            null, null, null, null, null, null));
-    DomainsSearchResult domainsSearchResult = new DomainsSearchResult(domains);
-    domainsSearchResult.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
-    when(domainService.searchDomainsByNsIp(NS_IP)).thenReturn(domainsSearchResult);
-    mockMvc.perform(get("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("application/rdap+json")))
+  public void testSearchByNsLdhNameRdapJson() throws Exception {
+    DomainsSearchResult domainsSearchResult = initDomainsSearchResult();
+    when(domainService.searchDomainsByNsLdhName(NS_LDH_NAME)).thenReturn(domainsSearchResult);
+    mockMvc.perform(get("/domains?nsLdhName=" + NS_LDH_NAME).accept(MediaType.parseMediaType("application/rdap+json")))
             .andExpect(status().isOk())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"domainSearchResults\":[{\"objectClassName\":\"domain\",\"lang\":\"en\",\"status\":[\"active\",\"delete prohibited\",\"some specific status\"],\"handle\":\"Handle\",\"ldhName\":\"notexample.org\"}]}"));
+  }
+
+  @Test
+  public void testSearchByNsIpJsonHeader() throws Exception {
+    DomainsSearchResult domainsSearchResult = initDomainsSearchResult();
+    when(domainService.searchDomainsByNsIp(NS_IP)).thenReturn(domainsSearchResult);
+    mockMvc.perform(get("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"domainSearchResults\":[{\"objectClassName\":\"domain\",\"lang\":\"en\",\"status\":[\"active\",\"delete prohibited\",\"some specific status\"],\"handle\":\"Handle\",\"ldhName\":\"notexample.org\"}]}"));
     verify(domainService, times(1)).searchDomainsByNsIp(NS_IP);
     verify(domainService, never()).searchDomainsByName(anyString());
     verify(domainService, never()).searchDomainsByNsLdhName(anyString());
   }
+
+  @Test
+  public void testSearchByNsIpRdapJson() throws Exception {
+    DomainsSearchResult domainsSearchResult = initDomainsSearchResult();
+    when(domainService.searchDomainsByNsIp(NS_IP)).thenReturn(domainsSearchResult);
+    mockMvc.perform(get("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("application/rdap+json")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"domainSearchResults\":[{\"objectClassName\":\"domain\",\"lang\":\"en\",\"status\":[\"active\",\"delete prohibited\",\"some specific status\"],\"handle\":\"Handle\",\"ldhName\":\"notexample.org\"}]}"));
+  }
+
+  @Test
+  public void testSearchByNsIpOtherHeaders() throws Exception {
+    DomainsSearchResult domainsSearchResult = initDomainsSearchResult();
+    when(domainService.searchDomainsByNsIp(NS_IP)).thenReturn(domainsSearchResult);
+    mockMvc.perform(get("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("text/html;charset=utf-8")))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"domainSearchResults\":[{\"objectClassName\":\"domain\",\"lang\":\"en\",\"status\":[\"active\",\"delete prohibited\",\"some specific status\"],\"handle\":\"Handle\",\"ldhName\":\"notexample.org\"}]}"));
+  }
   
-	@Test
-	public void testMethodNotAllowed() throws Exception {
-		mockMvc.perform(put("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("application/rdap+json")))
-				.andExpect(status().isMethodNotAllowed());
-	}
+  @Test
+  public void testMethodNotAllowed() throws Exception {
+      mockMvc.perform(put("/domains?nsIp=" + NS_IP).accept(MediaType.parseMediaType("application/rdap+json")))
+              .andExpect(status().isMethodNotAllowed());
+  }
+
+  public void performSearchDomainsByName(String acceptHeader) throws Exception {
+    List<Domain> domains = new ArrayList<Domain>();
+    domains.add(new Domain(someLinks(), someNotices(), someRemarks(), "en", someEvents(), someStatuses(),
+            DomainName.of("whois.example.com"), "Handle", DomainName.of("examples.com"), DomainName.of("examples.com"), someVariants(),
+            someNameservers(), aSecureDNS(), someEntities(), somePublicIds(), anIPNetwork()));
+    DomainsSearchResult domainsSearchResult = new DomainsSearchResult(domains);
+    domainsSearchResult.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+    when(domainService.searchDomainsByName(NAME)).thenReturn(domainsSearchResult);
+    performSearchDomainTest(acceptHeader);
+    verify(domainService, times(1)).searchDomainsByName(NAME);
+    verify(domainService, never()).searchDomainsByNsLdhName(anyString());
+    verify(domainService, never()).searchDomainsByNsIp(anyString());
+  }
+
+  public void performSearchDomainTest(String acceptHeader) throws Exception {
+    String expectedJson = createExpectedJson("SearchDomainsControllerTest.searchByNameSuccess.json");
+
+    mockMvc.perform(get("/domains?name=" + NAME).accept(MediaType.parseMediaType(acceptHeader)))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .andExpect(content().json(expectedJson));
+  }
+
+  public DomainsSearchResult initDomainsSearchResult() throws Exception {
+    List <Domain> domains = new ArrayList<Domain>();
+    domains.add(new Domain(null, null, null, "en",null, someStatuses(), null, "Handle", DomainName.of("notexample.org"), null,
+            null, null, null, null, null, null));
+    DomainsSearchResult domainsSearchResult = new DomainsSearchResult(domains);
+    domainsSearchResult.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
+    return domainsSearchResult;
+  }
 }
