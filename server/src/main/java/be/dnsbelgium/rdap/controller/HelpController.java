@@ -24,7 +24,7 @@ public class HelpController {
     this.helpService = helpService;
   }
 
-  @RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+  @RequestMapping(method = RequestMethod.GET)
   @ResponseBody
   public Help get() throws RDAPError {
     logger.debug("Query(GET) for help");

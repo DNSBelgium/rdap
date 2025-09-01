@@ -40,14 +40,14 @@ public class IPController {
     this.ipService = ipService;
   }
 
-  @RequestMapping(value = "/{ipaddress}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+  @RequestMapping(value = "/{ipaddress}", method = RequestMethod.GET)
   @ResponseBody
   public IPNetwork get(@PathVariable("ipaddress") String ipAddress) throws RDAPError {
     logger.debug("Query for ip {}", ipAddress);
     return getNetwork(ipAddress);
   }
 
-  @RequestMapping(value = "/{ipaddress}/{size}", method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+  @RequestMapping(value = "/{ipaddress}/{size}", method = RequestMethod.GET)
   @ResponseBody
   public IPNetwork get(@PathVariable("ipaddress") String ipAddress, @PathVariable("size") int size) throws RDAPError {
     ipAddress = ipAddress+"/"+size;

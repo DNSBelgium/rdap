@@ -22,7 +22,7 @@ public class SearchNameserversController {
 		this.nameserverService = nameserverService;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public NameserversSearchResult search(@RequestParam(value = "name", required = false) final String name,
 			@RequestParam(value = "ip", required = false) final String ip) throws RDAPError {

@@ -22,7 +22,7 @@ public class SearchEntitiesController {
 		this.entityService = entityService;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, produces = Controllers.CONTENT_TYPE)
+	@RequestMapping(method = RequestMethod.GET)
 	@ResponseBody
 	public EntitiesSearchResult search(@RequestParam(value = "fn", required = false) final String fn,
 			@RequestParam(value = "handle", required = false) final String handle) throws RDAPError {
@@ -41,7 +41,7 @@ public class SearchEntitiesController {
 	}
 
 	@RequestMapping(method = { RequestMethod.DELETE, RequestMethod.PUT, RequestMethod.OPTIONS, RequestMethod.PATCH,
-			RequestMethod.POST, RequestMethod.TRACE }, produces = Controllers.CONTENT_TYPE)
+			RequestMethod.POST, RequestMethod.TRACE })
 	@ResponseBody
 	public Nameserver any(@RequestParam(value = "fn", required = false) final String fn,
 			@RequestParam(value = "handle", required = false) final String handle) throws RDAPError {
