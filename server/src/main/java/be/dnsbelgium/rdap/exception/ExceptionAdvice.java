@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static be.dnsbelgium.rdap.RdapMediaType.APPLICATION_RDAP_JSON_UTF8_VALUE;
+
 @RestControllerAdvice
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
   private final Logger logger = LoggerFactory.getLogger(ExceptionAdvice.class);
@@ -31,7 +33,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
   @ExceptionHandler(value = LabelException.IDNParseException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public HttpEntity<RDAPError> handleIDNParseException(LabelException.IDNParseException ipe) {
-    List<String> description = new ArrayList<String>();
+    List<String> description = new ArrayList<>();
     for (IDNA.Error error : ipe.getErrors()) {
       description.add(error.name());
     }
@@ -49,7 +51,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     // make sure spring returns "application/rdap+json;charset=UTF-8", would be "application/json" without this
     // see https://github.com/spring-projects/spring-framework/issues/21927
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "application/rdap+json;charset=UTF-8");
+    headers.add("Content-Type", APPLICATION_RDAP_JSON_UTF8_VALUE);
 
     return new HttpEntity<>(response, headers);
   }

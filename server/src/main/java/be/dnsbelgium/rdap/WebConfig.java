@@ -19,7 +19,6 @@ import be.dnsbelgium.rdap.jackson.CustomObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
@@ -46,9 +45,32 @@ public class WebConfig extends WebMvcConfigurationSupport {
   @Override
   protected void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
     super.configureContentNegotiation(configurer);
-    // make sure spring does not interpret extensions of domain name (.com)
-    configurer.ignoreAcceptHeader(true) // Ignore client's Accept header
-            .defaultContentType(MediaType.valueOf("application/rdap+json;charset=UTF-8"));;
+
+    /*
+     * The RDAP RFC (RFC 7480) includes the following requirement regarding the Content-Type header of responses:
+     *
+     *    | 4.2.  Accept Header
+     *    | To indicate to servers that an RDAP response is desired, clients
+     *    | include an Accept header field with an RDAP-specific JSON media type,
+     *    | the generic JSON media type, or both.  Servers receiving an RDAP
+     *    | request return an entity with a Content-Type header containing the
+     *    | RDAP-specific JSON media type.
+     *    | This specification does not define the responses a server returns to
+     *    | a request with any other media types in the Accept header field, or
+     *    | with no Accept header field.  One possibility would be to return a
+     *    | response in a media type suitable for rendering in a web browser.
+     *
+     * So for an Accept header of "application/rdap+json" or "application/json", we need to
+     * always return Content-Type "application/rdap+json"; for any other Accept header, we can choose.
+     *
+     * Since Spring will automatically respond with "application/json" if the Accept header is "application/json",
+     * and will only automatically respond with "application/rdap+json" if the Accept header is exactly that,
+     * we need to ignore the Accept header altogether. We then always respond with Content-Type "application/rdap+json",
+     * since this is always valid for any kind of request, according to the RFC.
+     */
+    configurer
+        .ignoreAcceptHeader(true)
+        .defaultContentType(RdapMediaType.APPLICATION_RDAP_JSON_UTF8);
   }
 
   @Bean

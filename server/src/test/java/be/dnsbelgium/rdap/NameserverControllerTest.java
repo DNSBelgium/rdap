@@ -29,15 +29,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static be.dnsbelgium.rdap.RdapMediaType.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -102,63 +103,63 @@ public class NameserverControllerTest extends AbstractControllerTest {
   
   @Test
   public void testAcceptRdapJsonMinimal() throws Exception {
-    performGetNameserverTest("application/rdap+json");
+    performGetNameserverTest(APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testAcceptRdapJsonCharsetMinimal() throws Exception {
-    performGetNameserverTest("application/rdap+json; charset=utf-8");
+  public void testAcceptRdapJsonUft8Minimal() throws Exception {
+    performGetNameserverTest(APPLICATION_RDAP_JSON_UTF8);
   }
 
   @Test
   public void testAcceptJsonMinimal() throws Exception {
-    performGetNameserverTest("application/json");
+    performGetNameserverTest(APPLICATION_JSON);
   }
 
   @Test
-  public void testAcceptJsonCharsetMinimal() throws Exception {
-    performGetNameserverTest("application/json; charset=utf-8");
+  public void testAcceptJsonUft8Minimal() throws Exception {
+    performGetNameserverTest(APPLICATION_RDAP_JSON_UTF8);
   }
 
   @Test
-  public void testAcceptOtherHeadersMinimal() throws Exception {
-    performGetNameserverTest("text/html; charset=utf-8");
+  public void testAcceptOtherAcceptHeadersMinimal() throws Exception {
+    performGetNameserverTest(TEXT_HTML);
   }
   
   @Test
   public void testMethodNotAllowed() throws Exception {
-      mockMvc.perform(put("/nameserver/ns.example").accept(MediaType.parseMediaType("application/rdap+json")))
+      mockMvc.perform(put("/nameserver/ns.example").accept(APPLICATION_RDAP_JSON))
               .andExpect(status().isMethodNotAllowed());
   }
 
   @Test
   public void testMaximal() throws Exception {
     //Create some links
-    Link link1 = new Link(new URI("http://example.com/domain/example"), null, new URI("http://example.com/domain/example"), null, null, null, "application/rdap+json");
-    Set<String> hrefLangSet = new HashSet<String>();
+    Link link1 = new Link(new URI("http://example.com/domain/example"), null, new URI("http://example.com/domain/example"), null, null, null, APPLICATION_RDAP_JSON_VALUE);
+    Set<String> hrefLangSet = new HashSet<>();
     hrefLangSet.add("en");
     hrefLangSet.add("nl");
     String title = "Title";
-    Link link2 = new Link(new URI("http://example.com/nameserver/ns.example"), "relrel", new URI("http://example.com/nameserver/ns.example"), hrefLangSet, title, "This is media", "application/rdap+json");
-    List<Link> linksList = new ArrayList<Link>();
+    Link link2 = new Link(new URI("http://example.com/nameserver/ns.example"), "relrel", new URI("http://example.com/nameserver/ns.example"), hrefLangSet, title, "This is media", APPLICATION_RDAP_JSON_VALUE);
+    List<Link> linksList = new ArrayList<>();
     linksList.add(link1);
     linksList.add(link2);
     //end creating links
 
     //Notices
-    List<String> noticeDescriptions = new ArrayList<String>();
+    List<String> noticeDescriptions = new ArrayList<>();
     noticeDescriptions.add("Call this a description!");
     noticeDescriptions.add("This one to!");
     Notice notice = new Notice("Notice title", "Notice type", noticeDescriptions, null);
-    List<Notice> noticeList = new ArrayList<Notice>();
+    List<Notice> noticeList = new ArrayList<>();
     noticeList.add(notice);
     //end notices
 
     //Remarks
-    List<String> remarkDescriptions = new ArrayList<String>();
+    List<String> remarkDescriptions = new ArrayList<>();
     remarkDescriptions.add("Describes the remark");
     Notice remark = new Notice("Remark title", "RemarkType", remarkDescriptions, null);
-    List<Notice> remarksList = new ArrayList<Notice>();
+    List<Notice> remarksList = new ArrayList<>();
     remarksList.add(remark);
     //end remarks
 
@@ -170,22 +171,22 @@ public class NameserverControllerTest extends AbstractControllerTest {
     Link lcLink1 = new Link(null, null, href1, null, null, null, null);
     URI value2 = new URI("http://example.com/lastChangedContextURI");
     URI href2 = new URI("http://example.com/lastChanged2target");
-    Set<String> hrefLangs = new HashSet<String>();
+    Set<String> hrefLangs = new HashSet<>();
     hrefLangs.add("en");
     hrefLangs.add("mn-Cyrl-MN");
     String eventTitle = "This is a title";
-    Link lcLink2 = new Link(value2, "related", href2, hrefLangs, eventTitle, "mediaString", "application/rdap+json");
-    List<Link> lcLinkList = new ArrayList<Link>();
+    Link lcLink2 = new Link(value2, "related", href2, hrefLangs, eventTitle, "mediaString", APPLICATION_RDAP_JSON_VALUE);
+    List<Link> lcLinkList = new ArrayList<>();
     lcLinkList.add(lcLink1);
     lcLinkList.add(lcLink2);
     Event lastChanged = new Event(Event.Action.Default.LAST_CHANGED, "RDAP-Slave", lastChangedTime, lcLinkList);
-    List<Event> events = new ArrayList<Event>();
+    List<Event> events = new ArrayList<>();
     events.add(created);
     events.add(lastChanged);
     //end creating events
 
     //Create some statuses
-    List<Status> statusesList = new ArrayList<Status>();
+    List<Status> statusesList = new ArrayList<>();
     statusesList.add(Status.Default.ACTIVE);
     statusesList.add(Status.Default.DELETE_PROHIBITED);
     statusesList.add(new Status.BasicStatus("specific status"));
@@ -195,8 +196,8 @@ public class NameserverControllerTest extends AbstractControllerTest {
     nameserver.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
     when(nameserverService.getNameserver(any(DomainName.class))).thenReturn(nameserver);
     mockMvc.perform(get("/nameserver/ns.example.com")
-            .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(content().contentTypeCompatibleWith(MediaType.parseMediaType("application/rdap+json")))
+            .accept(parseMediaType("application/json")))
+            .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
             .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"links\":[{\"value\":\"http://example.com/domain/example\"," +
                     "\"href\":\"http://example.com/domain/example\",\"type\":\"application/rdap+json\"},{\"value\":\"http://example.com/nameserver/ns.example\"," +
                     "\"rel\":\"relrel\",\"href\":\"http://example.com/nameserver/ns.example\",\"hreflang\":[\"en\",\"nl\"],\"title\":\"Title\"," +
@@ -213,13 +214,12 @@ public class NameserverControllerTest extends AbstractControllerTest {
                     "\"ipAddresses\":{\"v4\":[\"193.5.6.198\",\"89.65.3.87\"],\"v6\":[\"2001:678:9::1\",\"FE80:0000:0000:0000:0202:B3FF:FE1E:8329\"]}}"));
   }
 
-  public void performGetNameserverTest(String acceptHeader) throws Exception {
+  public void performGetNameserverTest(MediaType acceptHeader) throws Exception {
     initNameServer();
-    mockMvc.perform(get("/nameserver/ns.example")
-                    .accept(MediaType.parseMediaType(acceptHeader)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.com\"}"));
+    mockMvc.perform(get("/nameserver/ns.example").accept(acceptHeader))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
+        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.com\"}"));
   }
 
   public void initNameServer() throws RDAPError {

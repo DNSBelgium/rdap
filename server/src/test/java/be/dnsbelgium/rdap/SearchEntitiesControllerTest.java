@@ -3,7 +3,6 @@ package be.dnsbelgium.rdap;
 import be.dnsbelgium.rdap.controller.SearchEntitiesController;
 import be.dnsbelgium.rdap.core.EntitiesSearchResult;
 import be.dnsbelgium.rdap.core.Entity;
-import be.dnsbelgium.rdap.core.RDAPError;
 import be.dnsbelgium.rdap.service.EntityService;
 import org.junit.After;
 import org.junit.Test;
@@ -18,8 +17,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 
+import static be.dnsbelgium.rdap.RdapMediaType.APPLICATION_RDAP_JSON;
+import static be.dnsbelgium.rdap.RdapMediaType.APPLICATION_RDAP_JSON_UTF8_VALUE;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,6 +48,7 @@ public class SearchEntitiesControllerTest extends AbstractControllerTest {
 
   @Autowired
   SearchEntitiesController searchEntitiesController;
+
   @Autowired
   EntityService entityService;
 
@@ -56,57 +59,52 @@ public class SearchEntitiesControllerTest extends AbstractControllerTest {
 
   @Test
   public void testSearchByFnNoResult() throws Exception {
-    EntitiesSearchResult entitiesSearchResult = new EntitiesSearchResult(new ArrayList<Entity>());
+    EntitiesSearchResult entitiesSearchResult = new EntitiesSearchResult(new ArrayList<>());
     entitiesSearchResult.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.searchByFn(anyString())).thenReturn(entitiesSearchResult);
-    mockMvc.perform(get("/entities?fn=formattedName").accept(MediaType.parseMediaType("application/rdap+json")))
+    mockMvc.perform(get("/entities?fn=formattedName").accept(APPLICATION_RDAP_JSON))
         .andExpect(status().isNotFound())
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
+        .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE));
   }
 
   @Test
   public void testSearchByHandleNoResult() throws Exception {
-    EntitiesSearchResult entitiesSearchResult = new EntitiesSearchResult(new ArrayList<Entity>());
+    EntitiesSearchResult entitiesSearchResult = new EntitiesSearchResult(new ArrayList<>());
     entitiesSearchResult.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.searchByHandle(anyString())).thenReturn(entitiesSearchResult);
-    mockMvc.perform(get("/entities?handle=Handle").accept(MediaType.parseMediaType("application/rdap+json")))
+    mockMvc.perform(get("/entities?handle=Handle").accept(APPLICATION_RDAP_JSON))
         .andExpect(status().isNotFound())
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
-  }
-
-  @Test
-  public void testSearchByHandleNoResultWithAcceptHeader() throws Exception {
-    performSearchEntityTest("text/html");
+        .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE));
   }
 
   @Test
   public void testSearchByHandleNoResultWithJson() throws Exception {
-    performSearchEntityTest("application/json");
+    performSearchEntityTest(APPLICATION_JSON);
   }
 
   @Test
   public void testSearchByHandleNoResultWithRdapJson() throws Exception {
-    performSearchEntityTest("application/rdap+json");
+    performSearchEntityTest(APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testSearchByHandleNoResultWithOtherHeader() throws Exception {
-    performSearchEntityTest("text/html");
+  public void testSearchByHandleNoResultWithOtherAcceptHeaders() throws Exception {
+    performSearchEntityTest(TEXT_HTML);
   }
 
   @Test
   public void testMethodNotAllowed() throws Exception {
-    mockMvc.perform(put("/entities?handle=Handle").accept(MediaType.parseMediaType("application/rdap+json")))
+    mockMvc.perform(put("/entities?handle=Handle").accept(APPLICATION_RDAP_JSON))
         .andExpect(status().isMethodNotAllowed());
   }
 
-  public void performSearchEntityTest(String acceptHeader) throws Exception {
-    EntitiesSearchResult entitiesSearchResult = new EntitiesSearchResult(new ArrayList<Entity>());
+  public void performSearchEntityTest(MediaType acceptHeader) throws Exception {
+    EntitiesSearchResult entitiesSearchResult = new EntitiesSearchResult(new ArrayList<>());
     entitiesSearchResult.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.searchByHandle(anyString())).thenReturn(entitiesSearchResult);
     mockMvc.perform(get("/entities?handle=Handle")
-            .accept(MediaType.parseMediaType(acceptHeader)))
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+            .accept(acceptHeader))
+            .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
             .andExpect(status().isNotFound())
             .andDo(print());
   }

@@ -16,10 +16,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import static be.dnsbelgium.rdap.RdapMediaType.*;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -64,23 +66,23 @@ public class AutNumControllerTest extends AbstractControllerTest {
   @Test
   public void testWrongTypeForParam() throws Exception {
     mockMvc.perform(get("/autnum/testje")
-            .accept(MediaType.parseMediaType("application/rdap+json")))
+            .accept(APPLICATION_RDAP_JSON))
             .andExpect(status().isBadRequest());
   }
 
   @Test
   public void testMinimalJson() throws Exception {
-    performAutNumTest("application/json");
+    performAutNumTest(APPLICATION_JSON);
   }
 
   @Test
   public void testMinimalRdapJson() throws Exception {
-    performAutNumTest("application/rdap+json;charset=utf-8");
+    performAutNumTest(APPLICATION_RDAP_JSON_UTF8);
   }
 
   @Test
-  public void testMinimalOtherHeader() throws Exception {
-    performAutNumTest("text/html");
+  public void testMinimalOtherAcceptHeaders() throws Exception {
+    performAutNumTest(TEXT_HTML);
   }
 
   @Test
@@ -89,34 +91,32 @@ public class AutNumControllerTest extends AbstractControllerTest {
             DomainName.of("whois.example.com"), "Handle", 6000, 6300, "Name", "Type", "Country");
     autNum.addRdapConformance(AutNum.DEFAULT_RDAP_CONFORMANCE);
     when(autNumService.getAutNum(anyInt())).thenReturn(autNum);
-    mockMvc.perform(get("/autnum/6000")
-            .accept(MediaType.parseMediaType("application/rdap+json")))
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
-            .andExpect(status().isOk())
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\"," +
-                    "\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]," +
-                    "\"notices\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
-                    "\"remarks\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
-                    "\"lang\":\"en\"," +
-                    "\"events\":[{\"eventAction\":\"registration\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"eventAction\":\"last changed\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
-                    "\"status\":[\"active\",\"delete prohibited\",\"some specific status\"]," +
-                    "\"port43\":\"whois.example.com\"," +
-                    "\"handle\":\"Handle\"," +
-                    "\"startAutnum\":6000," +
-                    "\"endAutnum\":6300," +
-                    "\"name\":\"Name\"," +
-                    "\"type\":\"Type\"," +
-                    "\"country\":\"Country\"}"));
+    mockMvc.perform(get("/autnum/6000").accept(APPLICATION_RDAP_JSON))
+        .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\"," +
+            "\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]," +
+            "\"notices\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
+            "\"remarks\":[{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"title\":\"Title\",\"type\":\"Type\",\"description\":[\"Description part 1\",\"Description part 2\"],\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
+            "\"lang\":\"en\"," +
+            "\"events\":[{\"eventAction\":\"registration\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + createTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]},{\"eventAction\":\"last changed\",\"eventActor\":\"EventActor\",\"eventDate\":\"" + lastChangedTime.toString(ISODateTimeFormat.dateTimeNoMillis()) + "\",\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"],\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"}]}]," +
+            "\"status\":[\"active\",\"delete prohibited\",\"some specific status\"]," +
+            "\"port43\":\"whois.example.com\"," +
+            "\"handle\":\"Handle\"," +
+            "\"startAutnum\":6000," +
+            "\"endAutnum\":6300," +
+            "\"name\":\"Name\"," +
+            "\"type\":\"Type\"," +
+            "\"country\":\"Country\"}"));
   }
 
-  public void performAutNumTest(String acceptHeader) throws Exception {
+  public void performAutNumTest(MediaType acceptHeader) throws Exception {
     AutNum autNum = new AutNum(null, null, null, "en", null, null, null, "AutNumHandle", 6000, 6300, "AutNumName", "AutNumType", "Belgium");
     autNum.addRdapConformance(AutNum.DEFAULT_RDAP_CONFORMANCE);
     when(autNumService.getAutNum(anyInt())).thenReturn(autNum);
-    mockMvc.perform(get("/autnum/6000")
-                    .accept(MediaType.parseMediaType(acceptHeader)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\",\"lang\":\"en\",\"handle\":\"AutNumHandle\",\"startAutnum\":6000,\"endAutnum\":6300,\"name\":\"AutNumName\",\"type\":\"AutNumType\",\"country\":\"Belgium\"}"));
+    mockMvc.perform(get("/autnum/6000").accept(acceptHeader))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
+        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"autnum\",\"lang\":\"en\",\"handle\":\"AutNumHandle\",\"startAutnum\":6000,\"endAutnum\":6300,\"name\":\"AutNumName\",\"type\":\"AutNumType\",\"country\":\"Belgium\"}"));
   }
 }

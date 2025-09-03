@@ -18,11 +18,8 @@ package be.dnsbelgium.rdap.controller;
 
 public final class Controllers {
 
-  private Controllers() {
-
-  }
-
-//  public static final String CONTENT_TYPE_RDAP_JSON = "application/rdap+json;charset=UTF-8";
-//  public static final String CONTENT_TYPE_GENERIC_JSON = "application/json;charset=UTF-8";
   public static final String LOCATION_HEADER = "Location";
+
+  private Controllers() {}
+
 }

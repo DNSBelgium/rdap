@@ -16,9 +16,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import static be.dnsbelgium.rdap.RdapMediaType.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -65,33 +67,33 @@ public class EntityControllerTest extends AbstractControllerTest {
 
   @Test
   public void testMethodNotAllowed() throws Exception {
-    mockMvc.perform(put("/entity/123456").accept(MediaType.parseMediaType("application/rdap+json")))
+    mockMvc.perform(put("/entity/123456").accept(APPLICATION_RDAP_JSON))
         .andExpect(status().isMethodNotAllowed());
   }
 
   @Test
   public void testAcceptRdapJsonMinimal() throws Exception {
-    performGetEntityTest("application/rdap+json");
+    performGetEntityTest(APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testAcceptRdapJsonCharsetMinimal() throws Exception {
-    performGetEntityTest("application/rdap+json;charset=utf-8");
+  public void testAcceptRdapJsonUtf8Minimal() throws Exception {
+    performGetEntityTest(APPLICATION_RDAP_JSON_UTF8);
   }
 
   @Test
   public void testAcceptJsonMinimal() throws Exception {
-    performGetEntityTest("application/json");
+    performGetEntityTest(APPLICATION_JSON);
   }
 
   @Test
-  public void testAcceptJsonCharsetMinimal() throws Exception {
-    performGetEntityTest("application/json;charset=utf-8");
+  public void testAcceptJsonUtf8Minimal() throws Exception {
+    performGetEntityTest(APPLICATION_JSON_UTF8);
   }
 
   @Test
-  public void testAcceptOtherHeadersMinimal() throws Exception {
-    performGetEntityTest("text/html");
+  public void testAcceptOtherAcceptHeadersMinimal() throws Exception {
+    performGetEntityTest(TEXT_HTML);
   }
 
   @Test
@@ -99,9 +101,8 @@ public class EntityControllerTest extends AbstractControllerTest {
     String expectedJson = createExpectedJson("EntityControllerTest.minimalGet.json");
     String handle = "123456";
     initMinimalHead();
-    mockMvc.perform(get("/entity/" + handle)
-        .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"))
+    mockMvc.perform(get("/entity/" + handle).accept(APPLICATION_RDAP_JSON))
+        .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE))
         .andExpect(status().isOk())
         .andExpect(content().json(expectedJson));
   }
@@ -128,17 +129,17 @@ public class EntityControllerTest extends AbstractControllerTest {
     entity.addRdapConformance(Entity.DEFAULT_RDAP_CONFORMANCE);
     when(entityService.getEntity(eq(handle))).thenReturn(entity);
     mockMvc.perform(get("/entity/" + handle)
-        .accept(MediaType.parseMediaType("application/rdap+json")))
-        .andExpect(content().contentTypeCompatibleWith(MediaType.parseMediaType("application/rdap+json")))
+        .accept(APPLICATION_RDAP_JSON))
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
         .andExpect(status().isOk())
         .andExpect(content().json(expectedJson));
   }
 
-  public void performGetEntityTest(String acceptHeader) throws Exception {
+  public void performGetEntityTest(MediaType acceptHeader) throws Exception {
     initMinimalHead();
-    mockMvc.perform(get("/entity/123456").accept(MediaType.parseMediaType(acceptHeader)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")));
+    mockMvc.perform(get("/entity/123456").accept(acceptHeader))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON));
   }
 
   public void initMinimalHead() throws RDAPError {

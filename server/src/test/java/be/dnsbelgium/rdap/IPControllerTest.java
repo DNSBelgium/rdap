@@ -17,10 +17,12 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.net.InetAddress;
 
+import static be.dnsbelgium.rdap.RdapMediaType.APPLICATION_RDAP_JSON;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -69,58 +71,56 @@ public class IPControllerTest extends AbstractControllerTest {
 
   @Test
   public void testIPMinimalJson() throws Exception {
-    performIpTest("application/json");
+    performIpTest(APPLICATION_JSON);
   }
 
   @Test
   public void testIPMinimalRdapJson() throws Exception {
-    performIpTest("application/rdap+json");
+    performIpTest(APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testIPMinimalOtherHeader() throws Exception {
-    performIpTest("text/html;charset=UTF-8");
+  public void testIPMinimalOtherAcceptHeaders() throws Exception {
+    performIpTest(TEXT_HTML);
   }
 
   @Test
   public void testCIDRMinimalJson() throws Exception {
-    performCIDRMTest("application/json");
+    performCIDRMTest(APPLICATION_JSON);
   }
 
   @Test
   public void testCIDRMinimalRdapJson() throws Exception {
-    performCIDRMTest("application/rdap+json");
+    performCIDRMTest(APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testCIDRMinimalOtherHeader() throws Exception {
-    performCIDRMTest("text/html;charset=UTF-8");
+  public void testCIDRMinimalOtherAcceptHeader() throws Exception {
+    performCIDRMTest(TEXT_HTML);
   }
 
-  public void performIpTest(String acceptHeader) throws Exception {
+  public void performIpTest(MediaType acceptHeader) throws Exception {
     InetAddress inetAddress = InetAddress.getByName("193.12.32.98");
     IPNetwork ipNetwork = new IPNetwork(null, null, null, "en", IPNetwork.OBJECT_CLASS_NAME, null, null, null, null, inetAddress, inetAddress, null, "IPv4", "USA", null, null);
     ipNetwork.addRdapConformance(IPNetwork.DEFAULT_RDAP_CONFORMANCE);
     when(ipService.getIPNetwork(any(CIDR.class))).thenReturn(ipNetwork);
-    mockMvc.perform(get("/ip/193.12.32.98")
-                    .accept(MediaType.parseMediaType(acceptHeader)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"ip network\",\"lang\":\"en\"," +
-                    "\"startAddress\":\"193.12.32.98\",\"endAddress\":\"193.12.32.98\",\"type\":\"IPv4\",\"country\":\"USA\"}"));
+    mockMvc.perform(get("/ip/193.12.32.98").accept(acceptHeader))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
+        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"ip network\",\"lang\":\"en\"," +
+                "\"startAddress\":\"193.12.32.98\",\"endAddress\":\"193.12.32.98\",\"type\":\"IPv4\",\"country\":\"USA\"}"));
   }
 
-  public void performCIDRMTest(String acceptHeader) throws Exception {
+  public void performCIDRMTest(MediaType acceptHeader) throws Exception {
     InetAddress startAddress = InetAddress.getByName("FE80:0000:0000:0000:0202:B3FF:FE1E:0000");
     InetAddress endAddress = InetAddress.getByName("FE80:0000:0000:0000:0202:B3FF:FE1E:FFFF");
     IPNetwork ipNetwork = new IPNetwork(null, null, null, "en", IPNetwork.OBJECT_CLASS_NAME, null, null, null, null, startAddress, endAddress, null, "IPv6", "USA", null, null);
     ipNetwork.addRdapConformance(IPNetwork.DEFAULT_RDAP_CONFORMANCE);
     when(ipService.getIPNetwork(any(CIDR.class))).thenReturn(ipNetwork);
-    mockMvc.perform(get("/ip/FE80:0000:0000:0000:0202:B3FF:FE1E:1111/112")
-                    .accept(MediaType.parseMediaType(acceptHeader)))
-            .andExpect(status().isOk())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
-            .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"ip network\",\"lang\":\"en\"," +
-                    "\"startAddress\":\"fe80:0:0:0:202:b3ff:fe1e:0\",\"endAddress\":\"fe80:0:0:0:202:b3ff:fe1e:ffff\",\"type\":\"IPv6\",\"country\":\"USA\"}"));
+    mockMvc.perform(get("/ip/FE80:0000:0000:0000:0202:B3FF:FE1E:1111/112").accept(acceptHeader))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
+        .andExpect(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"ip network\",\"lang\":\"en\"," +
+            "\"startAddress\":\"fe80:0:0:0:202:b3ff:fe1e:0\",\"endAddress\":\"fe80:0:0:0:202:b3ff:fe1e:ffff\",\"type\":\"IPv6\",\"country\":\"USA\"}"));
   }
 }
