@@ -9,7 +9,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RobotsTxtTest extends AbstractControllerTest {
   @Test
   public void requestForRobotsTxtShouldReturnSomething() throws Exception{
-    this.mockMvc.perform(get("/robots.txt").accept(MediaType.parseMediaType("text/html")))
+    this.mockMvc.perform(get("/robots.txt").accept(MediaType.TEXT_HTML))
         .andExpect(status().isOk())
         .andExpect(content().string(containsString("User-agent: *")));
   }

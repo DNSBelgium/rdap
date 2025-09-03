@@ -19,7 +19,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 
+import static be.dnsbelgium.rdap.RdapMediaType.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -59,32 +61,32 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
 
   @Test
   public void testSearchByIpSuccessJson() throws Exception {
-    performSearchBy("ip", "application/json");
+    performSearchBy("ip", APPLICATION_JSON);
   }
 
   @Test
   public void testSearchByIpSuccessRdapJson() throws Exception {
-    performSearchBy("ip", "application/rdap+json");
+    performSearchBy("ip", APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testSearchByIpSuccessOtherHeader() throws Exception {
-    performSearchBy("ip", "text/html");
+  public void testSearchByIpSuccessOtherAcceptHeaders() throws Exception {
+    performSearchBy("ip", TEXT_HTML);
   }
 
   @Test
   public void testSearchByNameSuccessJson() throws Exception {
-    performSearchBy("name", "application/json");
+    performSearchBy("name", APPLICATION_JSON);
   }
 
   @Test
   public void testSearchByNameSuccessRdapJson() throws Exception {
-    performSearchBy("name", "application/rdap+json");
+    performSearchBy("name", APPLICATION_RDAP_JSON);
   }
 
   @Test
-  public void testSearchByNameSuccessOtherHeader() throws Exception {
-    performSearchBy("name", "text/html");
+  public void testSearchByNameSuccessOtherAcceptHeaders() throws Exception {
+    performSearchBy("name", TEXT_HTML);
   }
 
   @Test
@@ -103,7 +105,7 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
     when(nameserverService.searchByName(query)).thenThrow(RDAPError.noResults(query));
     mockMvc.perform(get("/nameservers?name=" + query))
             .andExpect(status().isNotFound())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
+            .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE));
   }
 
   @Test
@@ -112,7 +114,7 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
     when(nameserverService.searchByName(query)).thenReturn(new NameserversSearchResult(new ArrayList<>()));
     mockMvc.perform(get("/nameservers?name=" + query))
             .andExpect(status().isNotFound())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
+            .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE));
   }
 
   @Test
@@ -121,7 +123,7 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
     when(nameserverService.searchByIp(ipQuery)).thenThrow(RDAPError.noResults(ipQuery));
     mockMvc.perform(get("/nameservers?ip=" + ipQuery))
             .andExpect(status().isNotFound())
-            .andExpect(header().string("Content-type", "application/rdap+json;charset=UTF-8"));
+            .andExpect(header().string("Content-type", APPLICATION_RDAP_JSON_UTF8_VALUE));
   }
 
   @Test
@@ -130,10 +132,10 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
     when(nameserverService.searchByIp(ipQuery)).thenReturn(new NameserversSearchResult(null));
     mockMvc.perform(get("/nameservers?ip=" + ipQuery))
             .andExpect(status().isNotFound())
-            .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")));
+            .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON));
   }
 
-  public void performSearchBy(String searchBy, String acceptHeader) throws Exception {
+  public void performSearchBy(String searchBy, MediaType acceptHeader) throws Exception {
     NameserversSearchResult nameserversSearchResult = new NameserversSearchResult(someNameservers());
     nameserversSearchResult.addRdapConformance(Nameserver.DEFAULT_RDAP_CONFORMANCE);
 
@@ -141,9 +143,9 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
       String query = "ns1.example*.com";
 
       when(nameserverService.searchByName(query)).thenReturn(nameserversSearchResult);
-      mockMvc.perform(get("/nameservers?name=" + query).accept(MediaType.parseMediaType(acceptHeader)))
+      mockMvc.perform(get("/nameservers?name=" + query).accept(acceptHeader))
               .andExpect(status().isOk())
-              .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+              .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
               .andExpect(content().string(expectedContent));
       verify(nameserverService, times(1)).searchByName(query);
       verify(nameserverService, never()).searchByIp(anyString());
@@ -152,16 +154,16 @@ public class SearchNameserversControllerTest extends AbstractControllerTest {
       String ipQuery = "193.56.54.32";
 
       when(nameserverService.searchByIp(ipQuery)).thenReturn(nameserversSearchResult);
-      mockMvc.perform(get("/nameservers?ip=" + ipQuery).accept(MediaType.parseMediaType(acceptHeader)))
+      mockMvc.perform(get("/nameservers?ip=" + ipQuery).accept(acceptHeader))
               .andExpect(status().isOk())
-              .andExpect(content().contentTypeCompatibleWith(MediaType.valueOf("application/rdap+json")))
+              .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
               .andExpect(content().string(expectedContent));
       verify(nameserverService, times(1)).searchByIp(ipQuery);
       verify(nameserverService, never()).searchByName(anyString());
     }
   }
 
-  private String expectedContent = "{\"rdapConformance\":[\"rdap_level_0\"],\"nameserverSearchResults\":[{" +
+  private final String expectedContent = "{\"rdapConformance\":[\"rdap_level_0\"],\"nameserverSearchResults\":[{" +
           "\"objectClassName\":\"nameserver\"," +
           "\"links\":[{\"value\":\"http://example.com/value\",\"rel\":\"rel\",\"href\":\"http://example.com/href\",\"hreflang\":[\"de\",\"en\"]," +
           "\"title\":\"Title\",\"media\":\"Media\",\"type\":\"Type\"},{\"value\":\"http://example.com/value\"," +
