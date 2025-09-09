@@ -124,6 +124,7 @@ public class DomainControllerTest extends AbstractControllerTest {
 
   @Test
   public void testDefaultGetWithTrailingSlash() throws Exception {
+    initDomain();
     mockMvc.perform(get(DOMAIN_PATH + "/").accept(APPLICATION_RDAP_JSON))
         .andExpect(status().isNotFound());
   }
