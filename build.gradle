@@ -152,7 +152,7 @@ subprojects {
 
     release {
         git {
-            requireBranch.set('master')
+            requireBranch.set('3.x')
         }
     }
 
