@@ -90,6 +90,7 @@ public class WebConfig extends WebMvcConfigurationSupport {
     UrlPathHelper urlPathHelper = new UrlPathHelper();
     urlPathHelper.setUrlDecode(false);
     configurer.setUrlPathHelper(urlPathHelper);
+    configurer.setUseTrailingSlashMatch(false);
   }
 
 }
