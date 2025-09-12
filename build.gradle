@@ -72,11 +72,6 @@ subprojects {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
-    java {
-        withJavadocJar()
-        withSourcesJar()
-    }
-
     mavenPublishing {
         publishToMavenCentral()
 
