@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'net.researchgate.release' version '3.1.0'
-    id "org.sonarqube" version '6.3.1.5724'
-    id 'io.codearte.nexus-staging' version '0.30.0'
+    id 'org.sonarqube' version '6.3.1.5724'
+    id 'com.vanniktech.maven.publish' version '0.34.0'
 }
 
 ext {
@@ -40,15 +40,14 @@ ext {
 }
 
 allprojects {
-    group 'be.dnsbelgium'
+    group = 'be.dnsbelgium'
 }
 
 subprojects {
 
     apply plugin: 'java-library'
     apply plugin: 'jacoco'
-    apply plugin: 'signing'
-    apply plugin: 'maven-publish'
+    apply plugin: 'com.vanniktech.maven.publish'
 
     repositories {
         mavenCentral()
@@ -64,18 +63,13 @@ subprojects {
         }
     }
 
-    tasks.withType(JavaCompile) {
+    tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
         //options.compilerArgs << "-Xlint:all"
     }
 
-    tasks.withType(Javadoc) {
+    tasks.withType(Javadoc).configureEach {
         options.addStringOption('Xdoclint:none', '-quiet')
-    }
-
-    nexusStaging {
-        username sonatype_username
-        password sonatype_password
     }
 
     java {
@@ -83,71 +77,39 @@ subprojects {
         withSourcesJar()
     }
 
-    publishing {
-        repositories {
-//            maven {
-//                name = 'localFileRepo'
-//                url = "file://${buildDir}/repo"
-//            }
+    mavenPublishing {
+        publishToMavenCentral()
 
-            maven {
-                def releasesRepoUrl = 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
-                def snapshotsRepoUrl = 'https://central.sonatype.com/repository/maven-snapshots/'
+        signAllPublications()
 
-                name = 'sonatype'
-                url = version.endsWith('SNAPSHOT')  ? snapshotsRepoUrl : releasesRepoUrl
-                credentials {
-                    username = sonatype_username
-                    password = sonatype_password
+        coordinates(group.toString(), project.name, version.toString())
+
+        pom {
+            name = 'RDAP ' + project.name
+            description = 'RDAP implementation'
+            url = 'https://github.com/DNSBelgium/rdap'
+            licenses {
+                license {
+                    name = 'The Apache Software License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution = 'repo'
                 }
             }
-
-        }
-
-        publications {
-            myLibrary(MavenPublication) {
-                from components.java
-
-                pom {
-                    name = 'RDAP ' + project.name
-                    description = 'RDAP implementation'
-                    url = 'https://github.com/DNSBelgium/rdap'
-
-                    licenses {
-                        license {
-                            name = 'The Apache Software License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution = 'repo'
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            id = 'dnsbelgium'
-                            name = 'DNS Belgium Engineering'
-                            email = 'engineering@dnsbelgium.be'
-                            organization = 'DNS Belgium'
-                            organizationUrl = 'https://www.dnsbelgium.be'
-                        }
-                    }
-
-                    scm {
-                        connection = 'scm:git@github.com:DNSBelgium/rdap.git'
-                        developerConnection = 'scm:git@github.com:DNSBelgium/rdap.git'
-                        url = 'scm:git@github.com:DNSBelgium/rdap.git'
-                    }
-
+            developers {
+                developer {
+                    id = 'dnsbelgium'
+                    name = 'DNS Belgium Engineering'
+                    email = 'engineering@dnsbelgium.be'
+                    organization = 'DNS Belgium'
+                    organizationUrl = 'https://www.dnsbelgium.be'
                 }
             }
+            scm {
+                connection = 'scm:git@github.com:DNSBelgium/rdap.git'
+                developerConnection = 'scm:git@github.com:DNSBelgium/rdap.git'
+                url = 'scm:git@github.com:DNSBelgium/rdap.git'
+            }
         }
-    }
-
-    signing {
-        def signingKeyId = signingKeyId
-        def signingKey = signingKey
-        def signingPassword = signingPassword
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-        sign publishing.publications
     }
 
     release {
@@ -156,6 +118,6 @@ subprojects {
         }
     }
 
-    afterReleaseBuild.dependsOn publish
+    afterReleaseBuild.dependsOn publishToMavenCentral
 
 }

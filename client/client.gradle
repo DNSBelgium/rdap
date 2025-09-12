@@ -1,7 +1,9 @@
 apply plugin: 'application'
 
-mainClassName = 'be.dnsbelgium.rdap.client.RDAPCLI'
-applicationName = 'rdap'
+application {
+    mainClass = 'be.dnsbelgium.rdap.client.RDAPCLI'
+    applicationName = 'rdap'
+}
 
 dependencies {
   implementation project(':rdap-core')
