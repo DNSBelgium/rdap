@@ -27,19 +27,26 @@ public class Event {
   public interface Action {
 
     enum Default implements Action {
-      REGISTRATION, REREGISTRATION, LAST_CHANGED{
-        public String getValue(){
-          return "last changed";
-        }
-      }, REGISTRAR_EXPIRATION, EXPIRATION, DELETION, REINSTANTIATION, TRANSFER, LOCKED, UNLOCKED, LAST_UPDATE_OF_RDAP_DATABASE{
-        public String getValue() {
-          return "last update of RDAP database";
-        }
-      };
+      REGISTRATION,
+      REREGISTRATION,
+      LAST_CHANGED,
+      EXPIRATION,
+      REGISTRAR_EXPIRATION,
+      DELETION,
+      REINSTANTIATION,
+      TRANSFER,
+      LOCKED,
+      UNLOCKED,
+      LAST_UPDATE_OF_RDAP_DATABASE("last update of RDAP database");
+
       private final String value;
 
       Default() {
-        this.value = name().toLowerCase(Locale.ENGLISH);
+        this.value = name().toLowerCase(Locale.ENGLISH).replace("_", " ");
+      }
+
+      Default(String value) {
+        this.value = value;
       }
 
       @Override
@@ -47,6 +54,7 @@ public class Event {
         return value;
       }
     }
+
     String getValue();
   }
 
