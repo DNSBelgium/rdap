@@ -17,22 +17,22 @@ package be.dnsbelgium.rdap.jackson;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CustomObjectMapper extends ObjectMapper {
 
   public CustomObjectMapper() {
-    super.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+    // Although currently still annotated with @Deprecated, this deprecation will (hopefully) be reverted as of
+    // Jackson 2.21.0 (see https://github.com/FasterXML/jackson-databind/issues/1547), so we will use it again.
+    configure(SerializationFeature.WRITE_EMPTY_JSON_ARRAYS, false);
+    setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
     SimpleModule simpleModule = new SimpleModule("SimpleModule",
         new Version(1, 0, 0, null, null, null));
-
     simpleModule.addSerializer(new RDAPContactSerializer());
     simpleModule.addSerializer(new StructuredValueSerializer());
     simpleModule.addSerializer(new TextListSerializer());
@@ -44,15 +44,7 @@ public class CustomObjectMapper extends ObjectMapper {
     simpleModule.addSerializer(new EntityRoleSerializer());
     simpleModule.addSerializer(new EventActionSerializer());
 
-    for (JsonSerializer serializer: getSerializers()) {
-      simpleModule.addSerializer(serializer);
-    }
-
     registerModule(simpleModule);
-  }
-
-  public List<JsonSerializer> getSerializers() {
-    return new ArrayList<>();
   }
 
 }
