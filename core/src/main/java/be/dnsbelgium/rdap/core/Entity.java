@@ -85,14 +85,36 @@ public final class Entity extends Common {
       @JsonProperty("roles") List<Role> roles,
       @JsonProperty("asEventActor") List<Event> asEventActor,
       @JsonProperty("publicIds") List<PublicId> publicIds,
-      @JsonProperty("entities") List<Entity> entities) {
-    super(links, notices, remarks, lang, objectClassName, events, status, port43);
+      @JsonProperty("entities") List<Entity> entities,
+      @JsonProperty("redacted") List<Redacted> redacted
+  ) {
+    super(links, notices, remarks, lang, objectClassName, events, status, port43, redacted);
     this.handle = handle;
     this.vcardArray = vcardArray;
     this.roles = roles == null ? null : new ImmutableList.Builder<Role>().addAll(roles).build();
     this.asEventActor = asEventActor == null ? null : new ImmutableList.Builder<Event>().addAll(asEventActor).build();
     this.publicIds = publicIds == null ? null : new ImmutableList.Builder<PublicId>().addAll(publicIds).build();
     this.entities = (entities == null) ? null : new ImmutableList.Builder<Entity>().addAll(entities).build();
+  }
+
+  public Entity(
+      List<Link> links,
+      List<Notice> notices,
+      List<Notice> remarks,
+      String lang,
+      String objectClassName,
+      List<Event> events,
+      List<Status> status,
+      DomainName port43,
+      String handle,
+      Contact vcardArray,
+      List<Role> roles,
+      List<Event> asEventActor,
+      List<PublicId> publicIds,
+      List<Entity> entities
+  ) {
+    this(links, notices, remarks, lang, objectClassName, events, status, port43, handle, vcardArray, roles, asEventActor,
+        publicIds, entities, null);
   }
 
   public String getHandle() {

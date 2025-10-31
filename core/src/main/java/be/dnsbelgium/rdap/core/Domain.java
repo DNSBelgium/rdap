@@ -171,8 +171,10 @@ public final class Domain extends Common {
       @JsonProperty("secureDNS") SecureDNS secureDNS,
       @JsonProperty("entities") List<Entity> entities,
       @JsonProperty("publicIds") List<PublicId> publicIds,
-      @JsonProperty("network") IPNetwork network) {
-    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43);
+      @JsonProperty("network") IPNetwork network,
+      @JsonProperty("redacted") List<Redacted> redacted
+  ) {
+    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43, redacted);
     this.handle = handle;
     this.ldhName = ldhName;
     this.unicodeName = unicodeName;
@@ -182,5 +184,27 @@ public final class Domain extends Common {
     this.entities = entities == null ? null : new ImmutableList.Builder<Entity>().addAll(entities).build();
     this.publicIds = publicIds == null ? null : new ImmutableList.Builder<PublicId>().addAll(publicIds).build();
     this.network = network;
+  }
+
+  public Domain(
+      List<Link> links,
+      List<Notice> notices,
+      List<Notice> remarks,
+      String lang,
+      List<Event> events,
+      List<Status> status,
+      DomainName port43,
+      String handle,
+      DomainName ldhName,
+      DomainName unicodeName,
+      List<Variant> variants,
+      List<Nameserver> nameservers,
+      SecureDNS secureDNS,
+      List<Entity> entities,
+      List<PublicId> publicIds,
+      IPNetwork network
+  ) {
+    this(links, notices, remarks, lang, events, status, port43, handle, ldhName, unicodeName, variants, nameservers,
+        secureDNS, entities, publicIds, network, null);
   }
 }

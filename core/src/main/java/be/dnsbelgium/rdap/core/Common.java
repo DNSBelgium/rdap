@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.collect.ImmutableList;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,6 +30,7 @@ import java.util.Set;
 class Common {
 
   public static final String DEFAULT_RDAP_CONFORMANCE = "rdap_level_0";
+  public static final String REDACTED_EXTENSION_CONFORMANCE = "redacted";
 
   public Set<String> rdapConformance;
 
@@ -49,6 +50,8 @@ class Common {
 
   public DomainName port43;
 
+  public List<Redacted> redacted;
+
   @JsonCreator
   public Common(
       @JsonProperty("links") List<Link> links,
@@ -58,7 +61,8 @@ class Common {
       @JsonProperty("objectClassName") String objectClassName,
       @JsonProperty("events") List<Event> events,
       @JsonProperty("status") List<Status> status,
-      @JsonProperty("port43") DomainName port43
+      @JsonProperty("port43") DomainName port43,
+      @JsonProperty("redacted") List<Redacted> redacted
   ) {
     this.links = links == null ? null : new ImmutableList.Builder<Link>().addAll(links).build();
     this.notices = notices == null ? null : new ImmutableList.Builder<Notice>().addAll(notices).build();
@@ -68,11 +72,25 @@ class Common {
     this.events = events == null ? null : new ImmutableList.Builder<Event>().addAll(events).build();
     this.status = status == null ? null : new ImmutableList.Builder<Status>().addAll(status).build();
     this.port43 = port43;
+    this.redacted = redacted == null ? null : new ImmutableList.Builder<Redacted>().addAll(redacted).build();
+  }
+
+  public Common(
+      List<Link> links,
+      List<Notice> notices,
+      List<Notice> remarks,
+      String lang,
+      String objectClassName,
+      List<Event> events,
+      List<Status> status,
+      DomainName port43
+  ) {
+    this(links, notices, remarks, lang, objectClassName, events, status, port43, null);
   }
 
   public void addRdapConformance(String conformance) {
     if (rdapConformance == null) {
-      rdapConformance = new HashSet<String>();
+      rdapConformance = new LinkedHashSet<>();
     }
     rdapConformance.add(conformance);
   }
@@ -111,5 +129,18 @@ class Common {
 
   public DomainName getPort43() {
     return port43;
+  }
+
+  public List<Redacted> getRedacted() {
+    return redacted;
+  }
+
+  public void addRedacted(Redacted... redacted) {
+    ImmutableList.Builder<Redacted> builder = new ImmutableList.Builder<>();
+    if (this.redacted != null) {
+      builder.addAll(this.redacted);
+    }
+    builder.add(redacted);
+    this.redacted = builder.build();
   }
 }
