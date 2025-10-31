@@ -95,11 +95,29 @@ public final class Nameserver extends Common {
       @JsonProperty("handle") String handle,
       @JsonProperty("ldhName") DomainName ldhName,
       @JsonProperty("unicodeName") DomainName unicodeName,
-      @JsonProperty("ipAddresses") IpAddresses ipAddresses) {
-    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43);
+      @JsonProperty("ipAddresses") IpAddresses ipAddresses,
+      @JsonProperty("redacted") List<Redacted> redacted
+  ) {
+    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43, redacted);
     this.handle = handle;
     this.ldhName = ldhName;
     this.unicodeName = unicodeName;
     this.ipAddresses = ipAddresses;
+  }
+
+  public Nameserver(
+      @JsonProperty("links") List<Link> links,
+      @JsonProperty("notices") List<Notice> notices,
+      @JsonProperty("remarks") List<Notice> remarks,
+      @JsonProperty("lang") String lang,
+      @JsonProperty("events") List<Event> events,
+      @JsonProperty("status") List<Status> status,
+      @JsonProperty("port43") DomainName port43,
+      @JsonProperty("handle") String handle,
+      @JsonProperty("ldhName") DomainName ldhName,
+      @JsonProperty("unicodeName") DomainName unicodeName,
+      @JsonProperty("ipAddresses") IpAddresses ipAddresses
+  ) {
+    this(links, notices, remarks, lang, events, status, port43, handle, ldhName, unicodeName, ipAddresses, null);
   }
 }

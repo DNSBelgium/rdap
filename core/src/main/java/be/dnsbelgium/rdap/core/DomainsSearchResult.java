@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +21,7 @@ public class DomainsSearchResult {
 
   public void addRdapConformance(String conformance) {
     if (rdapConformance == null) {
-      rdapConformance = new HashSet<String>();
+      rdapConformance = new LinkedHashSet<>();
     }
     rdapConformance.add(conformance);
   }

@@ -49,14 +49,34 @@ public final class AutNum extends Common {
       @JsonProperty("endAutnum") int endAutnum,
       @JsonProperty("name") String name,
       @JsonProperty("type") String type,
-      @JsonProperty("country") String country) {
-    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43);
+      @JsonProperty("country") String country,
+      @JsonProperty("redacted") List<Redacted> redacted
+  ) {
+    super(links, notices, remarks, lang, OBJECT_CLASS_NAME, events, status, port43, redacted);
     this.handle = handle;
     this.startAutnum = startAutnum;
     this.endAutnum = endAutnum;
     this.name = name;
     this.type = type;
     this.country = country;
+  }
+
+  public AutNum(
+      List<Link> links,
+      List<Notice> notices,
+      List<Notice> remarks,
+      String lang,
+      List<Event> events,
+      List<Status> status,
+      DomainName port43,
+      String handle,
+      int startAutnum,
+      int endAutnum,
+      String name,
+      String type,
+      String country
+  ) {
+    this(links, notices, remarks, lang, events, status, port43, handle, startAutnum, endAutnum, name, type, country, null);
   }
 
   public String getHandle() {

@@ -1,6 +1,5 @@
-package be.dnsbelgium.core;
+package be.dnsbelgium.rdap.core;
 
-import be.dnsbelgium.rdap.core.Event;
 import org.junit.Test;
 
 import static be.dnsbelgium.rdap.core.Event.Action.Default.*;

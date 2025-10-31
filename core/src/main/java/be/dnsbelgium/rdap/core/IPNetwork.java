@@ -59,9 +59,10 @@ public final class IPNetwork extends Common {
       @JsonProperty("type") String type,
       @JsonProperty("country") String country,
       @JsonProperty("parentHandle") String parentHandle,
-      @JsonProperty("entities") List<Entity> entities
+      @JsonProperty("entities") List<Entity> entities,
+      @JsonProperty("redacted") List<Redacted> redacted
   ) {
-    super(links, notices, remarks, lang, objectClassName, events, status, port43);
+    super(links, notices, remarks, lang, objectClassName, events, status, port43, redacted);
     this.handle = handle;
     this.startAddress = startAddress;
     this.endAddress = endAddress;
@@ -70,6 +71,28 @@ public final class IPNetwork extends Common {
     this.country = country;
     this.parentHandle = parentHandle;
     this.entities = entities == null? new ImmutableList.Builder<Entity>().build():new ImmutableList.Builder<Entity>().addAll(entities).build();
+  }
+
+  public IPNetwork(
+      List<Link> links,
+      List<Notice> notices,
+      List<Notice> remarks,
+      String lang,
+      String objectClassName,
+      List<Event> events,
+      List<Status> status,
+      DomainName port43,
+      String handle,
+      InetAddress startAddress,
+      InetAddress endAddress,
+      String name,
+      String type,
+      String country,
+      String parentHandle,
+      List<Entity> entities
+  ) {
+    this(links, notices, remarks, lang, objectClassName, events, status, port43, handle, startAddress, endAddress, name,
+        type, country, parentHandle, entities, null);
   }
 
   public String getHandle() {
