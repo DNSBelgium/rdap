@@ -3,10 +3,7 @@ package be.dnsbelgium.rdap.core;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @JsonPropertyOrder({"rdapConformance"})
 public class Help {
@@ -21,7 +18,7 @@ public class Help {
 
   public void addRdapConformance(String conformance) {
     if (rdapConformance == null) {
-      rdapConformance = new HashSet<String>();
+      rdapConformance = new LinkedHashSet<>();
     }
     rdapConformance.add(conformance);
   }
