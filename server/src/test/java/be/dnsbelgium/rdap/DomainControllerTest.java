@@ -175,7 +175,7 @@ public class DomainControllerTest extends AbstractControllerTest {
   @Test
   public void testIDNParseException() throws Exception {
     performGet("/domain/-\u2620-.be", APPLICATION_JSON, status().isBadRequest(),
-        content().string("{\"errorCode\":400,\"title\":\"Invalid domain name\",\"description\":[\"LEADING_HYPHEN\",\"TRAILING_HYPHEN\",\"DISALLOWED\"]}"));
+        content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"errorCode\":400,\"title\":\"Invalid domain name\",\"description\":[\"LEADING_HYPHEN\",\"TRAILING_HYPHEN\",\"DISALLOWED\"]}"));
   }
 
   private void verifyGetDomainOk(ResultMatcher... additionalMatchers) throws Exception {
