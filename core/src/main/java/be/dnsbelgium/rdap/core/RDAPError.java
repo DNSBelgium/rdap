@@ -42,12 +42,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+
+import static be.dnsbelgium.rdap.core.Common.DEFAULT_RDAP_CONFORMANCE;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
 public class RDAPError extends Exception {
 
 	private static final long serialVersionUID = 3000647771812593816L;
+
+  private final Set<String> rdapConformance = new LinkedHashSet<>();
+
 	private final int errorCode;
 
 	private final String title;
@@ -60,6 +67,7 @@ public class RDAPError extends Exception {
 		this.errorCode = errorCode;
 		this.title = title;
 		this.description = description == null ? null : new ImmutableList.Builder<String>().addAll(description).build();
+    addRdapConformance(DEFAULT_RDAP_CONFORMANCE);
 	}
 
 	@JsonCreator
@@ -77,6 +85,15 @@ public class RDAPError extends Exception {
 		this(errorCode, title, description);
 		this.initCause(cause);
 	}
+
+  @JsonProperty
+  public Set<String> getRdapConformance() {
+    return rdapConformance;
+  }
+
+  public void addRdapConformance(String conformance) {
+    rdapConformance.add(conformance);
+  }
 
 	@JsonProperty
 	public int getErrorCode() {
