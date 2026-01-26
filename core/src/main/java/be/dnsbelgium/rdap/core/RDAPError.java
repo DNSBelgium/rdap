@@ -39,6 +39,7 @@ import be.dnsbelgium.core.DomainName;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
@@ -49,6 +50,7 @@ import java.util.Set;
 import static be.dnsbelgium.rdap.core.Common.DEFAULT_RDAP_CONFORMANCE;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonPropertyOrder({"rdapConformance", "errorCode", "title", "description"})
 public class RDAPError extends Exception {
 
 	private static final long serialVersionUID = 3000647771812593816L;
