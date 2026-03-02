@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -265,7 +264,6 @@ public class Contact {
     private List<TelephoneNumber> telephoneNumbers = new ArrayList<TelephoneNumber>();
     private List<TelephoneNumber> faxNumbers = new ArrayList<TelephoneNumber>();
     private List<String> emailAddresses = new ArrayList<String>();
-    private List<URI> contactURIs = new ArrayList<URI>();
     private String[] languages = new String[0];
 
     public Builder setFormattedName(String formattedName) {
@@ -337,11 +335,6 @@ public class Contact {
       this.emailAddresses.add(emailAddress);
       return this;
     }
-    
-    public Builder addContactURI(URI contactURI) {
-      this.contactURIs.add(contactURI);
-      return this;
-    }
 
     public Contact build() {
       List<Property> properties = new ArrayList<Property>();
@@ -385,9 +378,6 @@ public class Contact {
       }
       for (String email : emailAddresses) {
         properties.add(new Property(null, "EMAIL", null, new Text(email)));
-      }
-      for (URI contactURI : contactURIs) {
-        properties.add(new Property(null, "CONTACT-URI", null, new URIValue(contactURI)));
       }
       for (int i = 0; i < languages.length; i++) {
         String lang = languages[i];
