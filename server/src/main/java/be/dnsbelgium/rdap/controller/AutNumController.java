@@ -28,9 +28,10 @@ public class AutNumController {
   @RequestMapping(value = "/{autnum}", method = RequestMethod.GET)
   @ResponseBody
   public AutNum get(@PathVariable("autnum") int autNum) throws RDAPError {
+    logger.debug("Query(GET) for autnum {}", autNum);
     AutNum result = autNumService.getAutNum(autNum);
     if (result == null) {
-      logger.debug("AutNum result for {} is null. Throwing AutNumNotFound Error");
+      logger.debug("AutNum result for {} is null. Throwing AutNumNotFound Error", autNum);
       throw RDAPError.autNumNotFound(autNum);
     }
     return result;
