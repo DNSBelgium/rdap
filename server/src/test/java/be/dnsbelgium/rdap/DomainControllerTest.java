@@ -132,8 +132,13 @@ public class DomainControllerTest extends AbstractControllerTest {
   @Test
   public void testDefaultHead() throws Exception {
     initDomain();
-    mockMvc.perform(head(DOMAIN_PATH).accept(APPLICATION_RDAP_JSON))
-        .andExpect(status().isOk());
+    performHeadDomain(APPLICATION_RDAP_JSON, status().isOk());
+  }
+
+  @Test
+  public void testHeadNotFound() throws Exception {
+    when(domainService.getDomain(DOMAIN_NAME)).thenReturn(null);
+    performHeadDomain(APPLICATION_RDAP_JSON, status().isNotFound());
   }
 
 	@Test
@@ -214,7 +219,7 @@ public class DomainControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  public void testInvalidDomainName() throws Exception {
+  public void testGetInvalidDomainName() throws Exception {
     performGet("/domain/.be", APPLICATION_RDAP_JSON, status().isBadRequest(), content().json(
         """
           {
@@ -228,6 +233,11 @@ public class DomainControllerTest extends AbstractControllerTest {
             ]
           }"""
     ));
+  }
+
+  @Test
+  public void testHeadInvalidDomainName() throws Exception {
+    performHead("/domain/.be", APPLICATION_RDAP_JSON, status().isBadRequest());
   }
 
   private void verifyGetDomainOk(ResultMatcher... additionalMatchers) throws Exception {
@@ -253,6 +263,17 @@ public class DomainControllerTest extends AbstractControllerTest {
         .andExpect(header().string("Content-type", RdapMediaType.APPLICATION_RDAP_JSON_UTF8_VALUE))
         .andExpect(statusMatcher)
         .andExpect(content().contentTypeCompatibleWith(APPLICATION_RDAP_JSON))
+        .andExpectAll(additionalMatchers);
+  }
+
+  private void performHeadDomain(MediaType acceptHeader, ResultMatcher statusMatcher, ResultMatcher... additionalMatchers) throws Exception {
+    performHead(DOMAIN_PATH, acceptHeader, statusMatcher, additionalMatchers);
+  }
+
+
+  private void performHead(String urlTemplate, MediaType acceptHeader, ResultMatcher statusMatcher, ResultMatcher... additionalMatchers) throws Exception {
+    mockMvc.perform(head(urlTemplate).accept(acceptHeader))
+        .andExpect(statusMatcher)
         .andExpectAll(additionalMatchers);
   }
 

@@ -16,8 +16,8 @@
 
 package be.dnsbelgium.rdap.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,8 +60,7 @@ public class DomainController {
 	@ResponseBody
 	public Domain get(@PathVariable("domainName") final String domainName) throws RDAPError {
 		logger.debug("Query(GET) for domain {}", domainName);
-		Domain result = getDomain(domainName);
-		return result;
+    return getDomain(domainName);
 	}
 
 	private Domain getDomain(String domainName) throws RDAPError {
@@ -83,16 +82,15 @@ public class DomainController {
 	@RequestMapping(value = "/{domainName}", method = RequestMethod.HEAD)
 	public ResponseEntity<Void> head(@PathVariable("domainName") final String domainName) throws RDAPError {
 		logger.debug("Query(HEAD) for domain {}", domainName);
-		Domain result = getDomain(domainName);
-		return new ResponseEntity<Void>(null, new HttpHeaders(), HttpStatus.OK);
+    getDomain(domainName);
+    return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@ExceptionHandler(value = RDAPError.NotAuthoritative.class)
 	@ResponseBody
-	protected RDAPError handleResourceNotFoundException(RDAPError.NotAuthoritative error, HttpServletResponse response)
-			throws UnsupportedEncodingException {
+	protected RDAPError handleResourceNotFoundException(RDAPError.NotAuthoritative error, HttpServletResponse response) {
 		response.setStatus(error.getErrorCode());
-		String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName(), "UTF-8");
+		String location = baseRedirectURL + "/domain/" + URLEncoder.encode(error.getDomainName(), StandardCharsets.UTF_8);
 		response.addHeader(Controllers.LOCATION_HEADER, location);
 		return error;
 	}
