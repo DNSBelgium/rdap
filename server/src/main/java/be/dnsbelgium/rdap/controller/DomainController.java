@@ -66,7 +66,12 @@ public class DomainController {
 
 	private Domain getDomain(String domainName) throws RDAPError {
 		final DomainName dn;
-		dn = DomainName.of(domainName);
+    try {
+      dn = DomainName.of(domainName);
+    } catch (IllegalArgumentException e) {
+      logger.warn("Domain name {} is not valid", domainName, e);
+      throw RDAPError.badRequest("Invalid domain name", "Domain name %s is not valid".formatted(domainName));
+    }
 		Domain result = domainService.getDomain(dn);
 		if (result == null) {
 			logger.debug("Domain result for '{}' is null. Throwing DomainNotFound Error", domainName);
