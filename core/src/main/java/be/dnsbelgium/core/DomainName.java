@@ -30,7 +30,7 @@ public class DomainName {
 
   public DomainName(List<Label> labels) {
     checkNotNull(labels, "labels must not be null");
-    checkArgument(labels.size() > 0, "labels.size() should be > 0");
+    checkArgument(!labels.isEmpty(), "labels.size() should be > 0");
     for (int i = 0; i < labels.size() - 1; i++) {
       if (labels.get(i) instanceof Label.RootLabel) {
         throw new IllegalArgumentException("Only the last label may be a root label");
@@ -42,7 +42,7 @@ public class DomainName {
 
   public static DomainName of(String domainName) {
     String[] labels = StringUtils.splitPreserveAllTokens(domainName, '.');
-    ImmutableList.Builder<Label> builder = new ImmutableList.Builder<Label>();
+    ImmutableList.Builder<Label> builder = new ImmutableList.Builder<>();
     for (String label : labels) {
       builder.add(Label.of(label));
     }

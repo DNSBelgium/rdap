@@ -82,7 +82,7 @@ public class DomainControllerTest extends AbstractControllerTest {
   @Test
   public void testNotFound() throws Exception {
     when(domainService.getDomain(DOMAIN_NAME)).thenReturn(null);
-    mockMvc.perform(get(DOMAIN_PATH).accept(APPLICATION_RDAP_JSON)).andExpect(status().isNotFound());
+    performGetDomain(APPLICATION_RDAP_JSON, status().isNotFound());
   }
 
   @Test
@@ -132,8 +132,13 @@ public class DomainControllerTest extends AbstractControllerTest {
   @Test
   public void testDefaultHead() throws Exception {
     initDomain();
-    mockMvc.perform(head(DOMAIN_PATH).accept(APPLICATION_RDAP_JSON))
-        .andExpect(status().isOk());
+    performHeadDomain(APPLICATION_RDAP_JSON, status().isOk());
+  }
+
+  @Test
+  public void testHeadNotFound() throws Exception {
+    when(domainService.getDomain(DOMAIN_NAME)).thenReturn(null);
+    performHeadDomain(APPLICATION_RDAP_JSON, status().isNotFound());
   }
 
 	@Test
@@ -151,9 +156,22 @@ public class DomainControllerTest extends AbstractControllerTest {
     Domain domain = new Domain(null, null, null, null, null, null, null, null, DOMAIN_NAME, DOMAIN_NAME, null, nameserverList, null, null, null, null);
     domain.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
 
-    verifyGetDomainOkForDomain(domain, content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"domain\"," +
-        "\"ldhName\":\"example.com\",\"unicodeName\":\"example.com\"," +
-        "\"nameservers\":[{\"objectClassName\":\"nameserver\",\"ldhName\":\"ns.example.other\",\"unicodeName\":\"ns.example.other\"}]}"));
+    verifyGetDomainOkForDomain(domain, content().json("""
+        {
+          "rdapConformance": [
+            "rdap_level_0"
+          ],
+          "objectClassName":"domain",
+          "ldhName": "example.com",
+          "unicodeName":"example.com",
+          "nameservers":[
+            {
+              "objectClassName": "nameserver",
+              "ldhName": "ns.example.other",
+              "unicodeName": "ns.example.other"
+            }
+          ]
+        }"""));
   }
 
   @Test
@@ -169,13 +187,57 @@ public class DomainControllerTest extends AbstractControllerTest {
 
   @Test
   public void testBytes() throws Exception {
-    verifyGetDomainOk(content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"objectClassName\":\"domain\",\"ldhName\":\"example.com\",\"unicodeName\":\"example.com\"}"));
+    verifyGetDomainOk(content().json("""
+        {
+          "rdapConformance": [
+          "rdap_level_0"
+          ],
+          "objectClassName": "domain",
+          "ldhName": "example.com",
+          "unicodeName": "example.com"
+        }"""
+    ));
   }
 
   @Test
   public void testIDNParseException() throws Exception {
     performGet("/domain/-\u2620-.be", APPLICATION_JSON, status().isBadRequest(),
-        content().string("{\"rdapConformance\":[\"rdap_level_0\"],\"errorCode\":400,\"title\":\"Invalid domain name\",\"description\":[\"LEADING_HYPHEN\",\"TRAILING_HYPHEN\",\"DISALLOWED\"]}"));
+        content().json("""
+            {
+              "rdapConformance": [
+                "rdap_level_0"
+              ],
+              "errorCode": 400,
+              "title": "Invalid domain name",
+              "description": [
+                "LEADING_HYPHEN",
+                "TRAILING_HYPHEN",
+                "DISALLOWED"
+              ]
+            }"""
+        ));
+  }
+
+  @Test
+  public void testGetInvalidDomainName() throws Exception {
+    performGet("/domain/.be", APPLICATION_RDAP_JSON, status().isBadRequest(), content().json(
+        """
+          {
+            "rdapConformance": [
+              "rdap_level_0"
+            ],
+            "errorCode": 400,
+            "title": "Invalid domain name",
+            "description": [
+              "Domain name .be is not valid"
+            ]
+          }"""
+    ));
+  }
+
+  @Test
+  public void testHeadInvalidDomainName() throws Exception {
+    performHead("/domain/.be", APPLICATION_RDAP_JSON, status().isBadRequest());
   }
 
   private void verifyGetDomainOk(ResultMatcher... additionalMatchers) throws Exception {
@@ -204,8 +266,21 @@ public class DomainControllerTest extends AbstractControllerTest {
         .andExpectAll(additionalMatchers);
   }
 
+  private void performHeadDomain(MediaType acceptHeader, ResultMatcher statusMatcher, ResultMatcher... additionalMatchers) throws Exception {
+    performHead(DOMAIN_PATH, acceptHeader, statusMatcher, additionalMatchers);
+  }
+
+
+  private void performHead(String urlTemplate, MediaType acceptHeader, ResultMatcher statusMatcher, ResultMatcher... additionalMatchers) throws Exception {
+    mockMvc.perform(head(urlTemplate).accept(acceptHeader))
+        .andExpect(statusMatcher)
+        .andExpectAll(additionalMatchers);
+  }
+
   private void initDomain() throws RDAPError {
-    Domain domain = new Domain(null, null, null, null, null, null, null, null, DOMAIN_NAME, DOMAIN_NAME, null, null, null, null, null, null);
+    Domain domain = new Domain(null, null, null, null, null, null,
+        null, null, DOMAIN_NAME, DOMAIN_NAME, null, null, null,
+        null, null, null);
     domain.addRdapConformance(Domain.DEFAULT_RDAP_CONFORMANCE);
     when(domainService.getDomain(DOMAIN_NAME)).thenReturn(domain);
   }

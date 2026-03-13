@@ -41,6 +41,13 @@ public class DomainNameTest {
         DomainName.of(".www.example.com");
       }
     }, IllegalArgumentException.class, "Should throw IllegalArgumentException");
+
+    assertThrows(new Assert.Closure() {
+      @Override
+      public void execute() throws Throwable {
+        DomainName.of(".com");
+      }
+    }, IllegalArgumentException.class, "Should throw IllegalArgumentException");
   }
 
   @Test
