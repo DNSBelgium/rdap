@@ -72,13 +72,11 @@ public class RDAPError extends Exception {
     addRdapConformance(DEFAULT_RDAP_CONFORMANCE);
 	}
 
-	@JsonCreator
 	public RDAPError(@JsonProperty("errorCode") int errorCode, @JsonProperty("title") String title,
 			@JsonProperty("description") String description) {
 		this(errorCode, title, description == null ? null : Arrays.asList(description));
 	}
 
-	@JsonCreator
 	public RDAPError(@JsonProperty("errorCode") int errorCode, @JsonProperty("title") String title) {
 		this(errorCode, title, (List<String>) null);
 	}
